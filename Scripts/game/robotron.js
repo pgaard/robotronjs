@@ -4,9 +4,11 @@ game.dead = 0;
 game.lastShotTime = 0;
 game.shootX = 0;
 game.shootY = 0;
-game.gruntSpeed = 50;
+game.gruntSpeed = 100;
+game.manSpeed = 200;
+game.bulletSpeed = 750;
 game.spritesheet = new Image();
-game.spritesheet.src = 'images/robotronsprites.png';
+game.spritesheet.src = 'file:///F:/mygames/robotron-js/images/robotronsprites.png';
 var manCells = {
     left: [
         { x: 192, y: 164, w: 11, h: 22 },
@@ -48,7 +50,8 @@ var manMover = {
                     if (sprite.velocityX > 0) direction = "right";
                     else if (sprite.velocityX < 0) direction = "left";
                     else if (sprite.velocityY > 0) direction = "down";
-                    else if (sprite.velocityY < 0) direction = "up";                    
+                    else if (sprite.velocityY < 0) direction = "up";
+                    sprite.direction = direction;
                     sprite.painter.advance(direction);
                     this.lastTime = time;
                 }
@@ -106,10 +109,10 @@ game.manSprite = new Sprite('man', new SpriteSheetPainter(manCells, game.sprites
 game.manSprite.left = game.middle().x;
 game.manSprite.top = game.middle().y;
 game.manSprite.width = 19 * 2;
-game.manSprite.height = 26 * 2;
+game.manSprite.height = 22 * 2;
 game.addSprite(game.manSprite);
 
-for (var i=0; i < 100; i++) {
+for (var i=0; i < 15; i++) {
     var gruntSprite = new Sprite('grunt', new SpriteSheetPainter(gruntCells, game.spritesheet, "all", 2), [gruntMover]);
     do {
         gruntSprite.left = Math.round(Math.random() * game.width());
@@ -176,30 +179,33 @@ game.paintUnderSprites = function() {
 };
 
 game.startAnimate = function(time) {
-    if (this.shootX != 0 || this.shootY != 0) {
+    if ((this.shootX != 0 || this.shootY != 0) && !game.dead) {
         if (time - this.lastShotTime > 150) {
             // new bullet 
             this.lastShotTime = time;
-            var bullet = new Sprite('bullet', bulletPainter, [bulletMover]);
-            var bulletSpeed = 400;
-            bullet.velocityX = this.shootX * bulletSpeed;
-            bullet.velocityY = this.shootY * bulletSpeed;
+            var bullet = new Sprite('bullet', bulletPainter, [bulletMover]);            
+            bullet.velocityX = this.shootX * game.bulletSpeed;
+            bullet.velocityY = this.shootY * game.bulletSpeed;
             bullet.top = game.manSprite.top + game.manSprite.height / 2;
             bullet.left = game.manSprite.left + game.manSprite.width / 2;            
             game.addSprite(bullet);
         }
     }
-    
-    // check for death
-    var grunts = game.getAllSprites("grunt");
-    var left = game.manSprite.left;
-    var top = game.manSprite.top;
-    for (var i = 0; i < grunts.length; i++) {
-        if (left >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
-            top >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
-            
-            // dead
-            game.dead = 1;            
+
+    if (!game.paused && game.manSprite.direction) {
+        // check for death
+        var grunts = game.getAllSprites("grunt");
+        var left = game.manSprite.left;
+        var top = game.manSprite.top;
+        var width = manCells[game.manSprite.direction][0].w * 2;
+        var height = manCells[game.manSprite.direction][0].h * 2;
+        for (var i = 0; i < grunts.length; i++) {
+            if ((left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
+                (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
+
+                // dead
+                game.dead = 1;
+            }
         }
     }
 
@@ -220,7 +226,7 @@ game.addKeyListener(
     {
         key: 'd',
         listener: function(pressed) {
-            game.manSprite.velocityX = pressed ? 200 : 0;            
+            game.manSprite.velocityX = pressed ? game.manSpeed : 0;            
         },
     }
 );
@@ -230,7 +236,7 @@ game.addKeyListener(
     {
         key: 'a',
         listener: function(pressed) {
-            game.manSprite.velocityX = pressed ? -200 : 0;
+            game.manSprite.velocityX = pressed ? -game.manSpeed : 0;
         }
     }
 );
@@ -239,7 +245,7 @@ game.addKeyListener(
     {
         key: 'w',
         listener: function(pressed) {
-            game.manSprite.velocityY = pressed ? -200 : 0;
+            game.manSprite.velocityY = pressed ? -game.manSpeed : 0;
         }
     }
 );
@@ -248,7 +254,7 @@ game.addKeyListener(
     {
         key: 's',
         listener: function(pressed) {
-            game.manSprite.velocityY = pressed ? 200 : 0;
+            game.manSprite.velocityY = pressed ? game.manSpeed : 0;
         }
     });
 

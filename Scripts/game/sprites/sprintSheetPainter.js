@@ -21,8 +21,27 @@ SpriteSheetPainter.prototype = {
         }
     },
     paint: function (sprite, context) {
-        var cell = this.cells[this.currentDirection][this.cellIndex];
+        var cell = this.cells[this.currentDirection][this.cellIndex];        
+
         context.drawImage(this.spritesheet, cell.x, cell.y, cell.w, cell.h,
             sprite.left, sprite.top, cell.w * this.scale, cell.h * this.scale);
+          
+          /*
+        context.fillStyle = 'red'; // 
+        context.globalCompositeOperation = "source-in";
+        context.fillRect(sprite.left, sprite.top, cell.w * this.scale, cell.h * this.scale);
+        */        
+        
+        /*
+        var imgData = context.getImageData(sprite.left, sprite.top, cell.w * this.scale, cell.h * this.scale);
+        for (var i = 0; i < imgData.data.length; i += 4) {
+        if (imgData.data[i] != 0) {
+        imgData.data[i] = 0xff;
+        imgData.data[i + 1] = 0xff;
+        imgData.data[i + 2] = 0xff;
+        }
+        }
+        context.putImageData(imgData, 0, 0, sprite.left, sprite.top, cell.w * this.scale, cell.h * this.scale);
+        */
     }
 };
