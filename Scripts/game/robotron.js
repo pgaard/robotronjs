@@ -9,6 +9,11 @@ game.manSpeed = 200;
 game.bulletSpeed = 750;
 game.spritesheet = new Image();
 game.spritesheet.src = 'file:///F:/mygames/robotron-js/images/robotronsprites.png';
+game.left = 20;
+game.right = game.width() - 40;
+game.top = 20;
+game.bottom = game.height() - 40    ;
+
 var manCells = {
     left: [
         { x: 192, y: 164, w: 11, h: 22 },
@@ -57,19 +62,19 @@ var manMover = {
                 }
             }
 
-            if (sprite.left + sprite.width + deltaX > game.width()) {
+            if (sprite.left + sprite.width + deltaX > game.right) {
                 sprite.velocityX = 0;
                 deltaX = 0;                
             }
-            else if (sprite.left + deltaX < 0) {
+            else if (sprite.left + deltaX < game.left) {
                 sprite.velocityX = 0;
                 deltaX = 0;
             }
-            if (sprite.top + sprite.height + deltaY > game.height()) {
+            if (sprite.top + sprite.height + deltaY > game.bottom) {
                 sprite.velocityY = 0;
                 deltaY = 0;                
             }
-            else if (sprite.top + deltaY < 0) {
+            else if (sprite.top + deltaY < game.top) {
                 sprite.velocityY = 0;
                 deltaY = 0;
             }
@@ -115,8 +120,8 @@ game.addSprite(game.manSprite);
 for (var i=0; i < 15; i++) {
     var gruntSprite = new Sprite('grunt', new SpriteSheetPainter(gruntCells, game.spritesheet, "all", 2), [gruntMover]);
     do {
-        gruntSprite.left = Math.round(Math.random() * game.width());
-        gruntSprite.top = Math.round(Math.random() * game.height());
+        gruntSprite.left = Math.round(Math.random() * (game.right - game.left)) + game.left;
+        gruntSprite.top = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
         var distance = game.distance(gruntSprite.left, gruntSprite.top, game.manSprite.left, game.manSprite.top);
     }  while (distance < 300);
     gruntSprite.width = 14 * 2;
@@ -137,6 +142,7 @@ var bulletPainter = {
         else if(sprite.velocityY < 0) bulletY = -bulletLength;  
         
         context.beginPath();
+        context.lineWidth = 2;
         context.moveTo(sprite.left - bulletX, sprite.top - bulletY);
         context.lineTo(sprite.left + bulletX, sprite.top + bulletY);
         context.stroke();
@@ -149,10 +155,10 @@ var bulletMover = {
         if (!game.paused && !game.dead) {
             var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
             var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
-            if (sprite.left + deltaX > game.width() ||
-                sprite.left + deltaX < 0 ||
-                sprite.top + deltaY > game.height() ||
-                sprite.top + deltaY < 0) {
+            if (sprite.left + deltaX > game.right ||
+                sprite.left + deltaX < game.left ||
+                sprite.top + deltaY > game.bottom ||
+                sprite.top + deltaY < game.top) {
                 game.removeSprite(sprite);
             }                
             sprite.left += deltaX;
@@ -176,6 +182,10 @@ var bulletMover = {
 game.paintUnderSprites = function() {
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, this.width(), this.height());
+    
+    this.context.strokeStyle = '#ff0000';
+    this.context.lineWidth = 5;
+    this.context.strokeRect(this.left, this.top, this.right, this.bottom);
 };
 
 game.startAnimate = function(time) {
