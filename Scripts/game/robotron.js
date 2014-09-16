@@ -10,35 +10,13 @@ game.bulletSpeed = 750;
 game.spritesheet = new Image();
 game.spritesheet.src = 'file:///F:/mygames/robotron-js/images/robotronsprites.png';
 game.left = 20;
-game.right = game.width() - 40;
+game.right = game.width() - 20;
 game.top = 20;
-game.bottom = game.height() - 40    ;
-
-var manCells = {
-    left: [
-        { x: 192, y: 164, w: 11, h: 22 },
-        { x: 218, y: 164, w: 11, h: 22 }],
-    right: [
-        { x: 268, y: 164, w: 11, h: 22 },
-        { x: 294, y: 164, w: 11, h: 22 }],    
-    down: [
-        { x: 346, y: 164, w: 15, h: 22 },
-        { x: 372, y: 164, w: 15, h: 22 },
-        { x: 346, y: 164, w: 15, h: 22 },
-        { x: 398, y: 164, w: 15, h: 22 }],    
-    up: [
-        { x: 424, y: 164, w: 15, h: 22 },
-        { x: 450, y: 164, w: 15, h: 22 },
-        { x: 424, y: 164, w: 15, h: 22 },
-        { x: 476, y: 164, w: 15, h: 22 }],       
-};
-    
-var gruntCells = {
-    all: [
-        { x: 150, y: 234, w: 19, h: 26 },
-        { x: 180, y: 234, w: 19, h: 26 },
-        { x: 210, y: 234, w: 19, h: 26 },
-    ]      
+game.bottom = game.height() - 20;
+game.colors = {
+    r: 255,
+    g: 0,
+    b: 0
 };
 
 var manMover = {
@@ -182,11 +160,21 @@ var bulletMover = {
 game.paintUnderSprites = function() {
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, this.width(), this.height());
-    
-    this.context.strokeStyle = '#ff0000';
-    this.context.lineWidth = 5;
-    this.context.strokeRect(this.left, this.top, this.right, this.bottom);
+    game.rotateColors();    
+    this.context.strokeStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
+    this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
 };
+
+game.rotateColors = function ()
+{
+     game.colors.r += 7;
+    if (game.colors.r > 255) game.colors.r = 0;
+    game.colors.g += 4;
+    if (game.colors.g > 255) game.colors.g = 0;
+    game.colors.b += 3;
+    if (game.colors.b > 255) game.colors.b = 0;
+    this.context.lineWidth = 5;
+},
 
 game.startAnimate = function(time) {
     if ((this.shootX != 0 || this.shootY != 0) && !game.dead) {
