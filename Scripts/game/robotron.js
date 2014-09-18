@@ -95,7 +95,7 @@ game.manSprite.width = 19 * 2;
 game.manSprite.height = 22 * 2;
 game.addSprite(game.manSprite);
 
-for (var i=0; i < 15; i++) {
+for (var i=0; i < 20; i++) {
     var gruntSprite = new Sprite('grunt', new SpriteSheetPainter(gruntCells, game.spritesheet, "all", 2), [gruntMover]);
     do {
         gruntSprite.left = Math.round(Math.random() * (game.right - game.left)) + game.left;
@@ -145,10 +145,25 @@ var bulletMover = {
             var grunts = game.getAllSprites("grunt");
             for (var i = 0; i < grunts.length; i++) {                
                 if(sprite.left >= grunts[i].left && sprite.left <= grunts[i].left + grunts[i].width && 
-                    sprite.top >= grunts[i].top && sprite.top <= grunts[i].top + grunts[i].height){
-                    // explosions!
+                    sprite.top >= grunts[i].top && sprite.top <= grunts[i].top + grunts[i].height) {
+
+
+                    var grunt = grunts[i];
+                    
+                    // make explosion
+                    var explosion = new Sprite('explosion', explosionPainter, [explosionMover]);                    
+                    explosion.top = grunt.top;
+                    explosion.height = grunt.height;
+                    explosion.left = grunt.left;
+                    explosion.width = grunt.width;
+                    explosion.horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
+                    game.addSprite(explosion);
+
+                    // remove grunt and bullet
                     game.removeSprite(grunts[i]);
                     game.removeSprite(sprite);
+                    game.score += 100;
+                    
                     break;
                 }
             }
