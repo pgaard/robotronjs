@@ -1,10 +1,7 @@
 ﻿var game = new Game("testgame", "canvas");
 
-game.dead = 0;
-game.lastShotTime = 0;
-game.shootX = 0;
-game.shootY = 0;
-game.gruntSpeed = 100;
+game.gruntNumber = 20;
+game.gruntSpeedRatio = 0.002;
 game.manSpeed = 200;
 game.bulletSpeed = 750;
 game.spritesheet = new Image();
@@ -19,44 +16,27 @@ game.colors = {
     b: 0
 };
 
-var gruntMover = {
-    execute: function(sprite, context, time) {
-        if (!game.paused && !game.dead) {
-            if (!sprite.lastTime)
-                sprite.lastTime = 0;
-            var timeDiff = time - sprite.lastTime;
+game.init = function() {
+    game.dead = 0;
+    game.lastShotTime = 0;
+    game.shootX = 0;
+    game.shootY = 0;
 
-            var theta = Math.atan((sprite.top - game.manSprite.top) / (sprite.left - game.manSprite.left));
-            var reverse = sprite.left > game.manSprite.left ? -1 : 1;
-            sprite.velocityX = Math.cos(theta) * game.gruntSpeed * reverse;
-            sprite.velocityY = Math.sin(theta) * game.gruntSpeed * reverse;
-            if (timeDiff > 75) {
-                sprite.painter.advance('all');
-                sprite.lastTime = time;
-            }
-            
-            var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
-            var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
-            
-            sprite.left += deltaX;
-            sprite.top += deltaY;
-        }   
-    }
+    game.removeAllSprites();
+
+    game.manSprite = new Man(game, game.middle().x, game.middle().y);
+
+    for (var i=0; i < game.gruntNumber; i++) {
+        var left, t;
+        do {
+            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
+            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
+            var distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
+        }  
+        while (distance < 300);
+        var gruntSprite = new Grunt(game, left, t);    
+    } 
 };
-
-game.manSprite = new Man(game, game.middle().x, game.middle().y);
-
-for (var i=0; i < 20; i++) {
-    var gruntSprite = new Sprite('grunt', new SpriteSheetPainter(gruntCells, game.spritesheet, "all", 2), [gruntMover]);
-    do {
-        gruntSprite.left = Math.round(Math.random() * (game.right - game.left)) + game.left;
-        gruntSprite.top = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
-        var distance = game.distance(gruntSprite.left, gruntSprite.top, game.manSprite.left, game.manSprite.top);
-    }  while (distance < 300);
-    gruntSprite.width = 14 * 2;
-    gruntSprite.height = 22 * 2;
-    game.addSprite(gruntSprite);    
-}
 
 var bulletPainter = {
     paint: function(sprite, context) {
@@ -113,12 +93,10 @@ var bulletMover = {
                     // remove grunt and bullet
                     game.removeSprite(grunts[i]);
                     game.removeSprite(sprite);
-                    game.score += 100;
-                    
+                    game.score += 100;                                        
                     break;
                 }
-            }
-
+            }                       
         }        
     }
 };
@@ -143,6 +121,14 @@ game.rotateColors = function ()
 },
 
 game.startAnimate = function(time) {
+    
+    if (game.getAllSprites("grunt").length == 0) {
+        game.gruntNumber += 5;
+        game.init();
+        game.start();        
+        return;
+    }       
+
     if ((this.shootX != 0 || this.shootY != 0) && !game.dead) {
         if (time - this.lastShotTime > 150) {
             // new bullet 
@@ -173,14 +159,27 @@ game.startAnimate = function(time) {
         }
     }
 
-    game.gruntSpeed = 50 + time * .002;
+    game.gruntSpeed = 50 + time * game.gruntSpeedRatio;
 };
+
+game.addKeyListener(
+    {
+        key: 'r',
+        listener: function (pressed) {
+            
+            //togglePaused();
+        }
+    }
+);
 
 game.addKeyListener(
     {
         key: 'p',
         listener: function (pressed) {
-            game.start();
+            if (pressed) {
+                game.init();
+                game.start();
+            }
             //togglePaused();
         }
     }

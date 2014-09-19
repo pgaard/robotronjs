@@ -265,7 +265,7 @@ Game.prototype = {
             return String.fromCharCode(keyCode).toLowerCase();
         }
         switch (keyCode) {
-            // Add more keys as needed                
+            // Add more keys as needed                 
             case 32:
                 key = 'space';
                 break;
@@ -375,6 +375,10 @@ Game.prototype = {
                 return;
             }
         }
+    },
+
+    removeAllSprites: function () {
+        this.sprites = [];
     },
 
     // Override the following methods as desired. animate() calls

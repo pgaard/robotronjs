@@ -39,7 +39,7 @@ var explosionPainter = {
 var explosionMover = {
     execute: function (sprite, context, time) {
         if (!game.paused && !game.dead) {
-            sprite.spacing += .35;
+            sprite.spacing += .5;
             if (sprite.spacing > 10) {
                 game.removeSprite(sprite);
                 return;
