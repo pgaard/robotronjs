@@ -1,8 +1,10 @@
 ﻿var game = new Game("testgame", "canvas");
 
+game.innerWave = 1;
 game.gruntNumber = 15;
 game.hulkNumber = 10;
 game.gruntSpeedRatio = 0.002;
+game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
 game.manSpeed = 200;
 game.bulletSpeed = 750;
 game.spritesheet = new Image();
@@ -22,9 +24,7 @@ game.init = function() {
     game.lastShotTime = 0;
     game.shootX = 0;
     game.shootY = 0;
-
-    game.removeAllSprites();
-
+  
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
     
     for (var i=0; i < game.gruntNumber; i++) {
@@ -46,7 +46,7 @@ game.init = function() {
         }  
         while (distance < 150);
         var hulk = new Hulk(game, left, t);    
-    } 
+    }     
 };
 
 game.paintUnderSprites = function() {
@@ -55,6 +55,51 @@ game.paintUnderSprites = function() {
     game.rotateColors();    
     this.context.strokeStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
     this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
+    
+    if (game.innerWave) {
+        game.drawInnerWave();
+    }        
+};
+
+game.startWave = function()
+{
+    game.removeAllSprites();
+    game.innerWave = 1;
+    game.innerWaveTime = getTimeNow();
+},
+
+game.drawInnerWave = function() {
+    var progress = getTimeNow() - game.innerWaveTime;
+
+    if(progress < 1000)
+    {
+        var percent = progress / 1000.0;     
+        var widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
+        var heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
+        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
+        this.context.fillRect(
+            this.left + widthAdj, 
+            this.top + heightAdj,
+            (this.right - this.left) * percent, 
+            (this.bottom - this.top) * percent);
+    }
+    else if (progress < 2000) {
+        percent = (progress - 1000) / 1000.0;     
+        widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
+        heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
+        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
+        this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
+        this.context.fillStyle = 'black';
+        this.context.fillRect(
+            this.left + widthAdj, 
+            this.top + heightAdj,
+            (this.right - this.left) * percent, 
+            (this.bottom - this.top) * percent);
+    }
+    else {
+        game.innerWave = 0;
+        game.init();
+    }
 };
 
 game.rotateColors = function ()
@@ -69,11 +114,13 @@ game.rotateColors = function ()
 },
 
 game.startAnimate = function(time) {
+
+    if (game.innerWave)
+        return;
     
     if (game.getAllSprites("grunt").length == 0) {
-        game.gruntNumber += 5;
-        game.init();
-        game.start();        
+        game.gruntNumber += 5;        
+        game.startWave();      
         return;
     }       
 
@@ -107,9 +154,7 @@ game.startAnimate = function(time) {
                 game.dead = 1;
             }
         }
-    }
-
-    game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
+    }    
 };
 
 game.addKeyListener(
@@ -127,7 +172,8 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed) {
             if (pressed) {
-                game.init();
+                game.paused = 0;
+                game.startWave();       
                 game.start();
             }
         }

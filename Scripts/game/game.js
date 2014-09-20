@@ -360,12 +360,12 @@ Game.prototype = {
     },
 
     getAllSprites: function (name) {
-        var sprites = [];
+        var list = [];
         for (i in this.sprites) {
             if (!name || this.sprites[i].name === name)
-                sprites.push(this.sprites[i]);
+                list.push(this.sprites[i]);
         }
-        return sprites;
+        return list;
     },
 
     removeSprite: function (sprite) {
