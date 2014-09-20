@@ -1,6 +1,7 @@
 ﻿var game = new Game("testgame", "canvas");
 
-game.gruntNumber = 20;
+game.gruntNumber = 15;
+game.hulkNumber = 10;
 game.gruntSpeedRatio = 0.002;
 game.manSpeed = 200;
 game.bulletSpeed = 750;
@@ -25,7 +26,7 @@ game.init = function() {
     game.removeAllSprites();
 
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
-
+    
     for (var i=0; i < game.gruntNumber; i++) {
         var left, t;
         do {
@@ -35,6 +36,16 @@ game.init = function() {
         }  
         while (distance < 300);
         var gruntSprite = new Grunt(game, left, t);    
+    } 
+    
+    for (i=0; i < game.hulkNumber; i++) {        
+        do {
+            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
+            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
+            distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
+        }  
+        while (distance < 150);
+        var hulk = new Hulk(game, left, t);    
     } 
 };
 
@@ -82,13 +93,14 @@ game.startAnimate = function(time) {
 
     if (!game.paused && game.manSprite.direction) {
         // check for death
-        var grunts = game.getAllSprites("grunt");
+        var grunts = game.getAllSprites();
         var left = game.manSprite.left;
         var top = game.manSprite.top;
         var width = manCells[game.manSprite.direction][0].w * 2;
         var height = manCells[game.manSprite.direction][0].h * 2;
         for (var i = 0; i < grunts.length; i++) {
-            if ((left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
+            if (grunts[i].name != 'man' && grunts[i].name != 'bullet' && grunts[i].name != 'explosion' &&  
+                (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
                 (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
 
                 // dead

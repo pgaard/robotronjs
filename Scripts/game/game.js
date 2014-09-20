@@ -362,7 +362,7 @@ Game.prototype = {
     getAllSprites: function (name) {
         var sprites = [];
         for (i in this.sprites) {
-            if (this.sprites[i].name === name)
+            if (!name || this.sprites[i].name === name)
                 sprites.push(this.sprites[i]);
         }
         return sprites;
