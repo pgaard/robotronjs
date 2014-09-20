@@ -38,69 +38,6 @@ game.init = function() {
     } 
 };
 
-var bulletPainter = {
-    paint: function(sprite, context) {
-        var bulletLength = 10;
-        context.save();                
-        context.beginPath();        
-        context.strokeStyle = 'white';        
-        var bulletX = 0, bulletY = 0;
-        if (sprite.velocityX > 0) bulletX = bulletLength;
-        else if(sprite.velocityX < 0) bulletX = -bulletLength;
-        if (sprite.velocityY > 0) bulletY = bulletLength;
-        else if(sprite.velocityY < 0) bulletY = -bulletLength;  
-        
-        context.beginPath();
-        context.lineWidth = 2;
-        context.moveTo(sprite.left - bulletX, sprite.top - bulletY);
-        context.lineTo(sprite.left + bulletX, sprite.top + bulletY);
-        context.stroke();
-        context.restore();
-    }
-};
-
-var bulletMover = {
-    execute: function(sprite, context, time) {
-        if (!game.paused && !game.dead) {
-            var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
-            var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
-            if (sprite.left + deltaX > game.right ||
-                sprite.left + deltaX < game.left ||
-                sprite.top + deltaY > game.bottom ||
-                sprite.top + deltaY < game.top) {
-                game.removeSprite(sprite);
-            }                
-            sprite.left += deltaX;
-            sprite.top += deltaY;
-
-            var grunts = game.getAllSprites("grunt");
-            for (var i = 0; i < grunts.length; i++) {                
-                if(sprite.left >= grunts[i].left && sprite.left <= grunts[i].left + grunts[i].width && 
-                    sprite.top >= grunts[i].top && sprite.top <= grunts[i].top + grunts[i].height) {
-
-
-                    var grunt = grunts[i];
-                    
-                    // make explosion
-                    var explosion = new Sprite('explosion', explosionPainter, [explosionMover]);                    
-                    explosion.top = grunt.top;
-                    explosion.height = grunt.height;
-                    explosion.left = grunt.left;
-                    explosion.width = grunt.width;
-                    explosion.horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
-                    game.addSprite(explosion);
-
-                    // remove grunt and bullet
-                    game.removeSprite(grunts[i]);
-                    game.removeSprite(sprite);
-                    game.score += 100;                                        
-                    break;
-                }
-            }                       
-        }        
-    }
-};
-
 game.paintUnderSprites = function() {
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, this.width(), this.height());
@@ -133,12 +70,13 @@ game.startAnimate = function(time) {
         if (time - this.lastShotTime > 150) {
             // new bullet 
             this.lastShotTime = time;
-            var bullet = new Sprite('bullet', bulletPainter, [bulletMover]);            
-            bullet.velocityX = this.shootX * game.bulletSpeed;
-            bullet.velocityY = this.shootY * game.bulletSpeed;
-            bullet.top = game.manSprite.top + game.manSprite.height / 2;
-            bullet.left = game.manSprite.left + game.manSprite.width / 2;            
-            game.addSprite(bullet);
+            var bullet = new Bullet(
+                game,
+                game.manSprite.left + game.manSprite.width / 2,
+                game.manSprite.top + game.manSprite.height / 2,
+                this.shootX * game.bulletSpeed,
+                this.shootY * game.bulletSpeed
+            );
         }
     }
 
@@ -159,7 +97,7 @@ game.startAnimate = function(time) {
         }
     }
 
-    game.gruntSpeed = 50 + time * game.gruntSpeedRatio;
+    game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
 };
 
 game.addKeyListener(
@@ -180,7 +118,6 @@ game.addKeyListener(
                 game.init();
                 game.start();
             }
-            //togglePaused();
         }
     }
 );
