@@ -2,7 +2,7 @@
 
 game.innerWave = 1;
 game.gruntNumber = 15;
-game.hulkNumber = 10;
+game.hulkNumber = 5;
 game.gruntSpeedRatio = 0.002;
 game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
 game.manSpeed = 200;
@@ -27,17 +27,6 @@ game.init = function() {
   
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
     
-    for (var i=0; i < game.gruntNumber; i++) {
-        var left, t;
-        do {
-            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
-            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
-            var distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
-        }  
-        while (distance < 300);
-        var gruntSprite = new Grunt(game, left, t);    
-    } 
-    
     for (i=0; i < game.hulkNumber; i++) {        
         do {
             left = Math.round(Math.random() * (game.right - game.left)) + game.left;
@@ -47,6 +36,17 @@ game.init = function() {
         while (distance < 150);
         var hulk = new Hulk(game, left, t);    
     }     
+    
+    for (var i=0; i < game.gruntNumber; i++) {
+        var left, t;
+        do {
+            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
+            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
+            var distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
+        }  
+        while (distance < 300);
+        var gruntSprite = new Grunt(game, left, t);    
+    }        
 };
 
 game.paintUnderSprites = function() {
@@ -64,6 +64,7 @@ game.paintUnderSprites = function() {
 game.startWave = function()
 {
     game.removeAllSprites();
+    game.playSound("sound_wavestart");
     game.innerWave = 1;
     game.innerWaveTime = getTimeNow();
 },
@@ -120,6 +121,7 @@ game.startAnimate = function(time) {
     
     if (game.getAllSprites("grunt").length == 0) {
         game.gruntNumber += 5;        
+        game.hulkNumber += 2;   
         game.startWave();      
         return;
     }       
@@ -128,6 +130,7 @@ game.startAnimate = function(time) {
         if (time - this.lastShotTime > 150) {
             // new bullet 
             this.lastShotTime = time;
+            game.playSound("sound_shot");
             var bullet = new Bullet(
                 game,
                 game.manSprite.left + game.manSprite.width / 2,
@@ -138,7 +141,7 @@ game.startAnimate = function(time) {
         }
     }
 
-    if (!game.paused && game.manSprite.direction) {
+    if (!game.paused && game.manSprite.direction && !game.dead) {
         // check for death
         var grunts = game.getAllSprites();
         var left = game.manSprite.left;
@@ -151,6 +154,7 @@ game.startAnimate = function(time) {
                 (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
 
                 // dead
+                game.playSound("sound_death");
                 game.dead = 1;
             }
         }

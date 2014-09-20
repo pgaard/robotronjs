@@ -45,16 +45,25 @@
                 sprite.left += deltaX;
                 sprite.top += deltaY;
 
-                var grunts = sprite.game.getAllSprites("grunt");
-                for (var i = 0; i < grunts.length; i++) {
-                    var grunt = grunts[i];
-                    if (sprite.left >= grunt.left && sprite.left <= grunt.left + grunt.width &&
-                        sprite.top >= grunt.top && sprite.top <= grunt.top + grunt.height) {
+                // hit handling - should be somewhere better
+                var enemies = sprite.game.getAllSprites();
+                for (var i = 0; i < enemies.length; i++) {
+                    var enemy = enemies[i];
+                    if (enemy.name != 'grunt' && enemy.name != 'hulk')
+                        continue;
+                    if (sprite.left >= enemy.left && sprite.left <= enemy.left + enemy.width &&
+                        sprite.top >= enemy.top && sprite.top <= enemy.top + enemy.height) {
 
-                        var horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
-                        var explosion = new Explosion(sprite.game, grunt.left, grunt.top, grunt.width, grunt.height, horizontal);
-
-                        sprite.game.removeSprite(grunt);
+                        if (enemy.name == 'grunt') {
+                            var horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
+                            var explosion = new Explosion(sprite.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);
+                            sprite.game.playSound("sound_kill");
+                            sprite.game.removeSprite(enemy);
+                        }
+                        else if (enemy.name == 'hulk') {
+                            if (deltaX) enemy.left += 7 * (deltaX / Math.abs(deltaX));
+                            if (deltaY) enemy.top += 7 * (deltaY / Math.abs(deltaY));
+                        }
                         sprite.game.removeSprite(sprite);
                         break;
                     }

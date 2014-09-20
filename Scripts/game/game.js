@@ -35,12 +35,12 @@ var Game = function (gameName, canvasId) {
     this.soundChannels = [];
     this.audio = new Audio();
     this.NUM_SOUND_CHANNELS = 10;
-    /*
+    
     for (var i = 0; i < this.NUM_SOUND_CHANNELS; ++i) {
-    var audio = new Audio();
-    this.soundChannels.push(audio);
+        var audio = new Audio();
+        this.soundChannels.push(audio);
     }
-    */
+    
     // The this object in the following event handlers is the
     // DOM window, which is why the functions call
     // self.keyPressed() instead of this.keyPressed(e).
