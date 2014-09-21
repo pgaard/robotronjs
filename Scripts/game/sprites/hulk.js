@@ -13,7 +13,6 @@
 
     setDirection: function (sprite) {
         var rand = Math.random() * 4;
-        var y = Math.random();
 
         this.velocityX = this.velocityY = 0;
 
@@ -32,6 +31,8 @@
         }
     },
 
+
+    // TODO: random changing movement towards player, towards family or random
     hulkMover: {
         execute: function (sprite, context, time) {
             if (!sprite.game.paused && !sprite.game.dead) {

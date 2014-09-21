@@ -66,7 +66,7 @@ game.startWave = function()
     game.removeAllSprites();
     game.playSound("sound_wavestart");
     game.innerWave = 1;
-    game.innerWaveTime = getTimeNow();
+    game.innerWaveTime = getTimeNow();    
 },
 
 game.drawInnerWave = function() {
@@ -99,6 +99,7 @@ game.drawInnerWave = function() {
     }
     else {
         game.innerWave = 0;
+        game.waveStartTime = getTimeNow();
         game.init();
     }
 };
@@ -124,20 +125,27 @@ game.startAnimate = function(time) {
         game.hulkNumber += 2;   
         game.startWave();      
         return;
-    }       
+    }
+
+    game.gruntSpeed = 50 + (getTimeNow() - game.waveStartTime) * 0.004;
 
     if ((this.shootX != 0 || this.shootY != 0) && !game.dead) {
         if (time - this.lastShotTime > 150) {
-            // new bullet 
-            this.lastShotTime = time;
-            game.playSound("sound_shot");
-            var bullet = new Bullet(
-                game,
-                game.manSprite.left + game.manSprite.width / 2,
-                game.manSprite.top + game.manSprite.height / 2,
-                this.shootX * game.bulletSpeed,
-                this.shootY * game.bulletSpeed
-            );
+
+            // 4 bullet maximum
+            if (game.getAllSprites('bullet').length < 4) {
+
+                // new bullet 
+                this.lastShotTime = time;
+                game.playSound("sound_shot");
+                var bullet = new Bullet(
+                    game,
+                    game.manSprite.left + game.manSprite.width / 2,
+                    game.manSprite.top + game.manSprite.height / 2,
+                    this.shootX * game.bulletSpeed,
+                    this.shootY * game.bulletSpeed
+                );
+            }
         }
     }
 
@@ -146,8 +154,8 @@ game.startAnimate = function(time) {
         var grunts = game.getAllSprites();
         var left = game.manSprite.left;
         var top = game.manSprite.top;
-        var width = manCells[game.manSprite.direction][0].w * 2;
-        var height = manCells[game.manSprite.direction][0].h * 2;
+        var width = game.manSprite.cells[game.manSprite.direction][0].w * 2;
+        var height = game.manSprite.cells[game.manSprite.direction][0].h * 2;
         for (var i = 0; i < grunts.length; i++) {
             if (grunts[i].name != 'man' && grunts[i].name != 'bullet' && grunts[i].name != 'explosion' &&  
                 (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
