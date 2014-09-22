@@ -3,6 +3,7 @@
 game.innerWave = 1;
 game.gruntNumber = 15;
 game.hulkNumber = 5;
+game.electrodeNumber = 10;
 game.gruntSpeedRatio = 0.002;
 game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
 game.manSpeed = 200;
@@ -27,6 +28,16 @@ game.init = function() {
   
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
     
+    for (i=0; i < game.electrodeNumber; i++) {        
+        do {
+            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
+            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
+            distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
+        }  
+        while (distance < 150);
+        var electrode = new Electrode(game, left, t);    
+    }     
+
     for (i=0; i < game.hulkNumber; i++) {        
         do {
             left = Math.round(Math.random() * (game.right - game.left)) + game.left;
