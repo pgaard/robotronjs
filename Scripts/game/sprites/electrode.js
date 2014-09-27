@@ -10,7 +10,6 @@
         this.height = 18 * 2;
         game.addSprite(this);
     },
-
     electrodePainter: {
         paint: function (sprite,
             context) {

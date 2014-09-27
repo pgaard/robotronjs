@@ -57,7 +57,7 @@
 
                         if (enemy instanceof Grunt) {
                             var horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
-                            var explosion = new Explosion(sprite.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);
+                            var explosion = new Explosion(sprite.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);                            
                             sprite.game.playSound("sound_kill");
                             sprite.game.removeSprite(enemy);
                         }
@@ -69,6 +69,8 @@
                             sprite.game.playSound("sound_kill");
                             enemy.hit = 1;
                         }
+                        if (enemy.score)
+                            sprite.game.score += enemy.score;
                         sprite.game.removeSprite(sprite);
                         break;
                     }

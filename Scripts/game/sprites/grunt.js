@@ -8,9 +8,9 @@
         this.height = 22 * 2;
         game.addSprite(this);
     },
-
+    score:100,
     gruntMover: {
-        execute: function (sprite, context, time) {            
+        execute: function (sprite, context, time) {
             if (!sprite.game.paused && !sprite.game.dead) {
                 if (!sprite.lastTime)
                     sprite.lastTime = 0;

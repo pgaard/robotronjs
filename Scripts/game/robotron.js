@@ -1,10 +1,8 @@
 ﻿var game = new Game("testgame", "canvas");
 
+game.score = 0;
 game.keys = [];
 game.innerWave = 1;
-game.gruntNumber = 15;
-game.hulkNumber = 5;
-game.electrodeNumber = 10;
 game.gruntSpeedRatio = 0.002;
 game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
 game.manSpeed = 200;
@@ -21,98 +19,88 @@ game.colors = {
     b: 0
 };
 
-game.init = function() {
+game.initWave = function () {
     game.dead = 0;
     game.lastShotTime = 0;
     game.shootX = 0;
     game.shootY = 0;
-  
+
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
-    
-    for (i=0; i < game.electrodeNumber; i++) {        
-        do {
-            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
-            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
-            distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
-        }  
-        while (distance < 150);
-        var electrode = new Electrode(game, left, t);    
-    }     
-    
-    for (i=0; i < game.hulkNumber; i++) {        
-        do {
-            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
-            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
-            distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
-        }  
-        while (distance < 150);
-        var hulk = new Hulk(game, left, t);    
-    }     
-    
-    for (var i=0; i < game.gruntNumber; i++) {
-        var left, t;
-        do {
-            left = Math.round(Math.random() * (game.right - game.left)) + game.left;
-            t = Math.round(Math.random() * (game.bottom - game.top)) + game.top;
-            var distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
-        }  
-        while (distance < 300);
-        var gruntSprite = new Grunt(game, left, t);    
-    }        
+
+    game.addRandomSprites(Waves.getRoboCount(game.wave, "electrodes"), Electrode);
+    game.addRandomSprites(Waves.getRoboCount(game.wave, "hulks"), Hulk);
+    game.addRandomSprites(Waves.getRoboCount(game.wave, "grunts"), Grunt);
 };
 
-game.paintUnderSprites = function() {
+game.addRandomSprites = function(number, type) {
+    var buffer = 100,
+        height = this.height() - buffer,
+        width = this.width() - buffer;
+
+    for (var i = 0; i < number; i++) {
+        do {
+            var left = Math.round(Math.random() * width) + game.left;
+            var t = Math.round(Math.random() * height) + game.top;
+            var distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
+        } while (distance < 150);
+        new type(game, left, t);
+    }
+};
+
+game.paintUnderSprites = function () {
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, this.width(), this.height());
-    game.rotateColors();    
-    this.context.strokeStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
+    game.rotateColors();
+    this.context.strokeStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
     this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
-    
+    this.context.fillStyle = this.context.strokeStyle;
+    this.context.font = "20px Courier";
+    this.context.fillText(this.wave + 1 + " Wave", this.left + this.width() / 2 - 50, this.bottom + 16);
+    this.context.fillText("Score: " + this.score, this.left + 100, 15);
     if (game.innerWave) {
         game.drawInnerWave();
-    }        
+    }
 };
 
-game.startWave = function()
-{
+game.startWave = function () {
+    game.wave++;
     game.removeAllSprites();
     game.playSound("sound_wavestart");
     game.innerWave = 1;
-    game.innerWaveTime = getTimeNow();    
+    game.innerWaveTime = getTimeNow();
 },
 
-game.drawInnerWave = function() {
+game.drawInnerWave = function () {
     var progress = getTimeNow() - game.innerWaveTime;
 
-    if(progress < 1000)
-    {
-        var percent = progress / 1000.0;     
+    if (progress < 1000) {
+        var percent = progress / 1000.0;
         var widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
         var heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
-        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
+        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
         this.context.fillRect(
-            this.left + widthAdj, 
+            this.left + widthAdj,
             this.top + heightAdj,
-            (this.right - this.left) * percent, 
+            (this.right - this.left) * percent,
             (this.bottom - this.top) * percent);
     }
     else if (progress < 2000) {
-        percent = (progress - 1000) / 1000.0;     
+        percent = (progress - 1000) / 1000.0;
         widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
         heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
-        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';      
+        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
         this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
         this.context.fillStyle = 'black';
         this.context.fillRect(
-            this.left + widthAdj, 
+            this.left + widthAdj,
             this.top + heightAdj,
-            (this.right - this.left) * percent, 
+            (this.right - this.left) * percent,
             (this.bottom - this.top) * percent);
     }
     else {
-        game.innerWave = 0;
+        game.initWave();
+        game.innerWave = 0;        
         game.waveStartTime = getTimeNow();
-        game.init();
     }
 };
 
@@ -133,9 +121,7 @@ game.startAnimate = function (time) {
 
     game.handlesKeys();
 
-    if (game.getAllSprites("grunt").length == 0) {
-        game.gruntNumber += 5;
-        game.hulkNumber += 2;
+    if (!game.innerWave && game.getAllSprites("grunt").length == 0) {
         game.startWave();
         return;
     }
@@ -204,6 +190,7 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed) {
             if (pressed) {
+                game.wave = -1;
                 game.paused = 0;
                 game.startWave();       
                 game.start();
