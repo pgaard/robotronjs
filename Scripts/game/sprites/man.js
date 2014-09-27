@@ -6,6 +6,7 @@
         this.top = top;
         this.width = 19 * 2;
         this.height = 22 * 2;
+        this.direction = "down";
         game.addSprite(this);
     },
     manMover: {

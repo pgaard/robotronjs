@@ -1,5 +1,6 @@
 ﻿var game = new Game("testgame", "canvas");
 
+game.keys = [];
 game.innerWave = 1;
 game.gruntNumber = 15;
 game.hulkNumber = 5;
@@ -37,7 +38,7 @@ game.init = function() {
         while (distance < 150);
         var electrode = new Electrode(game, left, t);    
     }     
-
+    
     for (i=0; i < game.hulkNumber; i++) {        
         do {
             left = Math.round(Math.random() * (game.right - game.left)) + game.left;
@@ -115,9 +116,8 @@ game.drawInnerWave = function() {
     }
 };
 
-game.rotateColors = function ()
-{
-     game.colors.r += 7;
+game.rotateColors = function () {
+    game.colors.r += 7;
     if (game.colors.r > 255) game.colors.r = 0;
     game.colors.g += 4;
     if (game.colors.g > 255) game.colors.g = 0;
@@ -126,69 +126,78 @@ game.rotateColors = function ()
     this.context.lineWidth = 5;
 },
 
-game.startAnimate = function(time) {
+game.startAnimate = function (time) {
 
     if (game.innerWave)
         return;
-    
+
+    game.handlesKeys();
+
     if (game.getAllSprites("grunt").length == 0) {
-        game.gruntNumber += 5;        
-        game.hulkNumber += 2;   
-        game.startWave();      
+        game.gruntNumber += 5;
+        game.hulkNumber += 2;
+        game.startWave();
         return;
     }
 
     game.gruntSpeed = 50 + (getTimeNow() - game.waveStartTime) * 0.004;
 
-    if ((this.shootX != 0 || this.shootY != 0) && !game.dead) {
+    this.shoot(time);
+
+    this.checkForDeath();
+};
+
+game.handlesKeys = function () {
+    var speed = this.manSpeed;
+    var keys = this.pressedKeys;
+    this.manSprite.velocityX = keys['d'] ? speed : keys['a'] ? -speed : 0;
+    this.manSprite.velocityY = keys['s'] ? speed : keys['w'] ? -speed : 0;
+    this.shootX = keys['l'] ? 1 : keys['j'] ? -1 : 0;
+    this.shootY = keys['k'] ? 1 : keys['i'] ? -1 : 0;
+};
+
+game.shoot = function(time) {
+    if ((this.shootX != 0 || this.shootY != 0) && !this.dead) {
         if (time - this.lastShotTime > 150) {
 
             // 4 bullet maximum
-            if (game.getAllSprites('bullet').length < 4) {
+            if (this.getAllSprites('bullet').length < 4) {
 
                 // new bullet 
                 this.lastShotTime = time;
-                game.playSound("sound_shot");
+                this.playSound("sound_shot");
                 var bullet = new Bullet(
                     game,
-                    game.manSprite.left + game.manSprite.width / 2,
-                    game.manSprite.top + game.manSprite.height / 2,
-                    this.shootX * game.bulletSpeed,
-                    this.shootY * game.bulletSpeed
+                    this.manSprite.left + this.manSprite.width / 2,
+                    this.manSprite.top + this.manSprite.height / 2,
+                    this.shootX * this.bulletSpeed,
+                    this.shootY * this.bulletSpeed
                 );
             }
         }
     }
+};
 
-    if (!game.paused && game.manSprite.direction && !game.dead) {
+game.checkForDeath = function() {
+    if (!this.paused && this.manSprite.direction && !this.dead) {
         // check for death
-        var grunts = game.getAllSprites();
-        var left = game.manSprite.left;
-        var top = game.manSprite.top;
-        var width = game.manSprite.cells[game.manSprite.direction][0].w * 2;
-        var height = game.manSprite.cells[game.manSprite.direction][0].h * 2;
+        var grunts = this.getAllSprites();
+        var left = this.manSprite.left;
+        var top = this.manSprite.top;
+        var width = this.manSprite.cells[this.manSprite.direction][0].w * 2;
+        var height = this.manSprite.cells[this.manSprite.direction][0].h * 2;
         for (var i = 0; i < grunts.length; i++) {
-            if (grunts[i].name != 'man' && grunts[i].name != 'bullet' && grunts[i].name != 'explosion' &&  
+            if (grunts[i].name != 'man' && grunts[i].name != 'bullet' && grunts[i].name != 'explosion' &&
                 (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
                 (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
 
                 // dead
-                game.playSound("sound_death");
-                game.dead = 1;
+                this.playSound("sound_death");
+                this.dead = 1;
             }
         }
-    }    
-};
-
-game.addKeyListener(
-    {
-        key: 'r',
-        listener: function (pressed) {
-            
-            //togglePaused();
-        }
     }
-);
+};
 
 game.addKeyListener(
     {
@@ -202,72 +211,3 @@ game.addKeyListener(
         }
     }
 );
-
-game.addKeyListener(
-    {
-        key: 'd',
-        listener: function(pressed) {
-            game.manSprite.velocityX = pressed ? game.manSpeed : 0;            
-        },
-    }
-);
-
-
-game.addKeyListener(
-    {
-        key: 'a',
-        listener: function(pressed) {
-            game.manSprite.velocityX = pressed ? -game.manSpeed : 0;
-        }
-    }
-);
-
-game.addKeyListener(
-    {
-        key: 'w',
-        listener: function(pressed) {
-            game.manSprite.velocityY = pressed ? -game.manSpeed : 0;
-        }
-    }
-);
-
-game.addKeyListener(
-    {
-        key: 's',
-        listener: function(pressed) {
-            game.manSprite.velocityY = pressed ? game.manSpeed : 0;
-        }
-    });
-
-game.addKeyListener(
-    {
-        key: 'l',
-        listener: function(pressed) {
-            game.shootX = pressed ? 1 : 0;
-        }
-    });
-
-game.addKeyListener(
-    {
-        key: 'j',
-        listener: function(pressed) {
-            game.shootX = pressed ? -1 : 0;
-        }
-    });
-
-game.addKeyListener(
-    {
-        key: 'i',
-        listener: function(pressed) {
-            game.shootY = pressed ? -1 : 0;
-        }
-    });
-
-game.addKeyListener(
-    {
-        key: 'k',
-        listener: function(pressed) {
-            game.shootY = pressed ? 1 : 0;
-        }
-    });
-

@@ -35,12 +35,14 @@ var Game = function (gameName, canvasId) {
     this.soundChannels = [];
     this.audio = new Audio();
     this.NUM_SOUND_CHANNELS = 10;
-    
+
+    this.pressedKeys = [];
+
     for (var i = 0; i < this.NUM_SOUND_CHANNELS; ++i) {
         var audio = new Audio();
         this.soundChannels.push(audio);
     }
-    
+
     // The this object in the following event handlers is the
     // DOM window, which is why the functions call
     // self.keyPressed() instead of this.keyPressed(e).
@@ -265,7 +267,7 @@ Game.prototype = {
             return String.fromCharCode(keyCode).toLowerCase();
         }
         switch (keyCode) {
-            // Add more keys as needed                 
+            // Add more keys as needed                  
             case 32:
                 key = 'space';
                 break;
@@ -289,9 +291,10 @@ Game.prototype = {
     keyPressed: function (e) {
         var listener = undefined,
             key = this.keyCodeToName(e.keyCode);
+        this.pressedKeys[key] = 1;
         listener = this.findKeyListener(key);
         if (listener) { // Listener is a function
-            listener(true); // Invoke the listener function
+            listener(true); // Invoke the listener function            
         }
     },
 
@@ -299,6 +302,7 @@ Game.prototype = {
     keyReleased: function (e) {
         var listener = undefined,
             key = this.keyCodeToName(e.keyCode);
+        this.pressedKeys[key] = 0;
         listener = this.findKeyListener(key);
         if (listener) { // Listener is a function
             listener(false); // Invoke the listener function
