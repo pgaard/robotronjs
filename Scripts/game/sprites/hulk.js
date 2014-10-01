@@ -1,9 +1,6 @@
 ﻿var Hulk = Sprite.extend({
     init: function (game, left, top) {
-        this._super('hulk', new SpriteSheetPainter(this.cells, game.spritesheet, "left", 2), [this.hulkMover]);
-        this.game = game;
-        this.left = left;
-        this.top = top;
+        this._super('hulk', new SpriteSheetPainter(this.cells, game.spritesheet, "left", 2), [this.hulkMover], game, top, left);
         this.speed = 100;
         this.width = this.cells['left'][0].w * 2;
         this.height = this.cells['left'][0].h * 2;
@@ -35,44 +32,41 @@
     // TODO: random changing movement towards player, towards family or random
     hulkMover: {
         execute: function (sprite, context, time) {
-            if (!sprite.game.paused && !sprite.game.dead) {
-                if (!sprite.lastStepTime)
-                    sprite.lastStepTime = 0;
-                var timeDiff = time - sprite.lastStepTime;
+            if (!sprite.lastStepTime)
+                sprite.lastStepTime = 0;
+            var timeDiff = time - sprite.lastStepTime;
 
-                // move straight towards man                
-                if (timeDiff > 200) {
-                    sprite.painter.advance(sprite.direction);
-                    sprite.lastStepTime = time;
-                }
-
-                if (Math.random() < .005) sprite.setDirection(sprite);                    
-                
-                var deltaX = sprite.game.pixelsPerFrame(time, sprite.velocityX);
-                var deltaY = sprite.game.pixelsPerFrame(time, sprite.velocityY);
-
-                if (sprite.left + sprite.width + deltaX > game.right) {
-                    sprite.direction = 'left';
-                    sprite.velocityX = -sprite.speed;
-                    deltaX = 0;
-                } else if (sprite.left + deltaX < game.left) {
-                    sprite.direction = 'right';
-                    sprite.velocityX = sprite.speed;
-                    deltaX = 0;
-                }
-                if (sprite.top + sprite.height + deltaY > game.bottom) {
-                    sprite.direction = 'up';
-                    sprite.velocityY = -sprite.speed;
-                    deltaY = 0;
-                } else if (sprite.top + deltaY < game.top) {
-                    sprite.direction = 'down';
-                    sprite.velocityY = sprite.speed;                    
-                    deltaY = 0;
-                }
-
-                sprite.left += deltaX;
-                sprite.top += deltaY;
+            if (timeDiff > 200) {
+                sprite.painter.advance(sprite.direction);
+                sprite.lastStepTime = time;
             }
+
+            if (Math.random() < .005) sprite.setDirection(sprite);
+
+            var deltaX = sprite.game.pixelsPerFrame(time, sprite.velocityX);
+            var deltaY = sprite.game.pixelsPerFrame(time, sprite.velocityY);
+
+            if (sprite.left + sprite.width + deltaX > game.right) {
+                sprite.direction = 'left';
+                sprite.velocityX = -sprite.speed;
+                deltaX = 0;
+            } else if (sprite.left + deltaX < game.left) {
+                sprite.direction = 'right';
+                sprite.velocityX = sprite.speed;
+                deltaX = 0;
+            }
+            if (sprite.top + sprite.height + deltaY > game.bottom) {
+                sprite.direction = 'up';
+                sprite.velocityY = -sprite.speed;
+                deltaY = 0;
+            } else if (sprite.top + deltaY < game.top) {
+                sprite.direction = 'down';
+                sprite.velocityY = sprite.speed;
+                deltaY = 0;
+            }
+
+            sprite.left += deltaX;
+            sprite.top += deltaY;
         }
     },
 

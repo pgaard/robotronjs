@@ -1,9 +1,7 @@
 ﻿var Explosion = Sprite.extend({
     init: function (game, left, top, width, height, horizontal) {
-        this._super('explosion', this.explosionPainter, [this.explosionMover]);
-        this.top = top;
+        this._super('explosion', this.explosionPainter, [this.explosionMover], game, top, left);
         this.height = height;
-        this.left = left;
         this.width = width;
         this.horizontal = horizontal;
         this.spacing = 1;

@@ -30,6 +30,7 @@ game.initWave = function () {
     game.addRandomSprites(Waves.getRoboCount(game.wave, "electrodes"), Electrode);
     game.addRandomSprites(Waves.getRoboCount(game.wave, "hulks"), Hulk);
     game.addRandomSprites(Waves.getRoboCount(game.wave, "grunts"), Grunt);
+    game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
 };
 
 game.addRandomSprites = function(number, type) {
@@ -50,7 +51,7 @@ game.addRandomSprites = function(number, type) {
 game.paintUnderSprites = function () {
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, this.width(), this.height());
-    game.rotateColors();
+    this.rotateColors();
     this.context.strokeStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
     this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
     this.context.fillStyle = this.context.strokeStyle;
@@ -122,7 +123,7 @@ game.startAnimate = function (time) {
     game.handlesKeys();
 
     if (!game.innerWave && game.getAllSprites("grunt").length == 0) {
-        game.startWave();
+        this.startWave();
         return;
     }
 

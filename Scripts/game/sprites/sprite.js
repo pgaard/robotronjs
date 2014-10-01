@@ -1,11 +1,11 @@
 ﻿var Sprite = Class.extend({
     // painter is an object with a method paint(sprint,context) that draws the sprite
-    init: function(name, painter, behaviors) {
+    init: function(name, painter, behaviors, game, top, left) {
         if (name !== undefined) this.name = name;
         if (painter !== undefined) this.painter = painter;
-        this.top = 0;
-        this.left = 0;
-        this.width = 10;
+        this.game = game;
+        this.left = left;
+        this.top = top;
         this.height = 10;
         this.velocityX = 0;
         this.velocityY = 0;
@@ -21,8 +21,10 @@
     },
     
     update: function (context, time) {
-        for (var i = 0; i < this.behaviors.length; ++i) {
-            this.behaviors[i].execute(this, context, time);
+        if (!this.game.paused && !this.game.dead) {
+            for (var i = 0; i < this.behaviors.length; ++i) {
+                this.behaviors[i].execute(this, context, time);
+            }
         }
     }    
 });
