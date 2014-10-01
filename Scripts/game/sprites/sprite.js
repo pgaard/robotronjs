@@ -1,4 +1,5 @@
-﻿var Sprite = Class.extend({
+﻿// generic sprite
+var Sprite = Class.extend({
     // painter is an object with a method paint(sprint,context) that draws the sprite
     init: function(name, painter, behaviors, game, top, left) {
         if (name !== undefined) this.name = name;
@@ -26,5 +27,5 @@
                 this.behaviors[i].execute(this, context, time);
             }
         }
-    }    
+    }
 });
