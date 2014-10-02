@@ -401,8 +401,8 @@ Game.prototype = {
 
     middle: function () {
         return {
-            x: this.context.canvas.width / 2,
-            y: this.context.canvas.height / 2
+            x: this.width() / 2,
+            y: this.height() / 2
         };
     },
 

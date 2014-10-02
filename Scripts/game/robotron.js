@@ -5,7 +5,7 @@ game.keys = [];
 game.innerWave = 1;
 game.gruntSpeedRatio = 0.002;
 game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
-game.manSpeed = 200;
+game.manSpeed = 100;
 game.bulletSpeed = 750;
 game.spritesheet = new Image();
 game.spritesheet.src = 'images/robotronsprites.png';
@@ -31,6 +31,7 @@ game.initWave = function () {
     game.addRandomSprites(Waves.getRoboCount(game.wave, "hulks"), Hulk);
     game.addRandomSprites(Waves.getRoboCount(game.wave, "grunts"), Grunt);
     game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
+    game.addRandomSprites(Waves.getRoboCount(game.wave, "daddies"), Daddy);
 };
 
 game.addRandomSprites = function(number, type) {
@@ -173,8 +174,9 @@ game.checkForDeath = function() {
         var top = this.manSprite.top;
         var width = this.manSprite.cells[this.manSprite.direction][0].w * 2;
         var height = this.manSprite.cells[this.manSprite.direction][0].h * 2;
+        var removeSprites = [];
         for (var i = 0; i < grunts.length; i++) {
-            if (grunts[i].name != 'man' && grunts[i].name != 'bullet' && grunts[i].name != 'explosion' &&
+            if ((grunts[i] instanceof Grunt || grunts[i] instanceof Hulk)  &&
                 (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
                 (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
 
@@ -182,7 +184,20 @@ game.checkForDeath = function() {
                 this.playSound("sound_death");
                 this.dead = 1;
             }
+            // TODO: repeated collision check
+            else if(grunts[i] instanceof Family &&
+                (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
+                (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height){
+
+                // points
+                this.score += 1000;
+                removeSprites.push(grunts[i]);
+                // add points sprite
+            }
         }
+
+        for(i in removeSprites)
+            game.removeSprite(removeSprites[i]);
     }
 };
 

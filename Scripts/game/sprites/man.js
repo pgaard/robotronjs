@@ -1,32 +1,24 @@
-﻿var Man = Sprite.extend({
+﻿var Man = AnimatedSprite.extend({
     init: function (game, left, top) {
-        this._super('man', new SpriteSheetPainter(this.cells, game.spritesheet, "left", 2), [this.manMover], game, top, left);
+        this._super('man', game, left, top, this.manMover, "down");
         this.width = 19 * 2;
         this.height = 22 * 2;
-        this.direction = "down";
         game.addSprite(this);
     },
     manMover: {
         lastTime: 0,
         execute: function (sprite, context, time) {
-            var timeDiff = time - this.lastTime;
+            if(sprite.velocityX != 0 || sprite.velocityY != 0)
+                if(sprite.advanceFrame(sprite, time, 75))
+                    sprite.game.playSound("sound_walking");
+
             var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
             var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
 
-            if (sprite.velocityX != 0 || sprite.velocityY != 0) {
-                if (timeDiff > 75) {
-                    var direction = "down";
-                    if (sprite.velocityX > 0) direction = "right";
-                    else if (sprite.velocityX < 0) direction = "left";
-                    else if (sprite.velocityY > 0) direction = "down";
-                    else if (sprite.velocityY < 0) direction = "up";
-                    sprite.direction = direction;
-                    sprite.painter.advance(direction);
-                    if (sprite.game.shootX == 0 && sprite.game.shootY == 0)
-                        sprite.game.playSound("sound_walking");
-                    this.lastTime = time;
-                }
-            }
+            if (sprite.velocityX > 0) sprite.direction  = "right";
+            else if (sprite.velocityX < 0) sprite.direction  = "left";
+            else if (sprite.velocityY > 0) sprite.direction  = "down";
+            else if (sprite.velocityY < 0) sprite.direction  = "up";
 
             if (sprite.left + sprite.width + deltaX > game.right) {
                 sprite.velocityX = 0;

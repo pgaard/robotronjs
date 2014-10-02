@@ -2,6 +2,7 @@
 var AnimatedSprite = Sprite.extend({
     init: function (name, game, left, top, mover, startDirection) {
         this._super(name, new SpriteSheetPainter(this.cells, game.spritesheet, startDirection, 2), [mover], game, top, left);
+        this.direction = startDirection;
         game.addSprite(this);
     },
 
@@ -13,7 +14,9 @@ var AnimatedSprite = Sprite.extend({
         if (timeDiff > stepMs) {
             sprite.painter.advance(sprite.direction);
             sprite.lastStepTime = time;
+            return true;
         }
+        return false;
     },
 
     setRandomDirection: function (sprite) {

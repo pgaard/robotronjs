@@ -3,7 +3,6 @@ var Family = AnimatedSprite.extend({
         this._super(name, game, left, top, this.familyMover, "left");
         this.speed = 20;
         this.setRandomDirection(this);
-        game.addSprite(this);
     },
 
     familyMover : {
