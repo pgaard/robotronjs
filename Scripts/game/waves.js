@@ -53,12 +53,17 @@ var Waves = {
         hulks: 6,
         brains: 7,
         spheroids: 8,
-        quarks: 9
+        quarks: 9,
+        borderColor: 10
     },
     getRoboCount: function (waveNum, name) {
         var w = this.waves[waveNum];
         return w[this.waveItems[name]];
+    },
+    getBorderColor: function(waveNum){
+        return this.waves[waveNum][this.waveItems['borderColor']];
     }
+
 };
 
 

@@ -24,6 +24,7 @@ game.initWave = function () {
     game.lastShotTime = 0;
     game.shootX = 0;
     game.shootY = 0;
+    game.bonus = 1000;
 
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
 
@@ -53,9 +54,9 @@ game.paintUnderSprites = function () {
     this.context.fillStyle = 'black';
     this.context.fillRect(0, 0, this.width(), this.height());
     this.rotateColors();
-    this.context.strokeStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
+    this.context.strokeStyle =  Waves.getBorderColor(this.wave);
     this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
-    this.context.fillStyle = this.context.strokeStyle;
+    this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
     this.context.font = "20px Courier";
     this.context.fillText(this.wave + 1 + " Wave", this.left + this.width() / 2 - 50, this.bottom + 16);
     this.context.fillText("Score: " + this.score, this.left + 100, 15);
@@ -190,7 +191,9 @@ game.checkForDeath = function() {
                 (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height){
 
                 // points
-                this.score += 1000;
+                this.score += this.bonus;
+                if(this.bonus < 5000)
+                    this.bonus += 1000;
                 removeSprites.push(grunts[i]);
                 // add points sprite
             }
