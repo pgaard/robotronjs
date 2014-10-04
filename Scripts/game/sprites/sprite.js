@@ -7,7 +7,6 @@ var Sprite = Class.extend({
         this.game = game;
         this.left = left;
         this.top = top;
-        this.height = 10;
         this.velocityX = 0;
         this.velocityY = 0;
         this.visible = true;

@@ -11,7 +11,7 @@
         paint: function (sprite, context) {
             context.save();
             context.beginPath();
-            context.strokeStyle = 'white';
+            context.strokeStyle = game.rgbColors();
             var bulletX = 0, bulletY = 0;
             if (sprite.velocityX > 0) bulletX = sprite.bulletLength;
             else if (sprite.velocityX < 0) bulletX = -sprite.bulletLength;

@@ -18,6 +18,9 @@ game.colors = {
     g: 0,
     b: 0
 };
+game.rgbColors = function (){
+    return 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
+}
 
 game.initWave = function () {
     game.dead = 0;
@@ -33,6 +36,7 @@ game.initWave = function () {
     game.addRandomSprites(Waves.getRoboCount(game.wave, "grunts"), Grunt);
     game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
     game.addRandomSprites(Waves.getRoboCount(game.wave, "daddies"), Daddy);
+    game.addRandomSprites(Waves.getRoboCount(game.wave, "mikeys"), Mikey);
 };
 
 game.addRandomSprites = function(number, type) {
@@ -56,7 +60,7 @@ game.paintUnderSprites = function () {
     this.rotateColors();
     this.context.strokeStyle =  Waves.getBorderColor(this.wave);
     this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
-    this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
+    this.context.fillStyle = this.rgbColors();
     this.context.font = "20px Courier";
     this.context.fillText(this.wave + 1 + " Wave", this.left + this.width() / 2 - 50, this.bottom + 16);
     this.context.fillText("Score: " + this.score, this.left + 100, 15);
@@ -80,7 +84,7 @@ game.drawInnerWave = function () {
         var percent = progress / 1000.0;
         var widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
         var heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
-        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
+        this.context.fillStyle = this.rgbColors();
         this.context.fillRect(
             this.left + widthAdj,
             this.top + heightAdj,
@@ -91,7 +95,7 @@ game.drawInnerWave = function () {
         percent = (progress - 1000) / 1000.0;
         widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
         heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
-        this.context.fillStyle = 'rgb(' + game.colors.r + ',' + game.colors.g + ',' + game.colors.b + ')';
+        this.context.fillStyle = this.rgbColors();
         this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
         this.context.fillStyle = 'black';
         this.context.fillRect(
@@ -186,6 +190,7 @@ game.checkForDeath = function() {
                 // dead
                 this.playSound("sound_death");
                 this.dead = 1;
+                // TODO: remove bullet and explosion sprites, make man flash
             }
             // TODO: repeated collision check
             else if(sprite instanceof Family &&
