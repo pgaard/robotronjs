@@ -8,10 +8,11 @@
     manMover: {
         lastTime: 0,
         execute: function (sprite, context, time) {
+            /*
             if(sprite.velocityX != 0 || sprite.velocityY != 0)
                 if(sprite.advanceFrame(sprite, time, 75))
                     sprite.game.playSound("sound_walking");
-
+            */
             var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
             var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
 

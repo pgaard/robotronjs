@@ -170,37 +170,45 @@ game.shoot = function(time) {
 game.checkForDeath = function() {
     if (!this.paused && this.manSprite.direction && !this.dead) {
         // check for death
-        var grunts = this.getAllSprites();
+        var sprites = this.getAllSprites();
         var left = this.manSprite.left;
         var top = this.manSprite.top;
         var width = this.manSprite.cells[this.manSprite.direction][0].w * 2;
         var height = this.manSprite.cells[this.manSprite.direction][0].h * 2;
         var removeSprites = [];
-        for (var i = 0; i < grunts.length; i++) {
-            if ((grunts[i] instanceof Grunt || grunts[i] instanceof Hulk)  &&
-                (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
-                (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height) {
+        var addSprites = [];
+        for (var i = 0; i < sprites.length; i++) {
+            var sprite = sprites[i];
+            if ((sprite instanceof Grunt || sprite instanceof Hulk || sprite instanceof Electrode)  &&
+                (left + width) >= sprite.left && left <= sprite.left + sprite.width &&
+                (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
 
                 // dead
                 this.playSound("sound_death");
                 this.dead = 1;
             }
             // TODO: repeated collision check
-            else if(grunts[i] instanceof Family &&
-                (left + width) >= grunts[i].left && left <= grunts[i].left + grunts[i].width &&
-                (top + height) >= grunts[i].top && top <= grunts[i].top + grunts[i].height){
+            else if(sprite instanceof Family &&
+                (left + width) >= sprite.left && left <= sprite.left + sprite.width &&
+                (top + height) >= sprite.top && top <= sprite.top + sprite.height){
 
                 // points
                 this.score += this.bonus;
+                addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus ));
+                this.playSound("sound_rescue");
+
                 if(this.bonus < 5000)
                     this.bonus += 1000;
-                removeSprites.push(grunts[i]);
-                // add points sprite
+                removeSprites.push(sprite);
+
             }
         }
 
         for(i in removeSprites)
             game.removeSprite(removeSprites[i]);
+
+        for(i in addSprites)
+            game.addSprite(addSprites[i]);
     }
 };
 

@@ -8,8 +8,7 @@
         game.addSprite(this);
     },
     electrodePainter: {
-        paint: function (sprite,
-            context) {
+        paint: function (sprite,context) {
             context.save();
 
             context.fillStyle = 'rgb(' + sprite.game.colors.r + ',' + sprite.game.colors.g + ',' + sprite.game.colors.b + ')';
