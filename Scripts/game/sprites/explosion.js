@@ -44,12 +44,10 @@
 
     explosionMover: {
         execute: function (sprite, context, time) {
-            if (!game.paused && !game.dead) {
-                sprite.spacing += .5;
-                if (sprite.spacing > 10) {
-                    game.removeSprite(sprite);
-                    return;
-                }
+            sprite.spacing += .5;
+            if (sprite.spacing > 10) {
+                game.removeSprite(sprite);
+                return;
             }
         }
     }

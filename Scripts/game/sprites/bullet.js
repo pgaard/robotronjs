@@ -67,7 +67,7 @@
                         enemy.hit = 1;
                     }
                     if (enemy.score)
-                        sprite.game.score += enemy.score;
+                        sprite.game.increaseScore(enemy.score);
                     sprite.game.removeSprite(sprite);
                     break;
                 }

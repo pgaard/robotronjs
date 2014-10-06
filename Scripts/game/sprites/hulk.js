@@ -5,7 +5,6 @@
         this.width = this.cells['left'][0].w * 2;
         this.height = this.cells['left'][0].h * 2;
         this.setRandomDirection(this);
-        game.addSprite(this);
     },
 
     // TODO: random changing movement towards player, towards family or random

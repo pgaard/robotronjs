@@ -1,6 +1,7 @@
 ﻿var game = new Game("testgame", "canvas");
 
 game.score = 0;
+game.men = 2;
 game.keys = [];
 game.innerWave = 1;
 game.gruntSpeedRatio = 0.002;
@@ -31,12 +32,23 @@ game.initWave = function () {
 
     game.manSprite = new Man(game, game.middle().x, game.middle().y);
 
-    game.addRandomSprites(Waves.getRoboCount(game.wave, "electrodes"), Electrode);
-    game.addRandomSprites(Waves.getRoboCount(game.wave, "hulks"), Hulk);
-    game.addRandomSprites(Waves.getRoboCount(game.wave, "grunts"), Grunt);
-    game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
-    game.addRandomSprites(Waves.getRoboCount(game.wave, "daddies"), Daddy);
-    game.addRandomSprites(Waves.getRoboCount(game.wave, "mikeys"), Mikey);
+    if (game.continueWave) {
+        game.addRandomSprites(this.currentWave["electrodes"], Electrode);
+        game.addRandomSprites(this.currentWave["hulks"], Hulk);
+        game.addRandomSprites(this.currentWave["grunts"], Grunt);
+        game.addRandomSprites(this.currentWave["mommies"], Mommy);
+        game.addRandomSprites(this.currentWave["daddies"], Daddy);
+        game.addRandomSprites(this.currentWave["mikeys"], Mikey);
+        game.continueWave = 0;
+    }
+    else {
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "electrodes"), Electrode);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "hulks"), Hulk);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "grunts"), Grunt);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "daddies"), Daddy);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "mikeys"), Mikey);
+    }
 };
 
 game.addRandomSprites = function(number, type) {
@@ -63,19 +75,32 @@ game.paintUnderSprites = function () {
     this.context.fillStyle = this.rgbColors();
     this.context.font = "20px Courier";
     this.context.fillText(this.wave + 1 + " Wave", this.left + this.width() / 2 - 50, this.bottom + 16);
-    this.context.fillText("Score: " + this.score, this.left + 100, 15);
-    if (game.innerWave) {
+    this.context.fillText("Score: " + this.score + " men:" + this.men , this.left + 100, 15);
+
+    if(this.gameOver){
+        this.context.fillStyle = "red";
+        this.context.font = "40px Courier bold";
+        this.context.fillText("GAME OVER", this.left + this.width() / 2 - 100, this.top  + this.height() / 2);
+    }
+    else if (game.innerWave) {
         game.drawInnerWave();
     }
+    else if (game.deathPause){
+        if(getTimeNow() - game.innerWaveTime > 1000) {
+            game.deathPause = 0;
+            this.startWave();
+        }
+    };
 };
 
-game.startWave = function () {
-    game.wave++;
+game.startWave = function (died) {
+    if(!game.continueWave)
+        game.wave++;
     game.removeAllSprites();
     game.playSound("sound_wavestart");
     game.innerWave = 1;
     game.innerWaveTime = getTimeNow();
-},
+};
 
 game.drawInnerWave = function () {
     var progress = getTimeNow() - game.innerWaveTime;
@@ -119,7 +144,7 @@ game.rotateColors = function () {
     game.colors.b += 3;
     if (game.colors.b > 255) game.colors.b = 0;
     this.context.lineWidth = 5;
-},
+};
 
 game.startAnimate = function (time) {
 
@@ -170,6 +195,16 @@ game.shoot = function(time) {
         }
     }
 };
+game.getSpriteCounts = function(){
+    return {
+        electrodes : game.getSpriteCount("electrode"),
+        hulks : game.getSpriteCount("hulk"),
+        grunts : game.getSpriteCount("grunt"),
+        mommies: game.getSpriteCount("mommy"),
+        daddies: game.getSpriteCount("daddy"),
+        mikeys: game.getSpriteCount("mikey")
+    };
+};
 
 game.checkForDeath = function() {
     if (!this.paused && this.manSprite.direction && !this.dead) {
@@ -191,6 +226,16 @@ game.checkForDeath = function() {
                 this.playSound("sound_death");
                 this.dead = 1;
                 // TODO: remove bullet and explosion sprites, make man flash
+                if(this.men > 0){
+                    this.men--;
+                    this.continueWave = 1;
+                    this.currentWave = this.getSpriteCounts();
+                    this.deathPause = 1;
+                    this.innerWaveTime = getTimeNow();
+                } else{
+                    // game over
+                    this.gameOver = 1;
+                }
             }
             // TODO: repeated collision check
             else if(sprite instanceof Family &&
@@ -198,7 +243,7 @@ game.checkForDeath = function() {
                 (top + height) >= sprite.top && top <= sprite.top + sprite.height){
 
                 // points
-                this.score += this.bonus;
+                this.increaseScore(this.bonus);
                 addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus ));
                 this.playSound("sound_rescue");
 
@@ -216,6 +261,13 @@ game.checkForDeath = function() {
             game.addSprite(addSprites[i]);
     }
 };
+
+game.increaseScore = function(amount){
+
+    if(Math.round((this.score + amount) / 25000) > Math.round(this.score / 25000))
+        this.men++;
+    this.score += amount;
+},
 
 game.addKeyListener(
     {

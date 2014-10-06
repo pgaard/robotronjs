@@ -3,7 +3,6 @@
         this._super('man', game, left, top, this.manMover, "down");
         this.width = 19 * 2;
         this.height = 22 * 2;
-        game.addSprite(this);
     },
     manMover: {
         lastTime: 0,

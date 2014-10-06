@@ -356,7 +356,7 @@ Game.prototype = {
     // because it's better to write generalized code that deals with
     // all sprites, so this method should be used sparingly.
     getSprite: function (name) {
-        for (i in this.sprites) {
+        for (var i in this.sprites) {
             if (this.sprites[i].name === name)
                 return this.sprites[i];
         }
@@ -365,15 +365,24 @@ Game.prototype = {
 
     getAllSprites: function (name) {
         var list = [];
-        for (i in this.sprites) {
+        for (var i in this.sprites) {
             if (!name || this.sprites[i].name === name)
                 list.push(this.sprites[i]);
         }
         return list;
     },
 
+    getSpriteCount : function(type){
+        var count = 0;
+        for(var i in this.sprites){
+            if(this.sprites[i].name == type)
+                count++;
+        }
+        return count;
+    },
+
     removeSprite: function (sprite) {
-        for (i in this.sprites) {
+        for (var i in this.sprites) {
             if (this.sprites[i] == sprite) {
                 this.sprites.splice(i, 1);
                 return;
