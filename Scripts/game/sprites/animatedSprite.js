@@ -25,16 +25,16 @@ var AnimatedSprite = Sprite.extend({
         this.velocityX = this.velocityY = 0;
 
         if (rand < 1) {
-            sprite.direction = 'left';
+            if (sprite.direction != 'all') sprite.direction = 'left';
             sprite.velocityX = -this.speed;
         } else if (rand < 2) {
-            sprite.direction = 'right';
+            if (sprite.direction != 'all') sprite.direction = 'right';
             sprite.velocityX = this.speed;
         } else if (rand < 3) {
-            sprite.direction = 'up';
+            if (sprite.direction != 'all') sprite.direction = 'up';
             sprite.velocityY = -this.speed;
         } else {
-            sprite.direction = 'down';
+            if (sprite.direction != 'all') sprite.direction = 'down';
             sprite.velocityY = this.speed;
         }
     },
@@ -45,20 +45,20 @@ var AnimatedSprite = Sprite.extend({
 
         if(wallBounce) {
             if (sprite.left + sprite.width + deltaX > game.right) {
-                sprite.direction = 'left';
+                if (sprite.direction != 'all') sprite.direction = 'left';
                 sprite.velocityX = -sprite.speed;
                 deltaX = 0;
             } else if (sprite.left + deltaX < game.left) {
-                sprite.direction = 'right';
+                if (sprite.direction != 'all') sprite.direction = 'right';
                 sprite.velocityX = sprite.speed;
                 deltaX = 0;
             }
             if (sprite.top + sprite.height + deltaY > game.bottom) {
-                sprite.direction = 'up';
+                if (sprite.direction != 'all') sprite.direction = 'up';
                 sprite.velocityY = -sprite.speed;
                 deltaY = 0;
             } else if (sprite.top + deltaY < game.top) {
-                sprite.direction = 'down';
+                if (sprite.direction != 'all') sprite.direction = 'down';
                 sprite.velocityY = sprite.speed;
                 deltaY = 0;
             }

@@ -6,7 +6,6 @@ game.keys = [];
 game.innerWave = 1;
 game.gruntSpeedRatio = 0.002;
 game.gruntSpeed = 50; // + time * game.gruntSpeedRatio;
-game.manSpeed = 100;
 game.bulletSpeed = 750;
 game.spritesheet = new Image();
 game.spritesheet.src = 'images/robotronsprites.png';
@@ -39,6 +38,7 @@ game.initWave = function () {
         game.addRandomSprites(this.currentWave["mommies"], Mommy);
         game.addRandomSprites(this.currentWave["daddies"], Daddy);
         game.addRandomSprites(this.currentWave["mikeys"], Mikey);
+        game.addRandomSprites(this.currentWave["spheroids"], Spheroid);
         game.continueWave = 0;
     }
     else {
@@ -48,6 +48,7 @@ game.initWave = function () {
         game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
         game.addRandomSprites(Waves.getRoboCount(game.wave, "daddies"), Daddy);
         game.addRandomSprites(Waves.getRoboCount(game.wave, "mikeys"), Mikey);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "spheroids"), Spheroid);
     }
 };
 
@@ -150,26 +151,26 @@ game.startAnimate = function (time) {
 
     if (game.innerWave)
         return;
-
     game.handlesKeys();
 
-    if (!game.innerWave && game.getAllSprites("grunt").length == 0) {
+    if (!game.innerWave &&
+        game.getAllSprites(function(sprite){
+            return sprite.mustKill==1;
+            }
+        ).length == 0)
+    {
         this.startWave();
         return;
     }
 
     game.gruntSpeed = 50 + (getTimeNow() - game.waveStartTime) * 0.004;
-
     this.shoot(time);
-
     this.checkForDeath();
 };
 
 game.handlesKeys = function () {
-    var speed = this.manSpeed;
     var keys = this.pressedKeys;
-    this.manSprite.velocityX = keys['d'] ? speed : keys['a'] ? -speed : 0;
-    this.manSprite.velocityY = keys['s'] ? speed : keys['w'] ? -speed : 0;
+    this.manSprite.setDirection(keys['a'], keys['d'], keys['w'],keys['s']);
     this.shootX = keys['l'] ? 1 : keys['j'] ? -1 : 0;
     this.shootY = keys['k'] ? 1 : keys['i'] ? -1 : 0;
 };
@@ -195,6 +196,7 @@ game.shoot = function(time) {
         }
     }
 };
+
 game.getSpriteCounts = function(){
     return {
         electrodes : game.getSpriteCount("electrode"),
@@ -202,7 +204,8 @@ game.getSpriteCounts = function(){
         grunts : game.getSpriteCount("grunt"),
         mommies: game.getSpriteCount("mommy"),
         daddies: game.getSpriteCount("daddy"),
-        mikeys: game.getSpriteCount("mikey")
+        mikeys: game.getSpriteCount("mikey"),
+        spheroids: game.getSpriteCount("spheroid")
     };
 };
 
@@ -218,7 +221,7 @@ game.checkForDeath = function() {
         var addSprites = [];
         for (var i = 0; i < sprites.length; i++) {
             var sprite = sprites[i];
-            if ((sprite instanceof Grunt || sprite instanceof Hulk || sprite instanceof Electrode)  &&
+            if (sprite.enemy  &&
                 (left + width) >= sprite.left && left <= sprite.left + sprite.width &&
                 (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
 

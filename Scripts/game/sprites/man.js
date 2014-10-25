@@ -1,9 +1,16 @@
 ﻿var Man = AnimatedSprite.extend({
     init: function (game, left, top) {
         this._super('man', game, left, top, this.manMover, "down");
+        this.speed = 200;
         this.width = 19 * 2;
         this.height = 22 * 2;
     },
+
+    setDirection: function(left, right, up, down){
+        this.velocityX = right ? this.speed : left ? -this.speed : 0;
+        this.velocityY = down ? this.speed : up ? -this.speed : 0;
+    },
+
     manMover: {
         lastTime: 0,
         execute: function (sprite, context, time) {

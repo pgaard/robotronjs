@@ -3,6 +3,9 @@
         this._super('grunt', game, left, top, this.gruntMover, 'all');
         this.width = 14 * 2;
         this.height = 22 * 2;
+        this.enemy = 1;
+        this.mustKill = 1;
+        this.canKill = 1;
     },
     score:100,
     gruntMover: {

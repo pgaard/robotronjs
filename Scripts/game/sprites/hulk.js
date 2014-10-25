@@ -4,6 +4,7 @@
         this.speed = 50;
         this.width = this.cells['left'][0].w * 2;
         this.height = this.cells['left'][0].h * 2;
+        this.enemy = 1;
         this.setRandomDirection(this);
     },
 

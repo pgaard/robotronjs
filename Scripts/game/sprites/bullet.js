@@ -43,16 +43,17 @@
             sprite.top += deltaY;
 
             // hit handling - should be somewhere better
-            var enemies = sprite.game.getAllSprites();
-            for (var i = 0; i < enemies.length; i++) {
-                var enemy = enemies[i];
-                if (!(enemy instanceof Grunt) && !(enemy instanceof Hulk) && !(enemy instanceof Electrode))
+            var sprites = sprite.game.getAllSprites();
+            for (var i = 0; i < sprites.length; i++) {
+                var enemy = sprites[i];
+                if (!(enemy.canKill))
                     continue;
 
                 if (sprite.left >= enemy.left && sprite.left <= enemy.left + enemy.width &&
                     sprite.top >= enemy.top && sprite.top <= enemy.top + enemy.height) {
 
-                    if (enemy instanceof Grunt) {
+                    // TODO: move hit handling to sprite class
+                    if (enemy instanceof Grunt || enemy instanceof Spheroid) {
                         var horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
                         var explosion = new Explosion(sprite.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);
                         sprite.game.playSound("sound_kill");

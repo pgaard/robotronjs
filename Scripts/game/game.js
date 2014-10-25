@@ -363,11 +363,20 @@ Game.prototype = {
         return null;
     },
 
-    getAllSprites: function (name) {
+    getAllSprites: function (nameOrFunc) {
         var list = [];
-        for (var i in this.sprites) {
-            if (!name || this.sprites[i].name === name)
-                list.push(this.sprites[i]);
+        if(typeof(nameOrFunc) == "function"){
+            for (var i in this.sprites) {
+                if (nameOrFunc(this.sprites[i]))
+                    list.push(this.sprites[i]);
+            }
+        }
+        else
+        {
+            for (var i in this.sprites) {
+                if (!nameOrFunc || this.sprites[i].name === nameOrFunc)
+                    list.push(this.sprites[i]);
+            }
         }
         return list;
     },
