@@ -1,6 +1,6 @@
 var Spheroid = AnimatedSprite.extend({
     init: function (game, left, top) {
-        this._super('spheroid', game, top, left, this.mover, "all");
+        this._super('spheroid', game, left, top, this.mover, "all");
         this.speed = 200;
         this.width = this.cells['all'][0].w * 2;
         this.height = this.cells['all'][0].h * 2;
@@ -13,7 +13,7 @@ var Spheroid = AnimatedSprite.extend({
     // TODO: random changing movement towards player, towards family or random
     mover: {
         execute: function (sprite, context, time) {
-            sprite.advanceFrame(sprite, time, 100);
+            sprite.advanceFrame(sprite, time, 25);
             if (Math.random() < .005) sprite.setDirectionSpheroid(sprite);
             sprite.move(sprite, time, true);
         }

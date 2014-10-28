@@ -1,7 +1,7 @@
 ﻿// generic sprite
 var Sprite = Class.extend({
     // painter is an object with a method paint(sprint,context) that draws the sprite
-    init: function(name, painter, behaviors, game, top, left) {
+    init: function(name, painter, behaviors, game, left, top) {
         if (name !== undefined) this.name = name;
         if (painter !== undefined) this.painter = painter;
         this.game = game;

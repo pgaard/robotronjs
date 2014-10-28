@@ -1,6 +1,6 @@
 ﻿var Hulk = AnimatedSprite.extend({
     init: function (game, left, top) {
-        this._super('hulk', game, top, left, this.hulkMover, "left");
+        this._super('hulk', game, left, top, this.hulkMover, "left");
         this.speed = 50;
         this.width = this.cells['left'][0].w * 2;
         this.height = this.cells['left'][0].h * 2;

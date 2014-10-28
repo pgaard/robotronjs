@@ -1,6 +1,6 @@
 ﻿var Bullet = Sprite.extend({
     init: function (game, left, top, velocityX, velocityY) {
-        this._super('bullet', this.bulletPainter, [this.bulletMover], game, top, left);
+        this._super('bullet', this.bulletPainter, [this.bulletMover], game, left, top);
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         this.bulletLength = 10;
@@ -28,48 +28,48 @@
     },
 
     bulletMover: {
-        execute: function (sprite, context, time) {
+        execute: function (bullet, context, time) {
 
-            var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
-            var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
-            if (sprite.left + deltaX > sprite.game.right ||
-                sprite.left + deltaX < sprite.game.left ||
-                sprite.top + deltaY > sprite.game.bottom ||
-                sprite.top + deltaY < sprite.game.top) {
-                sprite.game.removeSprite(sprite);
+            var deltaX = game.pixelsPerFrame(time, bullet.velocityX);
+            var deltaY = game.pixelsPerFrame(time, bullet.velocityY);
+            if (bullet.left + deltaX > bullet.game.right ||
+                bullet.left + deltaX < bullet.game.left ||
+                bullet.top + deltaY > bullet.game.bottom ||
+                bullet.top + deltaY < bullet.game.top) {
+                bullet.game.removeSprite(bullet);
                 return;
             }
-            sprite.left += deltaX;
-            sprite.top += deltaY;
+            bullet.left += deltaX;
+            bullet.top += deltaY;
 
             // hit handling - should be somewhere better
-            var sprites = sprite.game.getAllSprites();
+            var sprites = bullet.game.getAllSprites();
             for (var i = 0; i < sprites.length; i++) {
                 var enemy = sprites[i];
                 if (!(enemy.canKill))
                     continue;
 
-                if (sprite.left >= enemy.left && sprite.left <= enemy.left + enemy.width &&
-                    sprite.top >= enemy.top && sprite.top <= enemy.top + enemy.height) {
+                if (bullet.left >= enemy.left && bullet.left <= enemy.left + enemy.width &&
+                    bullet.top >= enemy.top && bullet.top <= enemy.top + enemy.height) {
 
                     // TODO: move hit handling to sprite class
                     if (enemy instanceof Grunt || enemy instanceof Spheroid) {
-                        var horizontal = Math.abs(sprite.velocityY) > Math.abs(sprite.velocityX);
-                        var explosion = new Explosion(sprite.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);
-                        sprite.game.playSound("sound_kill");
-                        sprite.game.removeSprite(enemy);
+                        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
+                        var explosion = new Explosion(bullet.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);
+                        bullet.game.playSound("sound_kill");
+                        bullet.game.removeSprite(enemy);
                     }
                     else if (enemy instanceof Hulk) {
                         if (deltaX) enemy.left += 7 * (deltaX / Math.abs(deltaX));
                         if (deltaY) enemy.top += 7 * (deltaY / Math.abs(deltaY));
                     }
                     else if (enemy instanceof Electrode) {
-                        sprite.game.playSound("sound_kill");
+                        bullet.game.playSound("sound_kill");
                         enemy.hit = 1;
                     }
                     if (enemy.score)
-                        sprite.game.increaseScore(enemy.score);
-                    sprite.game.removeSprite(sprite);
+                        bullet.game.increaseScore(enemy.score);
+                    bullet.game.removeSprite(bullet);
                     break;
                 }
             }

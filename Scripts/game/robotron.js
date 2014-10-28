@@ -38,7 +38,7 @@ game.initWave = function () {
         game.addRandomSprites(this.currentWave["mommies"], Mommy);
         game.addRandomSprites(this.currentWave["daddies"], Daddy);
         game.addRandomSprites(this.currentWave["mikeys"], Mikey);
-        game.addRandomSprites(this.currentWave["spheroids"], Spheroid);
+        game.addRandomSprites(this.currentWave["spheroids"], Spheroid, true);
         game.continueWave = 0;
     }
     else {
@@ -48,21 +48,43 @@ game.initWave = function () {
         game.addRandomSprites(Waves.getRoboCount(game.wave, "mommies"), Mommy);
         game.addRandomSprites(Waves.getRoboCount(game.wave, "daddies"), Daddy);
         game.addRandomSprites(Waves.getRoboCount(game.wave, "mikeys"), Mikey);
-        game.addRandomSprites(Waves.getRoboCount(game.wave, "spheroids"), Spheroid);
+        game.addRandomSprites(Waves.getRoboCount(game.wave, "spheroids"), Spheroid, true);
     }
 };
 
-game.addRandomSprites = function(number, type) {
-    var buffer = 100,
-        height = this.height() - buffer,
-        width = this.width() - buffer;
+game.addRandomSprites = function(number, type, edge) {
+    var buffer = 70,
+        height = this.bottom - this.top - buffer,
+        width = this.right - this.left - buffer;
 
     for (var i = 0; i < number; i++) {
         do {
-            var left = Math.round(Math.random() * width) + game.left;
-            var t = Math.round(Math.random() * height) + game.top;
+            if(!edge) {
+                var left = Math.round(Math.random() * width) + this.left;
+                var t = Math.round(Math.random() * height) + this.top;
+            }
+            else {
+                // place on edge randomly
+                if(Math.random() < .5){
+                    if(Math.random()< .5){
+                        left = game.left + 10;
+                    } else {
+                        left = game.left + width;
+                    }
+                    t = Math.round(Math.random() * height) + game.top;
+                } else {
+                    if(Math.random()< .5){
+                        t = game.top + 10;
+                    } else {
+                        t = game.top + height;
+                    }
+                    left = Math.round(Math.random() * width) + game.left;
+                }
+            }
+
             var distance = game.distance(left, t, game.manSprite.left, game.manSprite.top);
         } while (distance < 150);
+
         new type(game, left, t);
     }
 };

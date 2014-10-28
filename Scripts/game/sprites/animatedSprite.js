@@ -1,7 +1,7 @@
 // a sprite with a spritesheet, directions, frames and a velocity
 var AnimatedSprite = Sprite.extend({
     init: function (name, game, left, top, mover, startDirection) {
-        this._super(name, new SpriteSheetPainter(this.cells, game.spritesheet, startDirection, 2), [mover], game, top, left);
+        this._super(name, new SpriteSheetPainter(this.cells, game.spritesheet, startDirection, 2), [mover], game, left, top);
         this.direction = startDirection;
         game.addSprite(this);
     },
