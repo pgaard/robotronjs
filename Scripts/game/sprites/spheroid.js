@@ -10,7 +10,6 @@ var Spheroid = AnimatedSprite.extend({
         this.setDirectionSpheroid(this);
     },
 
-    // TODO: random changing movement towards player, towards family or random
     mover: {
         execute: function (sprite, context, time) {
             sprite.advanceFrame(sprite, time, 25);
@@ -19,20 +18,35 @@ var Spheroid = AnimatedSprite.extend({
         }
     },
 
+    // override
     setDirectionSpheroid: function (sprite) {
-        var rand = Math.random() * 4;
+        var theta = 2 * Math.PI * Math.random();
+        sprite.velocityX = Math.cos(theta) * sprite.speed;
+        sprite.velocityY = Math.sin(theta) * sprite.speed;
+    },
 
-        this.velocityX = this.velocityY = 0;
+    // override - hug walls
+    move: function(sprite, time, wallBounce){
+        var deltaX = sprite.game.pixelsPerFrame(time, sprite.velocityX);
+        var deltaY = sprite.game.pixelsPerFrame(time, sprite.velocityY);
 
-        if (rand < 1) {
-            sprite.velocityX = -this.speed;
-        } else if (rand < 2) {
-            sprite.velocityX = this.speed;
-        } else if (rand < 3) {
-            sprite.velocityY = -this.speed;
-        } else {
-            sprite.velocityY = this.speed;
+        if(wallBounce) {
+            if ((sprite.left + sprite.width + deltaX > game.right) ||
+               (sprite.left + deltaX < game.left) ) {
+                sprite.velocityX = 0;
+                sprite.velocityY = (Math.random() < .5) ? sprite.speed : -sprite.speed;
+                deltaX = 0;
+            }
+            else if (sprite.top + sprite.height + deltaY > game.bottom ||
+                    (sprite.top + deltaY < game.top)) {
+                sprite.velocityY = 0;
+                sprite.velocityX = (Math.random() < .5) ? sprite.speed : -sprite.speed;
+                deltaY = 0;
+            }
         }
+
+        sprite.left += deltaX;
+        sprite.top += deltaY;
     },
 
     cells: {
