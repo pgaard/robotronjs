@@ -6,10 +6,9 @@ var Spheroid = AnimatedSprite.extend({
         this.height = this.cells['all'][0].h * 2;
         this.enemy = 1;
         this.mustKill = 1;
-        this.canKill = 1;
+        this.score = 1000;
         this.setDirectionSpheroid(this);
     },
-
     mover: {
         execute: function (sprite, context, time) {
             sprite.advanceFrame(sprite, time, 25);
@@ -47,6 +46,13 @@ var Spheroid = AnimatedSprite.extend({
 
         sprite.left += deltaX;
         sprite.top += deltaY;
+    },
+
+    kill : function(bullet){
+        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
+        bullet.game.playSound("sound_kill"); // TODO: different sound
+        this.game.removeSprite(this);
+        game.addSprite(new Bonus(game, this.left, this.top, "1000" ));
     },
 
     cells: {

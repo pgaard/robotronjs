@@ -17,6 +17,11 @@
         }
     },
 
+    kill : function(bullet){
+        if (bullet.velocityX) this.left += 7 * (bullet.velocityX / Math.abs(bullet.velocityX));
+        if (bullet.velocityY) this.top += 7 * (bullet.velocityY / Math.abs(bullet.velocityY));
+    },
+
     cells: {
         left: [
             { x: 535, y: 38, w: 24, h: 29 },

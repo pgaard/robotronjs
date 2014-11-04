@@ -46,27 +46,14 @@
             var sprites = bullet.game.getAllSprites();
             for (var i = 0; i < sprites.length; i++) {
                 var enemy = sprites[i];
-                if (!(enemy.canKill))
+
+                if (!(enemy.kill))
                     continue;
 
                 if (bullet.left >= enemy.left && bullet.left <= enemy.left + enemy.width &&
                     bullet.top >= enemy.top && bullet.top <= enemy.top + enemy.height) {
 
-                    // TODO: move hit handling to sprite class
-                    if (enemy instanceof Grunt || enemy instanceof Spheroid) {
-                        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
-                        var explosion = new Explosion(bullet.game, enemy.left, enemy.top, enemy.width, enemy.height, horizontal);
-                        bullet.game.playSound("sound_kill");
-                        bullet.game.removeSprite(enemy);
-                    }
-                    else if (enemy instanceof Hulk) {
-                        if (deltaX) enemy.left += 7 * (deltaX / Math.abs(deltaX));
-                        if (deltaY) enemy.top += 7 * (deltaY / Math.abs(deltaY));
-                    }
-                    else if (enemy instanceof Electrode) {
-                        bullet.game.playSound("sound_kill");
-                        enemy.hit = 1;
-                    }
+                    enemy.kill(bullet);
                     if (enemy.score)
                         bullet.game.increaseScore(enemy.score);
                     bullet.game.removeSprite(bullet);

@@ -5,9 +5,8 @@
         this.height = 22 * 2;
         this.enemy = 1;
         this.mustKill = 1;
-        this.canKill = 1;
+        this.score = 100;
     },
-    score:100,
     gruntMover: {
         execute: function (sprite, context, time) {
             sprite.advanceFrame(sprite, time, 75);
@@ -20,6 +19,13 @@
 
             sprite.move(sprite, time, false);
         }
+    },
+
+    kill : function(bullet){
+        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
+        var explosion = new Explosion(bullet.game, this.left, this.top, this.width, this.height, horizontal);
+        bullet.game.playSound("sound_kill");
+        this.game.removeSprite(this);
     },
 
     cells: {

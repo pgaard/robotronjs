@@ -6,7 +6,6 @@
         this.width = 10 * 2;
         this.height = 18 * 2;
         this.enemy = 1;
-        this.canKill = 1;
         game.addSprite(this);
     },
     electrodePainter: {
@@ -18,6 +17,11 @@
 
             context.restore();
         }
+    },
+
+    kill: function(bullet){
+        this.game.playSound("sound_kill");
+        this.hit = 1;
     },
 
     electrodeMover: {
