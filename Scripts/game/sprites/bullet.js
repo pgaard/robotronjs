@@ -41,25 +41,6 @@
             }
             bullet.left += deltaX;
             bullet.top += deltaY;
-
-            // hit handling - should be somewhere better
-            var sprites = bullet.game.getAllSprites();
-            for (var i = 0; i < sprites.length; i++) {
-                var enemy = sprites[i];
-
-                if (!(enemy.kill))
-                    continue;
-
-                if (bullet.left >= enemy.left && bullet.left <= enemy.left + enemy.width &&
-                    bullet.top >= enemy.top && bullet.top <= enemy.top + enemy.height) {
-
-                    enemy.kill(bullet);
-                    if (enemy.score)
-                        bullet.game.increaseScore(enemy.score);
-                    bullet.game.removeSprite(bullet);
-                    break;
-                }
-            }
         }
     }
 });

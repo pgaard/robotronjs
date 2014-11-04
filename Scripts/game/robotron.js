@@ -187,6 +187,7 @@ game.startAnimate = function (time) {
 
     game.gruntSpeed = 50 + (getTimeNow() - game.waveStartTime) * 0.004;
     this.shoot(time);
+    this.checkForKills();
     this.checkForDeath();
 };
 
@@ -218,6 +219,37 @@ game.shoot = function(time) {
         }
     }
 };
+
+game.increaseScore = function(amount){
+
+    if(Math.round((this.score + amount) / 25000) > Math.round(this.score / 25000))
+        this.men++;
+    this.score += amount;
+},
+
+game.checkForKills = function(){
+    var sprites = this.getAllSprites();
+    var bullets = this.getAllSprites('bullet');
+    for(var b in bullets) {
+        var bullet = bullets[b];
+        for (var i in sprites) {
+            var enemy = sprites[i];
+
+            if (!(enemy.kill))
+                continue;
+
+            if (bullet.left >= enemy.left && bullet.left <= enemy.left + enemy.width &&
+                bullet.top >= enemy.top && bullet.top <= enemy.top + enemy.height) {
+
+                enemy.kill(bullet);
+                if (enemy.score)
+                    this.increaseScore(enemy.score);
+                this.removeSprite(bullet);
+                break;
+            }
+        }
+    }
+}
 
 game.getSpriteCounts = function(){
     return {
@@ -286,13 +318,6 @@ game.checkForDeath = function() {
             game.addSprite(addSprites[i]);
     }
 };
-
-game.increaseScore = function(amount){
-
-    if(Math.round((this.score + amount) / 25000) > Math.round(this.score / 25000))
-        this.men++;
-    this.score += amount;
-},
 
 game.addKeyListener(
     {
