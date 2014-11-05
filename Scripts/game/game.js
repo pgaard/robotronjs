@@ -2,62 +2,62 @@
     return new Date();
 };
 
-var Game = function (gameName, canvasId) {
-    var canvas = document.getElementById(canvasId),
-        self = this;
+var Game = Class.extend({
+    init: function(gameName, canvasId) {
+        var canvas = document.getElementById(canvasId),
+            self = this;
 
-    this.context = canvas.getContext('2d');
-    this.gameName = gameName;
-    this.sprites = [];
-    this.keyListeners = [];
+        this.context = canvas.getContext('2d');
+        this.gameName = gameName;
+        this.sprites = [];
+        this.keyListeners = [];
 
-    // Image loading
-    //this.imageLoadingProgressCallback;
-    this.images = {};
-    this.imageUrls = [];
-    this.imagesLoaded = 0;
-    this.imagesFailedToLoad = 0;
-    this.imagesIndex = 0;
+        // Image loading
+        //this.imageLoadingProgressCallback;
+        this.images = {};
+        this.imageUrls = [];
+        this.imagesLoaded = 0;
+        this.imagesFailedToLoad = 0;
+        this.imagesIndex = 0;
 
-    this.score = 0;
+        this.score = 0;
 
-    this.startTime = 0;
-    this.lastTime = 0;
-    this.gameTime = 0;
-    this.fps = 0;
-    this.STARTING_FPS = 60;
+        this.startTime = 0;
+        this.lastTime = 0;
+        this.gameTime = 0;
+        this.fps = 0;
+        this.STARTING_FPS = 60;
 
-    this.paused = false;
-    this.startedPauseAt = 0;
-    this.PAUSE_TIMEOUT = 100;
+        this.paused = false;
+        this.startedPauseAt = 0;
+        this.PAUSE_TIMEOUT = 100;
 
-    this.soundOn = true;
-    this.soundChannels = [];
-    this.audio = new Audio();
-    this.NUM_SOUND_CHANNELS = 10;
+        this.soundOn = true;
+        this.soundChannels = [];
+        this.audio = new Audio();
+        this.NUM_SOUND_CHANNELS = 10;
 
-    this.pressedKeys = [];
+        this.pressedKeys = [];
 
-    for (var i = 0; i < this.NUM_SOUND_CHANNELS; ++i) {
-        var audio = new Audio();
-        this.soundChannels.push(audio);
-    }
+        for (var i = 0; i < this.NUM_SOUND_CHANNELS; ++i) {
+            var audio = new Audio();
+            this.soundChannels.push(audio);
+        }
 
-    // The this object in the following event handlers is the
-    // DOM window, which is why the functions call
-    // self.keyPressed() instead of this.keyPressed(e).
-    window.onkeypress = function (e) {
-        self.keyPressed(e);
-    };
-    window.onkeydown = function (e) {
-        self.keyPressed(e);
-    };
-    window.onkeyup = function (e) {
-        self.keyReleased(e);
-    };
-};
+        // The this object in the following event handlers is the
+        // DOM window, which is why the functions call
+        // self.keyPressed() instead of this.keyPressed(e).
+        window.onkeypress = function (e) {
+            self.keyPressed(e);
+        };
+        window.onkeydown = function (e) {
+            self.keyPressed(e);
+        };
+        window.onkeyup = function (e) {
+            self.keyReleased(e);
+        };
+    },
 
-Game.prototype = {
     // Game loop.......................................................
     start: function () {
         var self = this;
@@ -435,6 +435,6 @@ Game.prototype = {
     distance: function (x1, y1, x2, y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
-};
+});
 
 
