@@ -39,6 +39,7 @@ game.initWave = function () {
         game.addRandomSprites(this.currentWave["daddies"], Daddy);
         game.addRandomSprites(this.currentWave["mikeys"], Mikey);
         game.addRandomSprites(this.currentWave["spheroids"], Spheroid, true);
+        game.addRandomSprites(this.currentWave["enforcers"], Enforcer);
         game.continueWave = 0;
     }
     else {
@@ -259,7 +260,8 @@ game.getSpriteCounts = function(){
         mommies: game.getSpriteCount("mommy"),
         daddies: game.getSpriteCount("daddy"),
         mikeys: game.getSpriteCount("mikey"),
-        spheroids: game.getSpriteCount("spheroid")
+        spheroids: game.getSpriteCount("spheroid"),
+        enforcers: game.getSpriteCount("enforcer")
     };
 };
 
@@ -324,7 +326,8 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed) {
             if (pressed) {
-                game.wave = -1;
+                //game.wave = -1;
+                game.wave = 1;
                 game.paused = 0;
                 game.startWave();       
                 game.start();

@@ -9,12 +9,12 @@ SpriteSheetPainter = function (cells, spritesheet, startDirection, scale) {
 };
 
 SpriteSheetPainter.prototype = {
-    advance: function (direction) {
+    advance: function (direction, oneShot) {
         if (direction != this.currentDirection)
             this.cellIndex = 0;
         this.currentDirection = direction;
         if (this.cellIndex == this.cells[direction].length - 1) {
-            this.cellIndex = 0;
+            if(!oneShot ) this.cellIndex = 0;
         }
         else {
             this.cellIndex++;

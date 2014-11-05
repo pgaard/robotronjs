@@ -1,7 +1,6 @@
 ﻿var Electrode = Sprite.extend({
     init: function (game, left, top, type) {
         this._super('electrode', this.electrodePainter, [this.electrodeMover], game, left, top);
-        this.type = type;
         this.hit = 0;
         this.width = 10 * 2;
         this.height = 18 * 2;

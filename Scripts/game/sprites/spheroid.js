@@ -7,12 +7,23 @@ var Spheroid = AnimatedSprite.extend({
         this.enemy = 1;
         this.mustKill = 1;
         this.score = 1000;
+        this.spawns = 0;
         this.setDirectionSpheroid(this);
+        this.startTime = getTimeNow();
     },
     mover: {
         execute: function (sprite, context, time) {
             sprite.advanceFrame(sprite, time, 25);
             if (Math.random() < .005) sprite.setDirectionSpheroid(sprite);
+
+            // after 5 sec spawn 1 - 3 enforcers at random interval
+            if ((getTimeNow() - sprite.startTime > 5000) && Math.random() < .005) {
+                new Enforcer(sprite.game, sprite.left, sprite.top);
+                sprite.spawns++;
+                if(sprite.spawns > 3 || Math.random() < .33){
+                    sprite.game.removeSprite(sprite);
+                }
+            }
             sprite.move(sprite, time, true);
         }
     },

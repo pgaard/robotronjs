@@ -6,13 +6,13 @@ var AnimatedSprite = Sprite.extend({
         game.addSprite(this);
     },
 
-    advanceFrame: function(sprite, time, stepMs){
+    advanceFrame: function(sprite, time, stepMs, oneShot){
         if (!sprite.lastStepTime)
             sprite.lastStepTime = 0;
         var timeDiff = time - sprite.lastStepTime;
 
         if (timeDiff > stepMs) {
-            sprite.painter.advance(sprite.direction);
+            sprite.painter.advance(sprite.direction, oneShot);
             sprite.lastStepTime = time;
             return true;
         }
