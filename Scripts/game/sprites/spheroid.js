@@ -16,11 +16,11 @@ var Spheroid = AnimatedSprite.extend({
             sprite.advanceFrame(sprite, time, 25);
             if (Math.random() < .005) sprite.setDirectionSpheroid(sprite);
 
-            // after 5 sec spawn 1 - 3 enforcers at random interval
-            if ((getTimeNow() - sprite.startTime > 5000) && Math.random() < .005) {
+            // after 5 sec spawn 4 enforcers at random interval
+            if ((getTimeNow() - sprite.startTime > 5000) && Math.random() < 0.01) {
                 new Enforcer(sprite.game, sprite.left, sprite.top);
                 sprite.spawns++;
-                if(sprite.spawns > 3 || Math.random() < .33){
+                if(sprite.spawns == 4){
                     sprite.game.removeSprite(sprite);
                 }
             }
