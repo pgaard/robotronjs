@@ -14,6 +14,18 @@ var Enforcer = AnimatedSprite.extend({
             sprite.advanceFrame(sprite, time, 200, true); // just grows and stops animating
             if (Math.random() < .01) sprite.setRandomDirectionEnforcer(sprite);
             sprite.move(sprite, time, true);
+
+            if (Math.random() < .005){
+                // shoot
+                var distance = game.distance(sprite.left, sprite.top, game.manSprite.left, sprite.game.manSprite.top );
+                var bulletSpeed =  (distance / game.width()) * 600;
+                var theta = Math.atan((sprite.top - sprite.game.manSprite.top) / (sprite.left - sprite.game.manSprite.left));
+                var reverse = sprite.left > game.manSprite.left ? -1 : 1;
+                var velocityX = Math.cos(theta) * bulletSpeed * reverse;
+                var velocityY = Math.sin(theta) * bulletSpeed * reverse;
+                var bullet = new EnforcerBullet(sprite.game, sprite.left, sprite.top, velocityX, velocityY);
+                bullet.speed = bulletSpeed;
+            }
         }
     },
 

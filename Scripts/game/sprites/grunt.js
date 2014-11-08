@@ -11,7 +11,7 @@
         execute: function (sprite, context, time) {
 
             // speed up during wave
-            var speed = 50 + (sprite.game.waveDuration ? (sprite.game.waveDuration * 0.008) : 1);
+            var speed = 50 + (sprite.game.waveDuration ? (sprite.game.waveDuration * 0.004) : 1);
 
             sprite.advanceFrame(sprite, time, 75);
 
