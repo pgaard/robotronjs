@@ -1,7 +1,7 @@
 var Enforcer = AnimatedSprite.extend({
     init: function (game, left, top) {
         this._super('enforcer', game, left, top, this.mover, 'all');
-        this.width = 14 * 2;
+        this.width = 18 * 2;
         this.height = 22 * 2;
         this.enemy = 1;
         this.mustKill = 1;

@@ -5,8 +5,6 @@
         this.score = 0;
         this.men = 2;
         this.innerWave = 1;
-        this.gruntSpeed = 50; // + time * this.gruntSpeedRatio;
-        this.bulletSpeed = 1000;
         this.spritesheet = new Image();
         this.spritesheet.src = 'images/robotronsprites.png';
         this.left = 20;
@@ -180,6 +178,8 @@
             return;
         this.handlesKeys();
 
+        this.waveDuration = (getTimeNow() - this.waveStartTime);
+
         if (!this.innerWave &&
             this.getAllSprites(function (sprite) {
                     return sprite.mustKill == 1;
@@ -189,7 +189,6 @@
             return;
         }
 
-        this.gruntSpeed = 50 + (getTimeNow() - this.waveStartTime) * 0.004;
         this.shoot(time);
         this.checkForKills();
         this.checkForDeath();
@@ -216,8 +215,8 @@
                         game,
                             this.manSprite.left + this.manSprite.width / 2,
                             this.manSprite.top + this.manSprite.height / 2,
-                            this.shootX * this.bulletSpeed,
-                            this.shootY * this.bulletSpeed
+                            this.shootX,
+                            this.shootY
                     );
                 }
             }

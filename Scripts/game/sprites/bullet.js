@@ -1,8 +1,9 @@
 ﻿var Bullet = Sprite.extend({
-    init: function (game, left, top, velocityX, velocityY) {
+    init: function (game, left, top, shootX, shootY) {
         this._super('bullet', this.bulletPainter, [this.bulletMover], game, left, top);
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
+        this.bulletSpeed = 1000;
+        this.velocityX = shootX * this.bulletSpeed;
+        this.velocityY = shootY * this.bulletSpeed;
         this.bulletLength = 10;
         game.addSprite(this);
     },

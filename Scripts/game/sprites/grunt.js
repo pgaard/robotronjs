@@ -9,13 +9,17 @@
     },
     gruntMover: {
         execute: function (sprite, context, time) {
+
+            // speed up during wave
+            var speed = 50 + (sprite.game.waveDuration ? (sprite.game.waveDuration * 0.008) : 1);
+
             sprite.advanceFrame(sprite, time, 75);
 
             // move straight towards man
             var theta = Math.atan((sprite.top - sprite.game.manSprite.top) / (sprite.left - game.manSprite.left));
             var reverse = sprite.left > game.manSprite.left ? -1 : 1;
-            sprite.velocityX = Math.cos(theta) * sprite.game.gruntSpeed * reverse;
-            sprite.velocityY = Math.sin(theta) * sprite.game.gruntSpeed * reverse;
+            sprite.velocityX = Math.cos(theta) * speed * reverse;
+            sprite.velocityY = Math.sin(theta) * speed * reverse;
 
             sprite.move(sprite, time, false);
         }
