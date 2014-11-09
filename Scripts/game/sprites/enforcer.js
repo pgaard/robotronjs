@@ -25,6 +25,7 @@ var Enforcer = AnimatedSprite.extend({
                 var velocityY = Math.sin(theta) * bulletSpeed * reverse;
                 var bullet = new EnforcerBullet(sprite.game, sprite.left, sprite.top, velocityX, velocityY);
                 bullet.speed = bulletSpeed;
+                sprite.game.playSound("sound_enforcershot");
             }
         }
     },

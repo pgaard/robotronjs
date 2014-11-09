@@ -19,8 +19,9 @@ var Spheroid = AnimatedSprite.extend({
             // after 5 sec spawn 4 enforcers at random interval
             if ((getTimeNow() - sprite.startTime > 5000) && Math.random() < 0.01) {
                 new Enforcer(sprite.game, sprite.left, sprite.top);
+                sprite.game.playSound("sound_enforcerbirth");
                 sprite.spawns++;
-                if(sprite.spawns == 4){
+                if(sprite.spawns == 3){
                     sprite.game.removeSprite(sprite);
                 }
             }
@@ -61,7 +62,7 @@ var Spheroid = AnimatedSprite.extend({
 
     kill : function(bullet){
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
-        bullet.game.playSound("sound_kill"); // TODO: different sound
+        bullet.game.playSound("sound_spheroidkill");
         this.game.removeSprite(this);
         game.addSprite(new Bonus(game, this.left, this.top, "1000" ));
     },
