@@ -12,6 +12,9 @@ var EnforcerBullet = AnimatedSprite.extend({
         execute: function (sprite, context, time) {
             sprite.advanceFrame(sprite, time, 100);
             sprite.move(sprite, time);
+            if(sprite.onEdge && Math.random() < .01){
+                sprite.game.removeSprite(sprite);
+            }
         }
     },
 
@@ -25,12 +28,14 @@ var EnforcerBullet = AnimatedSprite.extend({
             sprite.velocityX = 0;
             sprite.velocityY = (Math.random() < .5) ? sprite.speed : -sprite.speed;
             deltaX = 0;
+            sprite.onEdge = 1;
         }
         else if (sprite.top + sprite.height + deltaY > game.bottom ||
             (sprite.top + deltaY < game.top)) {
             sprite.velocityY = 0;
             sprite.velocityX = (Math.random() < .5) ? sprite.speed : -sprite.speed;
             deltaY = 0;
+            sprite.onEdge = 1;
         }
 
         sprite.left += deltaX;
