@@ -271,6 +271,7 @@
         if (!this.paused && this.manSprite.direction && !this.dead) {
             // check for death
             var sprites = this.getAllSprites();
+            var hulks = this.getAllSprites('hulk');
             var left = this.manSprite.left;
             var top = this.manSprite.top;
             var width = this.manSprite.cells[this.manSprite.direction][0].w * 2;
@@ -299,19 +300,32 @@
                     }
                 }
                 // TODO: repeated collision check
-                else if (sprite instanceof Family &&
-                    (left + width) >= sprite.left && left <= sprite.left + sprite.width &&
-                    (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
+                else if (sprite instanceof Family){
+                    if((left + width) >= sprite.left && left <= sprite.left + sprite.width &&
+                        (top + height) >= sprite.top && top <= sprite.top + sprite.height)
+                    {
+                        // points
+                        this.increaseScore(this.bonus);
+                        addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus));
+                        this.playSound("sound_rescue");
 
-                    // points
-                    this.increaseScore(this.bonus);
-                    addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus));
-                    this.playSound("sound_rescue");
-
-                    if (this.bonus < 5000)
-                        this.bonus += 1000;
-                    removeSprites.push(sprite);
-
+                        if (this.bonus < 5000)
+                            this.bonus += 1000;
+                        removeSprites.push(sprite);
+                    }
+                    else
+                    {
+                        // also check for family kills by hulks
+                        for(var h=0; h<hulks.length;h++){
+                            var hulk = hulks[h];
+                            if((hulk.left + hulk.width) >= sprite.left && hulk.left <= sprite.left + sprite.width &&
+                                (hulk.top + hulk.height) >= sprite.top && hulk.top <= sprite.top + sprite.height){
+                                removeSprites.push(sprite);
+                                addSprites.push(new Skull(game, sprite.left, sprite.top));
+                                this.playSound("sound_familydie");
+                            }
+                        }
+                    }
                 }
             }
 
@@ -331,7 +345,6 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed) {
             if (pressed) {
-                //this.wave = -1;
                 game.wave = -1;
                 game.paused = 0;
                 game.startWave();
