@@ -39,6 +39,7 @@
             this.addRandomSprites(this.currentWave["daddies"], Daddy);
             this.addRandomSprites(this.currentWave["mikeys"], Mikey);
             this.addRandomSprites(this.currentWave["spheroids"] + Math.ceil(this.currentWave["enforcers"] / 4), Spheroid, true); // enforcers turn back into spheriods
+            this.addRandomSprites(this.currentWave["brains"], Brain);
             this.continueWave = 0;
         }
         else {
@@ -49,6 +50,7 @@
             this.addRandomSprites(Waves.getRoboCount(this.wave, "daddies"), Daddy);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "mikeys"), Mikey);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "spheroids"), Spheroid, true);
+            this.addRandomSprites(Waves.getRoboCount(this.wave, "brains"), Brain);
         }
     },
 
@@ -345,7 +347,7 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed) {
             if (pressed) {
-                game.wave = -1;
+                game.wave = -1 + 4;
                 game.paused = 0;
                 game.startWave();
                 game.start();
