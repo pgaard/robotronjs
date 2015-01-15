@@ -1,88 +1,92 @@
-var Spheroid = AnimatedSprite.extend({
-    init: function (game, left, top) {
-        this._super('spheroid', game, left, top, this.mover, "all");
-        this.speed = 200;
-        this.width = this.cells['all'][0].w * 2;
-        this.height = this.cells['all'][0].h * 2;
-        this.enemy = 1;
-        this.mustKill = 1;
-        this.score = 1000;
+///<reference path="../Game.ts"/>
+///<reference path="AnimatedSprite.ts"/>
+///<reference path="Enforcer.ts"/>
+///<reference path="Bullet.ts"/>
+///<reference path="Bonus.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Spheroid = (function (_super) {
+    __extends(Spheroid, _super);
+    function Spheroid(game, left, top) {
+        _super.call(this, 'spheroid', game, left, top, "all", Spheroid.cells);
         this.spawns = 0;
-        this.setDirectionSpheroid(this);
+        this.speed = 200;
+        this.width = Spheroid.cells['all'][0].w * 2;
+        this.height = Spheroid.cells['all'][0].h * 2;
+        this.enemy = true;
+        this.canKill = true;
+        this.mustKill = true;
+        this.score = 1000;
+        this.setDirectionSpheroid();
         this.startTime = getTimeNow();
-    },
-    mover: {
-        execute: function (sprite, context, time) {
-            sprite.advanceFrame(sprite, time, 25);
-            if (Math.random() < .005) sprite.setDirectionSpheroid(sprite);
-
-            // after 5 sec spawn 4 enforcers at random interval
-            if ((getTimeNow() - sprite.startTime > 5000) && Math.random() < 0.01) {
-                new Enforcer(sprite.game, sprite.left, sprite.top);
-                sprite.game.playSound("sound_enforcerbirth");
-                sprite.spawns++;
-                if(sprite.spawns == 3){
-                    sprite.game.removeSprite(sprite);
-                }
+    }
+    Spheroid.prototype.mover = function (context, time) {
+        this.advanceFrame(time, 25);
+        if (Math.random() < .005)
+            this.setDirectionSpheroid();
+        // after 5 sec spawn 4 enforcers at random interval
+        if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
+            new Enforcer(this.game, this.left, this.top);
+            this.game.playSound("sound_enforcerbirth");
+            this.spawns++;
+            if (this.spawns == 3) {
+                this.game.removeSprite(this);
             }
-            sprite.move(sprite, time, true);
         }
-    },
-
+        this.move(time, true);
+    };
     // override
-    setDirectionSpheroid: function (sprite) {
+    Spheroid.prototype.setDirectionSpheroid = function () {
         var theta = 2 * Math.PI * Math.random();
-        sprite.velocityX = Math.cos(theta) * sprite.speed;
-        sprite.velocityY = Math.sin(theta) * sprite.speed;
-    },
-
+        this.velocityX = Math.cos(theta) * this.speed;
+        this.velocityY = Math.sin(theta) * this.speed;
+    };
     // override - hug walls
-    move: function(sprite, time, wallBounce){
-        var deltaX = sprite.game.pixelsPerFrame(time, sprite.velocityX);
-        var deltaY = sprite.game.pixelsPerFrame(time, sprite.velocityY);
-
-        if(wallBounce) {
-            if ((sprite.left + sprite.width + deltaX > game.right) ||
-               (sprite.left + deltaX < game.left) ) {
-                sprite.velocityX = 0;
-                sprite.velocityY = (Math.random() < .5) ? sprite.speed : -sprite.speed;
+    Spheroid.prototype.move = function (time, wallBounce) {
+        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
+        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        if (wallBounce) {
+            if ((this.left + this.width + deltaX > this.game.right) || (this.left + deltaX < this.game.left)) {
+                this.velocityX = 0;
+                this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
                 deltaX = 0;
             }
-            else if (sprite.top + sprite.height + deltaY > game.bottom ||
-                    (sprite.top + deltaY < game.top)) {
-                sprite.velocityY = 0;
-                sprite.velocityX = (Math.random() < .5) ? sprite.speed : -sprite.speed;
+            else if (this.top + this.height + deltaY > this.game.bottom || (this.top + deltaY < this.game.top)) {
+                this.velocityY = 0;
+                this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
                 deltaY = 0;
             }
         }
-
-        sprite.left += deltaX;
-        sprite.top += deltaY;
-    },
-
-    kill : function(bullet){
-        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
+        this.left += deltaX;
+        this.top += deltaY;
+    };
+    Spheroid.prototype.kill = function (bullet) {
         bullet.game.playSound("sound_spheroidkill");
         this.game.removeSprite(this);
-        game.addSprite(new Bonus(game, this.left, this.top, "1000" ));
-    },
-
-    cells: {
+        this.game.addSprite(new Bonus(this.game, this.left, this.top, "1000"));
+    };
+    Spheroid.cells = {
         all: [
-            { x: 561-42*7, y: 81, w: 30, h: 30 },
-            { x: 561-42*6, y: 81, w: 30, h: 30 },
-            { x: 561-42*5, y: 81, w: 30, h: 30 },
-            { x: 561-42*4, y: 81, w: 30, h: 30 },
-            { x: 561-42*3, y: 81, w: 30, h: 30 },
-            { x: 561-42*2, y: 81, w: 30, h: 30 },
-            { x: 561-42, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 7, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 6, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 5, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 4, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 3, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 2, y: 81, w: 30, h: 30 },
+            { x: 561 - 42, y: 81, w: 30, h: 30 },
             { x: 561, y: 81, w: 30, h: 30 },
-            { x: 561-42, y: 81, w: 30, h: 30 },
-            { x: 561-42*2, y: 81, w: 30, h: 30 },
-            { x: 561-42*3, y: 81, w: 30, h: 30 },
-            { x: 561-42*4, y: 81, w: 30, h: 30 },
-            { x: 561-42*5, y: 81, w: 30, h: 30 },
-            { x: 561-42*6, y: 81, w: 30, h: 30 },
+            { x: 561 - 42, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 2, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 3, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 4, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 5, y: 81, w: 30, h: 30 },
+            { x: 561 - 42 * 6, y: 81, w: 30, h: 30 },
         ]
-    }
-})
+    };
+    return Spheroid;
+})(AnimatedSprite);
+//# sourceMappingURL=Spheroid.js.map

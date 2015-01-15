@@ -1,57 +1,61 @@
-var EnforcerBullet = AnimatedSprite.extend({
-    init: function (game, left, top, velocityX, velocityY) {
-        this._super('enforcerbullet', game, left, top, this.mover, 'all');
+///<reference path="../Game.ts"/>
+///<reference path="AnimatedSprite.ts"/>
+///<reference path="Bullet.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var EnforcerBullet = (function (_super) {
+    __extends(EnforcerBullet, _super);
+    function EnforcerBullet(game, left, top, velocityX, velocityY) {
+        _super.call(this, 'enforcerbullet', game, left, top, 'all', EnforcerBullet.cells);
+        this.onEdge = false;
         this.width = 14 * 2;
         this.height = 14 * 2;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
-        this.enemy = 1;
-        this.score = 0;
-    },
-    mover: {
-        execute: function (sprite, context, time) {
-            sprite.advanceFrame(sprite, time, 100);
-            sprite.move(sprite, time);
-            if(sprite.onEdge && Math.random() < .01){
-                sprite.game.removeSprite(sprite);
-            }
+        this.enemy = true;
+        this.score = 25;
+    }
+    EnforcerBullet.prototype.mover = function (context, time) {
+        this.advanceFrame(time, 100);
+        this.move(time, false);
+        if (this.onEdge && Math.random() < .01) {
+            this.game.removeSprite(this);
         }
-    },
-
-    // override - hug walls
-    move: function(sprite, time, wallBounce){
-        var deltaX = sprite.game.pixelsPerFrame(time, sprite.velocityX);
-        var deltaY = sprite.game.pixelsPerFrame(time, sprite.velocityY);
-
-        if ((sprite.left + sprite.width + deltaX > game.right) ||
-            (sprite.left + deltaX < game.left) ) {
-            sprite.velocityX = 0;
-            sprite.velocityY = (Math.random() < .5) ? sprite.speed : -sprite.speed;
+    };
+    // override - hug wall
+    EnforcerBullet.prototype.move = function (time, wallBounce) {
+        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
+        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        if ((this.left + this.width + deltaX > this.game.right) || (this.left + deltaX < this.game.left)) {
+            this.velocityX = 0;
+            this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
             deltaX = 0;
-            sprite.onEdge = 1;
+            this.onEdge = true;
         }
-        else if (sprite.top + sprite.height + deltaY > game.bottom ||
-            (sprite.top + deltaY < game.top)) {
-            sprite.velocityY = 0;
-            sprite.velocityX = (Math.random() < .5) ? sprite.speed : -sprite.speed;
+        else if (this.top + this.height + deltaY > this.game.bottom || (this.top + deltaY < this.game.top)) {
+            this.velocityY = 0;
+            this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
             deltaY = 0;
-            sprite.onEdge = 1;
+            this.onEdge = true;
         }
-
-        sprite.left += deltaX;
-        sprite.top += deltaY;
-    },
-
-    kill : function(bullet){
+        this.left += deltaX;
+        this.top += deltaY;
+    };
+    EnforcerBullet.prototype.kill = function (bullet) {
         this.game.removeSprite(this);
-    },
-
-    cells: {
+    };
+    EnforcerBullet.cells = {
         all: [
             { x: 181, y: 123, w: 14, h: 14 },
             { x: 207, y: 123, w: 14, h: 14 },
             { x: 233, y: 123, w: 14, h: 14 },
             { x: 259, y: 123, w: 14, h: 14 }
         ]
-    }
-});
+    };
+    return EnforcerBullet;
+})(AnimatedSprite);
+//# sourceMappingURL=EnforcerBullet.js.map

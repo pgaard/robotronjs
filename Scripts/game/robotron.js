@@ -1,10 +1,31 @@
-﻿var Robotron = Game.extend({
-
-    init: function () {
-        this._super("robotron", "canvas");
+///<reference path="Game.ts" />
+///<reference path="Waves.ts" />
+///<reference path="Sprites/Man.ts" />
+///<reference path="Sprites/Daddy.ts" />
+///<reference path="Sprites/Mommy.ts" />
+///<reference path="Sprites/Mikey.ts" />
+///<reference path="Sprites/Electrode.ts" />
+///<reference path="Sprites/Brain.ts" />
+///<reference path="Sprites/Grunt.ts" />
+///<reference path="Sprites/Hulk.ts" />
+///<reference path="Sprites/Bonus.ts" />
+///<reference path="Sprites/Spheroid.ts" />
+///<reference path="Sprites/Man.ts" />
+///<reference path="Sprites/Skull.ts" />
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Robotron = (function (_super) {
+    __extends(Robotron, _super);
+    function Robotron() {
+        var _this = this;
+        _super.call(this, "robotron", "canvas");
         this.score = 0;
         this.men = 2;
-        this.innerWave = 1;
+        this.innerWave = true;
         this.spritesheet = new Image();
         this.spritesheet.src = 'images/robotronsprites.png';
         this.left = 20;
@@ -16,21 +37,18 @@
             g: 0,
             b: 0
         };
-    },
-
-    rgbColors: function () {
+        Enforcer.getMan = function () { return _this.manSprite; };
+    }
+    Robotron.prototype.rgbColors = function () {
         return 'rgb(' + this.colors.r + ',' + this.colors.g + ',' + this.colors.b + ')';
-    },
-
-    initWave: function () {
-        this.dead = 0;
+    };
+    Robotron.prototype.initWave = function () {
+        this.dead = false;
         this.lastShotTime = 0;
         this.shootX = 0;
         this.shootY = 0;
         this.bonus = 1000;
-
         this.manSprite = new Man(game, this.middle().x, this.middle().y);
-
         if (this.continueWave) {
             this.addRandomSprites(this.currentWave["electrodes"], Electrode);
             this.addRandomSprites(this.currentWave["hulks"], Hulk);
@@ -40,7 +58,7 @@
             this.addRandomSprites(this.currentWave["mikeys"], Mikey);
             this.addRandomSprites(this.currentWave["spheroids"] + Math.ceil(this.currentWave["enforcers"] / 4), Spheroid, true); // enforcers turn back into spheriods
             this.addRandomSprites(this.currentWave["brains"], Brain);
-            this.continueWave = 0;
+            this.continueWave = false;
         }
         else {
             this.addRandomSprites(Waves.getRoboCount(this.wave, "electrodes"), Electrode);
@@ -52,13 +70,10 @@
             this.addRandomSprites(Waves.getRoboCount(this.wave, "spheroids"), Spheroid, true);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "brains"), Brain);
         }
-    },
-
-    addRandomSprites: function (number, type, edge) {
-        var buffer = 70,
-            height = this.bottom - this.top - buffer,
-            width = this.right - this.left - buffer;
-
+    };
+    Robotron.prototype.addRandomSprites = function (number, type, edge) {
+        var _this = this;
+        var buffer = 70, height = this.bottom - this.top - buffer, width = this.right - this.left - buffer;
         for (var i = 0; i < number; i++) {
             do {
                 if (!edge) {
@@ -70,29 +85,40 @@
                     if (Math.random() < .5) {
                         if (Math.random() < .5) {
                             left = this.left + 10;
-                        } else {
+                        }
+                        else {
                             left = this.left + width;
                         }
                         t = Math.round(Math.random() * height) + this.top;
-                    } else {
+                    }
+                    else {
                         if (Math.random() < .5) {
                             t = this.top + 10;
-                        } else {
+                        }
+                        else {
                             t = this.top + height;
                         }
                         left = Math.round(Math.random() * width) + this.left;
                     }
                 }
-
                 var distance = this.distance(left, t, this.manSprite.left, this.manSprite.top);
             } while (distance < 150);
-
-            new type(game, left, t);
+            if (type == Grunt)
+                new Grunt(game, left, t, function () { return _this.waveDuration(); }, function () { return _this.manLocation(); });
+            else if (type == Electrode)
+                new Electrode(game, left, t, function () { return _this.rgbColors(); });
+            else
+                new type(game, left, t);
         }
-    },
-
+    };
+    Robotron.prototype.manLocation = function () {
+        return {
+            top: this.manSprite.top,
+            left: this.manSprite.left
+        };
+    };
     // override
-    paintUnderSprites: function () {
+    Robotron.prototype.paintUnderSprites = function () {
         this.context.fillStyle = 'black';
         this.context.fillRect(0, 0, this.width(), this.height());
         this.rotateColors();
@@ -102,7 +128,6 @@
         this.context.font = "20px Courier";
         this.context.fillText(this.wave + 1 + " Wave", this.left + this.width() / 2 - 50, this.bottom + 16);
         this.context.fillText("Score: " + this.score + " men:" + this.men, this.left + 100, 15);
-
         if (this.gameOver) {
             this.context.fillStyle = "red";
             this.context.font = "40px Courier bold";
@@ -113,35 +138,28 @@
         }
         else if (this.deathPause) {
             if (getTimeNow() - this.innerWaveTime > 1000) {
-                this.deathPause = 0;
+                this.deathPause = false;
                 this.startWave();
             }
         }
         ;
-    },
-
-    startWave: function (died) {
+    };
+    Robotron.prototype.startWave = function () {
         if (!this.continueWave)
             this.wave++;
         this.removeAllSprites();
         this.playSound("sound_wavestart");
-        this.innerWave = 1;
+        this.innerWave = true;
         this.innerWaveTime = getTimeNow();
-    },
-
-    drawInnerWave: function () {
+    };
+    Robotron.prototype.drawInnerWave = function () {
         var progress = getTimeNow() - this.innerWaveTime;
-
         if (progress < 1000) {
             var percent = progress / 1000.0;
             var widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
             var heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
             this.context.fillStyle = this.rgbColors();
-            this.context.fillRect(
-                    this.left + widthAdj,
-                    this.top + heightAdj,
-                    (this.right - this.left) * percent,
-                    (this.bottom - this.top) * percent);
+            this.context.fillRect(this.left + widthAdj, this.top + heightAdj, (this.right - this.left) * percent, (this.bottom - this.top) * percent);
         }
         else if (progress < 2000) {
             percent = (progress - 1000) / 1000.0;
@@ -150,102 +168,79 @@
             this.context.fillStyle = this.rgbColors();
             this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
             this.context.fillStyle = 'black';
-            this.context.fillRect(
-                    this.left + widthAdj,
-                    this.top + heightAdj,
-                    (this.right - this.left) * percent,
-                    (this.bottom - this.top) * percent);
+            this.context.fillRect(this.left + widthAdj, this.top + heightAdj, (this.right - this.left) * percent, (this.bottom - this.top) * percent);
         }
         else {
             this.initWave();
-            this.innerWave = 0;
+            this.innerWave = false;
             this.waveStartTime = getTimeNow();
         }
-    },
-
-    rotateColors: function () {
+    };
+    Robotron.prototype.rotateColors = function () {
         this.colors.r += 7;
-        if (this.colors.r > 255) this.colors.r = 0;
+        if (this.colors.r > 255)
+            this.colors.r = 0;
         this.colors.g += 4;
-        if (this.colors.g > 255) this.colors.g = 0;
+        if (this.colors.g > 255)
+            this.colors.g = 0;
         this.colors.b += 3;
-        if (this.colors.b > 255) this.colors.b = 0;
+        if (this.colors.b > 255)
+            this.colors.b = 0;
         this.context.lineWidth = 5;
-    },
-
+    };
+    Robotron.prototype.waveDuration = function () {
+        return (getTimeNow() - this.waveStartTime);
+    };
     // override
-    startAnimate: function (time) {
-
+    Robotron.prototype.startAnimate = function (time) {
         if (this.innerWave)
             return;
         this.handlesKeys();
-
-        this.waveDuration = (getTimeNow() - this.waveStartTime);
-
-        if (!this.innerWave &&
-            this.getAllSprites(function (sprite) {
-                    return sprite.mustKill == 1;
-                }
-            ).length == 0) {
+        if (!this.innerWave && this.getAllSprites(function (sprite) {
+            return sprite.mustKill == true;
+        }).length == 0) {
             this.startWave();
             return;
         }
-
         this.shoot(time);
         this.checkForKills();
         this.checkForDeath();
-    },
-
-    handlesKeys: function () {
+    };
+    Robotron.prototype.handlesKeys = function () {
         var keys = this.pressedKeys;
         this.manSprite.setDirection(keys['a'], keys['d'], keys['w'], keys['s']);
         this.shootX = keys['l'] ? 1 : keys['j'] ? -1 : 0;
         this.shootY = keys['k'] ? 1 : keys['i'] ? -1 : 0;
-    },
-
-    shoot: function (time) {
+    };
+    Robotron.prototype.shoot = function (time) {
+        var _this = this;
         if ((this.shootX != 0 || this.shootY != 0) && !this.dead) {
             if (time - this.lastShotTime > 150) {
-
                 // 4 bullet maximum
                 if (this.getAllSprites('bullet').length < 4) {
-
                     // new bullet
                     this.lastShotTime = time;
                     this.playSound("sound_shot");
-                    var bullet = new Bullet(
-                        game,
-                            this.manSprite.left + this.manSprite.width / 2,
-                            this.manSprite.top + this.manSprite.height / 2,
-                            this.shootX,
-                            this.shootY
-                    );
+                    var bullet = new Bullet(game, this.manSprite.left + this.manSprite.width / 2, this.manSprite.top + this.manSprite.height / 2, this.shootX, this.shootY, function () { return _this.rgbColors(); });
                 }
             }
         }
-    },
-
-    increaseScore: function (amount) {
-
+    };
+    Robotron.prototype.increaseScore = function (amount) {
         if (Math.round((this.score + amount) / 25000) > Math.round(this.score / 25000))
             this.men++;
         this.score += amount;
-    },
-
-    checkForKills: function () {
+    };
+    Robotron.prototype.checkForKills = function () {
         var sprites = this.getAllSprites();
         var bullets = this.getAllSprites('bullet');
         for (var b in bullets) {
             var bullet = bullets[b];
             for (var i in sprites) {
                 var enemy = sprites[i];
-
-                if (!(enemy.kill))
+                if (!enemy.canKill)
                     continue;
-
-                if (bullet.left >= enemy.left && bullet.left <= enemy.left + enemy.width &&
-                    bullet.top >= enemy.top && bullet.top <= enemy.top + enemy.height) {
-
+                if (bullet.left >= enemy.left && bullet.left <= enemy.left + enemy.width && bullet.top >= enemy.top && bullet.top <= enemy.top + enemy.height) {
                     enemy.kill(bullet);
                     if (enemy.score)
                         this.increaseScore(enemy.score);
@@ -254,9 +249,8 @@
                 }
             }
         }
-    },
-
-    getSpriteCounts: function () {
+    };
+    Robotron.prototype.getSpriteCounts = function () {
         return {
             electrodes: this.getSpriteCount("electrode"),
             hulks: this.getSpriteCount("hulk"),
@@ -265,63 +259,54 @@
             daddies: this.getSpriteCount("daddy"),
             mikeys: this.getSpriteCount("mikey"),
             spheroids: this.getSpriteCount("spheroid"),
-            enforcers: this.getSpriteCount("enforcer")
+            enforcers: this.getSpriteCount("enforcer"),
+            brains: this.getSpriteCount("brain")
         };
-    },
-
-    checkForDeath: function () {
+    };
+    Robotron.prototype.checkForDeath = function () {
         if (!this.paused && this.manSprite.direction && !this.dead) {
             // check for death
             var sprites = this.getAllSprites();
             var hulks = this.getAllSprites('hulk');
             var left = this.manSprite.left;
             var top = this.manSprite.top;
-            var width = this.manSprite.cells[this.manSprite.direction][0].w * 2;
-            var height = this.manSprite.cells[this.manSprite.direction][0].h * 2;
+            var width = Man.cells[this.manSprite.direction][0].w * 2;
+            var height = Man.cells[this.manSprite.direction][0].h * 2;
             var removeSprites = [];
             var addSprites = [];
             for (var i = 0; i < sprites.length; i++) {
                 var sprite = sprites[i];
-                if (sprite.enemy &&
-                    (left + width) >= sprite.left && left <= sprite.left + sprite.width &&
-                    (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
-
+                if (sprite.enemy && (left + width) >= sprite.left && left <= sprite.left + sprite.width && (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
                     // dead
                     this.playSound("sound_death");
-                    this.dead = 1;
+                    this.dead = true;
                     // TODO: remove bullet and explosion sprites, make man flash
                     if (this.men > 0) {
                         this.men--;
-                        this.continueWave = 1;
+                        this.continueWave = true;
                         this.currentWave = this.getSpriteCounts();
-                        this.deathPause = 1;
+                        this.deathPause = true;
                         this.innerWaveTime = getTimeNow();
-                    } else {
+                    }
+                    else {
                         // game over
-                        this.gameOver = 1;
+                        this.gameOver = true;
                     }
                 }
-                // TODO: repeated collision check
-                else if (sprite instanceof Family){
-                    if((left + width) >= sprite.left && left <= sprite.left + sprite.width &&
-                        (top + height) >= sprite.top && top <= sprite.top + sprite.height)
-                    {
+                else if (sprite instanceof Family) {
+                    if ((left + width) >= sprite.left && left <= sprite.left + sprite.width && (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
                         // points
                         this.increaseScore(this.bonus);
-                        addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus));
+                        addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus.toString()));
                         this.playSound("sound_rescue");
-
                         if (this.bonus < 5000)
                             this.bonus += 1000;
                         removeSprites.push(sprite);
                     }
-                    else
-                    {
-                        // also check for family kills by hulks
-                        for(var h=0; h<hulks.length;h++){
+                    else {
+                        for (var h = 0; h < hulks.length; h++) {
                             var hulk = hulks[h];
-                            if((hulk.left + hulk.width) >= sprite.left && hulk.left <= sprite.left + sprite.width &&
-                                (hulk.top + hulk.height) >= sprite.top && hulk.top <= sprite.top + sprite.height){
+                            if ((hulk.left + hulk.width) >= sprite.left && hulk.left <= sprite.left + sprite.width && (hulk.top + hulk.height) >= sprite.top && hulk.top <= sprite.top + sprite.height) {
                                 removeSprites.push(sprite);
                                 addSprites.push(new Skull(game, sprite.left, sprite.top));
                                 this.playSound("sound_familydie");
@@ -330,28 +315,24 @@
                     }
                 }
             }
-
-            for (i in removeSprites)
-                this.removeSprite(removeSprites[i]);
-
-            for (i in addSprites)
-                this.addSprite(addSprites[i]);
+            for (var j in removeSprites)
+                this.removeSprite(removeSprites[j]);
+            for (var j in addSprites)
+                this.addSprite(addSprites[j]);
+        }
+    };
+    return Robotron;
+})(Game);
+var game = new Robotron();
+game.addKeyListener({
+    key: 'p',
+    listener: function (pressed) {
+        if (pressed) {
+            game.wave = -1;
+            game.paused = false;
+            game.startWave();
+            game.start();
         }
     }
 });
-
-var game = new Robotron();
-
-game.addKeyListener(
-    {
-        key: 'p',
-        listener: function (pressed) {
-            if (pressed) {
-                game.wave = -1 + 4;
-                game.paused = 0;
-                game.startWave();
-                game.start();
-            }
-        }
-    }
-);
+//# sourceMappingURL=robotron.js.map

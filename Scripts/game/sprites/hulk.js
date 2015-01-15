@@ -1,47 +1,61 @@
-﻿var Hulk = AnimatedSprite.extend({
-    init: function (game, left, top) {
-        this._super('hulk', game, left, top, this.hulkMover, "left");
+///<reference path="../Game.ts"/>
+///<reference path="Bullet.ts"/>
+///<reference path="AnimatedSprite.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Hulk = (function (_super) {
+    __extends(Hulk, _super);
+    function Hulk(game, left, top) {
+        _super.call(this, 'hulk', game, left, top, "left", Hulk.cells);
         this.speed = 50;
-        this.width = this.cells['left'][0].w * 2;
-        this.height = this.cells['left'][0].h * 2;
-        this.enemy = 1;
-        this.setRandomDirection(this);
-    },
-
+        this.width = Hulk.cells['left'][0].w * 2;
+        this.height = Hulk.cells['left'][0].h * 2;
+        this.enemy = true;
+        this.setRandomDirection();
+    }
     // TODO: random changing movement towards player, towards family or random
-    hulkMover: {
-        execute: function (sprite, context, time) {
-            sprite.advanceFrame(sprite, time, 200);
-            if (Math.random() < .005) sprite.setRandomDirection(sprite);
-            sprite.move(sprite, time, true);
-        }
-    },
-
-    kill : function(bullet){
-        if (bullet.velocityX) this.left += 7 * (bullet.velocityX / Math.abs(bullet.velocityX));
-        if (bullet.velocityY) this.top += 7 * (bullet.velocityY / Math.abs(bullet.velocityY));
-    },
-
-    cells: {
+    Hulk.prototype.mover = function (context, time) {
+        this.advanceFrame(time, 200);
+        if (Math.random() < .005)
+            this.setRandomDirection();
+        this.move(time, true);
+    };
+    Hulk.prototype.kill = function (bullet) {
+        if (bullet.velocityX)
+            this.left += 7 * (bullet.velocityX / Math.abs(bullet.velocityX));
+        if (bullet.velocityY)
+            this.top += 7 * (bullet.velocityY / Math.abs(bullet.velocityY));
+    };
+    Hulk.cells = {
         left: [
             { x: 535, y: 38, w: 24, h: 29 },
             { x: 573, y: 38, w: 24, h: 29 },
             { x: 535, y: 38, w: 24, h: 29 },
-            { x: 1, y: 80, w: 24, h: 29}],
+            { x: 1, y: 80, w: 24, h: 29 }
+        ],
         right: [
             { x: 153, y: 81, w: 24, h: 28 },
             { x: 191, y: 81, w: 24, h: 28 },
             { x: 153, y: 81, w: 24, h: 28 },
-            { x: 229, y: 81, w: 24, h: 28 }],
+            { x: 229, y: 81, w: 24, h: 28 }
+        ],
         up: [
             { x: 39, y: 81, w: 35, h: 29 },
             { x: 77, y: 81, w: 35, h: 33 },
             { x: 39, y: 81, w: 35, h: 29 },
-            { x: 115, y: 81, w: 35, h: 33 }],
+            { x: 115, y: 81, w: 35, h: 33 }
+        ],
         down: [
             { x: 39, y: 81, w: 35, h: 29 },
             { x: 77, y: 81, w: 35, h: 33 },
             { x: 39, y: 81, w: 35, h: 29 },
-            { x: 115, y: 81, w: 35, h: 33 }]
-    }    
-})
+            { x: 115, y: 81, w: 35, h: 33 }
+        ]
+    };
+    return Hulk;
+})(AnimatedSprite);
+//# sourceMappingURL=Hulk.js.map

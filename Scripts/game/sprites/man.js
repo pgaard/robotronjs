@@ -1,68 +1,78 @@
-﻿var Man = AnimatedSprite.extend({
-    init: function (game, left, top) {
-        this._super('man', game, left, top, this.manMover, "down");
+///<reference path="../Game.ts"/>
+///<reference path="AnimatedSprite.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Man = (function (_super) {
+    __extends(Man, _super);
+    function Man(game, left, top) {
+        _super.call(this, 'man', game, left, top, "down", Man.cells);
         this.speed = 200;
         this.width = 19 * 2;
         this.height = 22 * 2;
-    },
-
-    setDirection: function(left, right, up, down){
+    }
+    Man.prototype.setDirection = function (left, right, up, down) {
         this.velocityX = right ? this.speed : left ? -this.speed : 0;
         this.velocityY = down ? this.speed : up ? -this.speed : 0;
-    },
-
-    manMover: {
-        lastTime: 0,
-        execute: function (sprite, context, time) {
-
-            if(sprite.velocityX != 0 || sprite.velocityY != 0)
-                if(sprite.advanceFrame(sprite, time, 75)){
-                    //sprite.game.playSound("sound_walking");
-                }
-
-            var deltaX = game.pixelsPerFrame(time, sprite.velocityX);
-            var deltaY = game.pixelsPerFrame(time, sprite.velocityY);
-
-            if (sprite.velocityX > 0) sprite.direction  = "right";
-            else if (sprite.velocityX < 0) sprite.direction  = "left";
-            else if (sprite.velocityY > 0) sprite.direction  = "down";
-            else if (sprite.velocityY < 0) sprite.direction  = "up";
-
-            if (sprite.left + sprite.width + deltaX > game.right) {
-                sprite.velocityX = 0;
-                deltaX = 0;
-            } else if (sprite.left + deltaX < game.left) {
-                sprite.velocityX = 0;
-                deltaX = 0;
+    };
+    Man.prototype.mover = function (context, time) {
+        if (this.velocityX != 0 || this.velocityY != 0)
+            if (this.advanceFrame(time, 75)) {
             }
-            if (sprite.top + sprite.height + deltaY > game.bottom) {
-                sprite.velocityY = 0;
-                deltaY = 0;
-            } else if (sprite.top + deltaY < game.top) {
-                sprite.velocityY = 0;
-                deltaY = 0;
-            }
-
-            sprite.left += deltaX;
-            sprite.top += deltaY;
+        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
+        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        if (this.velocityX > 0)
+            this.direction = "right";
+        else if (this.velocityX < 0)
+            this.direction = "left";
+        else if (this.velocityY > 0)
+            this.direction = "down";
+        else if (this.velocityY < 0)
+            this.direction = "up";
+        if (this.left + this.width + deltaX > this.game.right) {
+            this.velocityX = 0;
+            deltaX = 0;
         }
-    },
-    cells: {
+        else if (this.left + deltaX < this.game.left) {
+            this.velocityX = 0;
+            deltaX = 0;
+        }
+        if (this.top + this.height + deltaY > this.game.bottom) {
+            this.velocityY = 0;
+            deltaY = 0;
+        }
+        else if (this.top + deltaY < this.game.top) {
+            this.velocityY = 0;
+            deltaY = 0;
+        }
+        this.left += deltaX;
+        this.top += deltaY;
+    };
+    Man.cells = {
         left: [
             { x: 192, y: 164, w: 11, h: 22 },
-            { x: 218, y: 164, w: 11, h: 22}],
+            { x: 218, y: 164, w: 11, h: 22 }
+        ],
         right: [
             { x: 268, y: 164, w: 11, h: 22 },
-            { x: 294, y: 164, w: 11, h: 22}],
+            { x: 294, y: 164, w: 11, h: 22 }
+        ],
         down: [
             { x: 346, y: 164, w: 15, h: 22 },
             { x: 372, y: 164, w: 15, h: 22 },
             { x: 346, y: 164, w: 15, h: 22 },
-            { x: 398, y: 164, w: 15, h: 22}],
+            { x: 398, y: 164, w: 15, h: 22 }
+        ],
         up: [
             { x: 424, y: 164, w: 15, h: 22 },
             { x: 450, y: 164, w: 15, h: 22 },
             { x: 424, y: 164, w: 15, h: 22 },
-            { x: 476, y: 164, w: 15, h: 22}]
-    }
-});
+            { x: 476, y: 164, w: 15, h: 22 }
+        ]
+    };
+    return Man;
+})(AnimatedSprite);
+//# sourceMappingURL=Man.js.map

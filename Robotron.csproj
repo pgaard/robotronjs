@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{C484481D-D125-42B3-A365-83083B995FE1}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.1</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="images\robotronsprites.jpg" />
+    <Content Include="images\robotronsprites.png" />
+    <Content Include="robotron.html" />
+    <Content Include="sounds\death.mp3" />
+    <Content Include="sounds\enforcer birth.mp3" />
+    <Content Include="sounds\enforcer shot.mp3" />
+    <Content Include="sounds\extraguy.mp3" />
+    <Content Include="sounds\family die.mp3" />
+    <Content Include="sounds\kill.mp3" />
+    <Content Include="sounds\rescue.mp3" />
+    <Content Include="sounds\Robotron 2084 - Arcade.mp3" />
+    <Content Include="sounds\shot.mp3" />
+    <Content Include="sounds\spheroid kill.mp3" />
+    <Content Include="sounds\walking.mp3" />
+    <Content Include="sounds\wavestart.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\game\animation.ts" />
+    <TypeScriptCompile Include="Scripts\game\game.ts" />
+    <TypeScriptCompile Include="Scripts\game\robotron.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\animatedSprite.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\bonus.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\brain.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\bullet.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\cruisemissile.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\daddy.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\electrode.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\enforcer.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\enforcerbullet.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\explosion.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\family.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\grunt.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\hulk.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\imagePainter.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\interfaces.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\man.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\mikey.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\mommy.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\skull.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\spheroid.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\sprintSheetPainter.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\sprite.ts" />
+    <TypeScriptCompile Include="Scripts\game\waves.ts" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Robotron</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>7870</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:7806/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

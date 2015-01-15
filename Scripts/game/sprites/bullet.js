@@ -1,48 +1,53 @@
-﻿var Bullet = Sprite.extend({
-    init: function (game, left, top, shootX, shootY) {
-        this._super('bullet', this.bulletPainter, [this.bulletMover], game, left, top);
+///<reference path="../Game.ts"/>
+///<reference path="Sprite.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Bullet = (function (_super) {
+    __extends(Bullet, _super);
+    function Bullet(game, left, top, shootX, shootY, rgbColors) {
+        _super.call(this, 'bullet', game, left, top);
+        this.rgbColors = rgbColors;
         this.bulletSpeed = 1000;
         this.velocityX = shootX * this.bulletSpeed;
         this.velocityY = shootY * this.bulletSpeed;
         this.bulletLength = 10;
+        this.canKill = true;
         game.addSprite(this);
-    },
-
-    bulletPainter: {
-        paint: function (sprite, context) {
-            context.save();
-            context.beginPath();
-            context.strokeStyle = game.rgbColors();
-            var bulletX = 0, bulletY = 0;
-            if (sprite.velocityX > 0) bulletX = sprite.bulletLength;
-            else if (sprite.velocityX < 0) bulletX = -sprite.bulletLength;
-            if (sprite.velocityY > 0) bulletY = sprite.bulletLength;
-            else if (sprite.velocityY < 0) bulletY = -sprite.bulletLength;
-
-            context.beginPath();
-            context.lineWidth = 2;
-            context.moveTo(sprite.left - bulletX, sprite.top - bulletY);
-            context.lineTo(sprite.left + bulletX, sprite.top + bulletY);
-            context.stroke();
-            context.restore();
-        }
-    },
-
-    bulletMover: {
-        execute: function (bullet, context, time) {
-
-            var deltaX = game.pixelsPerFrame(time, bullet.velocityX);
-            var deltaY = game.pixelsPerFrame(time, bullet.velocityY);
-            if (bullet.left + deltaX > bullet.game.right ||
-                bullet.left + deltaX < bullet.game.left ||
-                bullet.top + deltaY > bullet.game.bottom ||
-                bullet.top + deltaY < bullet.game.top) {
-                bullet.game.removeSprite(bullet);
-                return;
-            }
-            bullet.left += deltaX;
-            bullet.top += deltaY;
-        }
     }
-});
-    
+    Bullet.prototype.painter = function (context) {
+        context.save();
+        context.beginPath();
+        context.strokeStyle = this.rgbColors();
+        var bulletX = 0, bulletY = 0;
+        if (this.velocityX > 0)
+            bulletX = this.bulletLength;
+        else if (this.velocityX < 0)
+            bulletX = -this.bulletLength;
+        if (this.velocityY > 0)
+            bulletY = this.bulletLength;
+        else if (this.velocityY < 0)
+            bulletY = -this.bulletLength;
+        context.beginPath();
+        context.lineWidth = 2;
+        context.moveTo(this.left - bulletX, this.top - bulletY);
+        context.lineTo(this.left + bulletX, this.top + bulletY);
+        context.stroke();
+        context.restore();
+    };
+    Bullet.prototype.mover = function (context, time) {
+        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
+        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        if (this.left + deltaX > this.game.right || this.left + deltaX < this.game.left || this.top + deltaY > this.game.bottom || this.top + deltaY < this.game.top) {
+            this.game.removeSprite(this);
+            return;
+        }
+        this.left += deltaX;
+        this.top += deltaY;
+    };
+    return Bullet;
+})(Sprite);
+//# sourceMappingURL=bullet.js.map

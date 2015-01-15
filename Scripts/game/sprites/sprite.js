@@ -1,30 +1,31 @@
-﻿// generic sprite
-var Sprite = Class.extend({
+///<reference path="../Game.ts" />
+// generic sprite
+var Sprite = (function () {
     // painter is an object with a method paint(sprint,context) that draws the sprite
-    init: function(name, painter, behaviors, game, left, top) {
-        if (name !== undefined) this.name = name;
-        if (painter !== undefined) this.painter = painter;
+    function Sprite(name, game, left, top) {
+        this.enemy = false;
+        if (name !== undefined)
+            this.name = name;
         this.game = game;
         this.left = left;
         this.top = top;
-        this.velocityX = 0;
-        this.velocityY = 0;
         this.visible = true;
         this.animating = false;
-        this.behaviors = behaviors || [];
-    },
-    
-    paint: function (context) {
-        if (this.painter !== undefined && this.visible) {
-            this.painter.paint(this, context);
-        }
-    },
-    
-    update: function (context, time) {
-        if (!this.game.paused && !this.game.dead) {
-            for (var i = 0; i < this.behaviors.length; ++i) {
-                this.behaviors[i].execute(this, context, time);
-            }
-        }
     }
-});
+    Sprite.prototype.paint = function (context) {
+        if (this.painter !== undefined && this.visible) {
+            this.painter(context);
+        }
+    };
+    Sprite.prototype.update = function (context, time) {
+        if (!this.game.paused && !this.game.dead) {
+            this.mover(context, time);
+        }
+    };
+    Sprite.prototype.mover = function (context, time) {
+    };
+    Sprite.prototype.painter = function (context) {
+    };
+    return Sprite;
+})();
+//# sourceMappingURL=Sprite.js.map
