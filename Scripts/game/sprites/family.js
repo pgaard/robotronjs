@@ -17,8 +17,8 @@ var Family = (function (_super) {
         this.advanceFrame(time, 200);
         if (Math.random() < .005)
             this.setRandomDirection();
-        this.move(time, true);
+        this.move(time);
     };
     return Family;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=family.js.map

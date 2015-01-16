@@ -2,7 +2,7 @@
 ///<reference path="Bullet.ts"/>
 ///<reference path="AnimatedSprite.ts"/>
 
-class Hulk extends AnimatedSprite {
+class Hulk extends RobotronSprite {
     constructor(game: Game, left: number, top: number) {
         super('hulk', game, left, top, "left", Hulk.cells);
         this.speed = 50;
@@ -16,7 +16,7 @@ class Hulk extends AnimatedSprite {
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 200);
         if (Math.random() < .005) this.setRandomDirection();
-        this.move(time, true);
+        this.move(time);
     }
 
     kill(bullet : Bullet){

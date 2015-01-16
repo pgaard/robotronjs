@@ -49,5 +49,5 @@ var Bullet = (function (_super) {
         this.top += deltaY;
     };
     return Bullet;
-})(Sprite);
+})(RobotronSprite);
 //# sourceMappingURL=bullet.js.map

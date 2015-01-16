@@ -21,15 +21,13 @@ var EnforcerBullet = (function (_super) {
     }
     EnforcerBullet.prototype.mover = function (context, time) {
         this.advanceFrame(time, 100);
-        this.move(time, false);
+        this.move(time);
         if (this.onEdge && Math.random() < .01) {
             this.game.removeSprite(this);
         }
     };
     // override - hug wall
-    EnforcerBullet.prototype.move = function (time, wallBounce) {
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+    EnforcerBullet.prototype.adjustMoveDelta = function (deltaX, deltaY) {
         if ((this.left + this.width + deltaX > this.game.right) || (this.left + deltaX < this.game.left)) {
             this.velocityX = 0;
             this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
@@ -42,8 +40,7 @@ var EnforcerBullet = (function (_super) {
             deltaY = 0;
             this.onEdge = true;
         }
-        this.left += deltaX;
-        this.top += deltaY;
+        return { deltaX: deltaX, deltaY: deltaY };
     };
     EnforcerBullet.prototype.kill = function (bullet) {
         this.game.removeSprite(this);
@@ -57,5 +54,5 @@ var EnforcerBullet = (function (_super) {
         ]
     };
     return EnforcerBullet;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=EnforcerBullet.js.map

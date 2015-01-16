@@ -28,5 +28,5 @@ var Bonus = (function (_super) {
         "5000": [{ x: 37 + 4 * 34, y: 1, w: 20, h: 10 }]
     };
     return Bonus;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Bonus.js.map

@@ -37,7 +37,7 @@ var Spheroid = (function (_super) {
                 this.game.removeSprite(this);
             }
         }
-        this.move(time, true);
+        this.move(time);
     };
     // override
     Spheroid.prototype.setDirectionSpheroid = function () {
@@ -46,23 +46,18 @@ var Spheroid = (function (_super) {
         this.velocityY = Math.sin(theta) * this.speed;
     };
     // override - hug walls
-    Spheroid.prototype.move = function (time, wallBounce) {
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
-        if (wallBounce) {
-            if ((this.left + this.width + deltaX > this.game.right) || (this.left + deltaX < this.game.left)) {
-                this.velocityX = 0;
-                this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
-                deltaX = 0;
-            }
-            else if (this.top + this.height + deltaY > this.game.bottom || (this.top + deltaY < this.game.top)) {
-                this.velocityY = 0;
-                this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
-                deltaY = 0;
-            }
+    Spheroid.prototype.adjustMoveDelta = function (deltaX, deltaY) {
+        if ((this.left + this.width + deltaX > this.game.right) || (this.left + deltaX < this.game.left)) {
+            this.velocityX = 0;
+            this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
+            deltaX = 0;
         }
-        this.left += deltaX;
-        this.top += deltaY;
+        else if (this.top + this.height + deltaY > this.game.bottom || (this.top + deltaY < this.game.top)) {
+            this.velocityY = 0;
+            this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
+            deltaY = 0;
+        }
+        return { deltaX: deltaX, deltaY: deltaY };
     };
     Spheroid.prototype.kill = function (bullet) {
         bullet.game.playSound("sound_spheroidkill");
@@ -88,5 +83,5 @@ var Spheroid = (function (_super) {
         ]
     };
     return Spheroid;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Spheroid.js.map

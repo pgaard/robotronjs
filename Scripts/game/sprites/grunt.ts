@@ -3,7 +3,7 @@
 ///<reference path="Bullet.ts"/>
 ///<reference path="Explosion.ts"/>
 
-class Grunt extends AnimatedSprite {
+class Grunt extends RobotronSprite {
     waveDuration: WaveDurationFunction;
     manPosition: ManPositionFunction;
 
@@ -33,7 +33,7 @@ class Grunt extends AnimatedSprite {
         this.velocityX = Math.cos(theta) * speed * reverse;
         this.velocityY = Math.sin(theta) * speed * reverse;
 
-        this.move(time, false);
+        this.move(time);
     }
 
     kill(bullet : Bullet){

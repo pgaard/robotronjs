@@ -29,5 +29,5 @@ var CruiseMissile = (function (_super) {
         context.restore();
     };
     return CruiseMissile;
-})(Sprite);
+})(RobotronSprite);
 //# sourceMappingURL=cruisemissile.js.map

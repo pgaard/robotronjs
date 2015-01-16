@@ -1,7 +1,7 @@
 ﻿///<reference path="../Game.ts"/>
 ///<reference path="AnimatedSprite.ts"/>
 
-class Man extends AnimatedSprite {
+class Man extends RobotronSprite {
     constructor(game : Game, left: number, top: number) {
         super('man', game, left, top, "down", Man.cells);
         this.speed = 200;
@@ -21,9 +21,10 @@ class Man extends AnimatedSprite {
                 //this.game.playSound("sound_walking");
             }
 
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        this.move(time);
+    }
 
+    adjustMoveDelta(deltaX: number, deltaY: number) {
         if (this.velocityX > 0) this.direction = "right";
         else if (this.velocityX < 0) this.direction = "left";
         else if (this.velocityY > 0) this.direction = "down";
@@ -43,9 +44,7 @@ class Man extends AnimatedSprite {
             this.velocityY = 0;
             deltaY = 0;
         }
-
-        this.left += deltaX;
-        this.top += deltaY;
+        return {deltaX: deltaX, deltaY: deltaY };
     }
 
     static cells : ISpriteCells = {

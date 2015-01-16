@@ -1,7 +1,7 @@
 ///<reference path="../Game.ts"/>
 ///<reference path="AnimatedSprite.ts"/>
 
-class Skull extends AnimatedSprite {
+class Skull extends RobotronSprite {
     startTime: number;
     constructor(game: Game, left: number, top: number) {
         super('skull', game, left, top, 'all', Skull.cells);

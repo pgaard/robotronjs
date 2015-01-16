@@ -3,7 +3,7 @@
 ///<reference path="Explosion.ts"/>
 ///<reference path="EnforcerBullet.ts"/>
 
-class Enforcer extends AnimatedSprite
+class Enforcer extends RobotronSprite
 {
     static getMan: () => Sprite;
 
@@ -23,7 +23,7 @@ class Enforcer extends AnimatedSprite
         this.advanceFrame(time, 200, true); // just grows and stops animating
         if (Math.random() < .01)
             this.setRandomDirectionEnforcer();
-        this.move(time, true);
+        this.move(time);
 
         if (Math.random() < .005) {
             // shoot

@@ -22,5 +22,5 @@ var Skull = (function (_super) {
         ]
     };
     return Skull;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Skull.js.map

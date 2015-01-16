@@ -3,7 +3,7 @@
 ///<reference path="Explosion.ts"/>
 ///<reference path="AnimatedSprite.ts"/>
 
-class Brain extends AnimatedSprite {
+class Brain extends RobotronSprite {
     constructor(game: Game, left: number, top: number) {
         super('brain', game, left, top, "left", Brain.cells );
         this.speed = 50;
@@ -20,7 +20,7 @@ class Brain extends AnimatedSprite {
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 200);
         if (Math.random() < .005) this.setRandomDirection();
-        this.move(time, true);
+        this.move(time);
     }
 
     kill(bullet : Bullet){

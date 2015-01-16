@@ -39,5 +39,5 @@ var Electrode = (function (_super) {
         }
     };
     return Electrode;
-})(Sprite);
+})(RobotronSprite);
 //# sourceMappingURL=Electrode.js.map

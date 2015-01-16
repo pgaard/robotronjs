@@ -1,4 +1,4 @@
-﻿class CruiseMissile extends Sprite
+﻿class CruiseMissile extends RobotronSprite
 {
     manPosition: ManPositionFunction;
     point1: { x: number; y: number }

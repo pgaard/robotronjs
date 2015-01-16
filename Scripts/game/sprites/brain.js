@@ -26,7 +26,7 @@ var Brain = (function (_super) {
         this.advanceFrame(time, 200);
         if (Math.random() < .005)
             this.setRandomDirection();
-        this.move(time, true);
+        this.move(time);
     };
     Brain.prototype.kill = function (bullet) {
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
@@ -61,5 +61,5 @@ var Brain = (function (_super) {
         ]
     };
     return Brain;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Brain.js.map

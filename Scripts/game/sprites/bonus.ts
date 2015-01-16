@@ -1,7 +1,7 @@
 ///<reference path="../Game.ts"/>
 ///<reference path="AnimatedSprite.ts"/>
 
-class Bonus extends AnimatedSprite
+class Bonus extends RobotronSprite
 {
     startTime: number;
 

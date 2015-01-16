@@ -228,7 +228,7 @@ class Robotron extends Game{
         this.handlesKeys();
 
         if (!this.innerWave &&
-            this.getAllSprites(function (sprite: AnimatedSprite) {
+            this.getAllSprites(function (sprite: RobotronSprite) {
                     return sprite.mustKill == true;
                 }
             ).length == 0) {
@@ -284,7 +284,7 @@ class Robotron extends Game{
         for (var b in bullets) {
             var bullet = <Bullet>bullets[b];
             for (var i in sprites) {
-                var enemy = <AnimatedSprite>sprites[i];
+                var enemy = <RobotronSprite>sprites[i];
 
                 if (!enemy.canKill)
                     continue;

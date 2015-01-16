@@ -25,7 +25,7 @@ var Enforcer = (function (_super) {
         this.advanceFrame(time, 200, true); // just grows and stops animating
         if (Math.random() < .01)
             this.setRandomDirectionEnforcer();
-        this.move(time, true);
+        this.move(time);
         if (Math.random() < .005) {
             // shoot
             var man = Enforcer.getMan();
@@ -64,5 +64,5 @@ var Enforcer = (function (_super) {
         ]
     };
     return Enforcer;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Enforcer.js.map

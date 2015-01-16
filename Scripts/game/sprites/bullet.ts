@@ -1,7 +1,7 @@
 ﻿///<reference path="../Game.ts"/>
 ///<reference path="Sprite.ts"/>
 
-class Bullet extends Sprite {
+class Bullet extends RobotronSprite {
     velocityX: number;
     velocityY: number;
     bulletSpeed: number;

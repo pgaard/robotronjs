@@ -2,7 +2,7 @@
 ///<reference path="sprite.ts"/>
 ///<reference path="bullet.ts"/>
 
-class Electrode extends Sprite {
+class Electrode extends RobotronSprite {
     hit:boolean;
     rgbColors:  () => string;
 

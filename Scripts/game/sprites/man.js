@@ -22,8 +22,9 @@ var Man = (function (_super) {
         if (this.velocityX != 0 || this.velocityY != 0)
             if (this.advanceFrame(time, 75)) {
             }
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        this.move(time);
+    };
+    Man.prototype.adjustMoveDelta = function (deltaX, deltaY) {
         if (this.velocityX > 0)
             this.direction = "right";
         else if (this.velocityX < 0)
@@ -48,8 +49,7 @@ var Man = (function (_super) {
             this.velocityY = 0;
             deltaY = 0;
         }
-        this.left += deltaX;
-        this.top += deltaY;
+        return { deltaX: deltaX, deltaY: deltaY };
     };
     Man.cells = {
         left: [
@@ -74,5 +74,5 @@ var Man = (function (_super) {
         ]
     };
     return Man;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Man.js.map

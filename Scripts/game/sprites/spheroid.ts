@@ -4,7 +4,7 @@
 ///<reference path="Bullet.ts"/>
 ///<reference path="Bonus.ts"/>
 
-class Spheroid extends AnimatedSprite {
+class Spheroid extends RobotronSprite {
     spawns: number = 0;
     startTime: number;
     constructor(game: Game, left: number, top: number) {
@@ -33,7 +33,7 @@ class Spheroid extends AnimatedSprite {
                 this.game.removeSprite(this);
             }
         }
-        this.move(time, true);
+        this.move(time);
     }
 
     // override
@@ -44,27 +44,21 @@ class Spheroid extends AnimatedSprite {
     }
 
     // override - hug walls
-    move(time: number, wallBounce: boolean){
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+    adjustMoveDelta(deltaX: number, deltaY: number) {
 
-        if(wallBounce) {
-            if ((this.left + this.width + deltaX > this.game.right) ||
-               (this.left + deltaX < this.game.left) ) {
-                this.velocityX = 0;
-                this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
-                deltaX = 0;
-            }
-            else if (this.top + this.height + deltaY > this.game.bottom ||
-                    (this.top + deltaY < this.game.top)) {
-                this.velocityY = 0;
-                this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
-                deltaY = 0;
-            }
+        if ((this.left + this.width + deltaX > this.game.right) ||
+            (this.left + deltaX < this.game.left)) {
+            this.velocityX = 0;
+            this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
+            deltaX = 0;
         }
-
-        this.left += deltaX;
-        this.top += deltaY;
+        else if (this.top + this.height + deltaY > this.game.bottom ||
+            (this.top + deltaY < this.game.top)) {
+            this.velocityY = 0;
+            this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
+            deltaY = 0;
+        }
+        return { deltaX: deltaX, deltaY: deltaY };
     }
 
     kill(bullet: Bullet){

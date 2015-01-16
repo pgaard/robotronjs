@@ -31,7 +31,7 @@ var Grunt = (function (_super) {
         var reverse = this.left > man.left ? -1 : 1;
         this.velocityX = Math.cos(theta) * speed * reverse;
         this.velocityY = Math.sin(theta) * speed * reverse;
-        this.move(time, false);
+        this.move(time);
     };
     Grunt.prototype.kill = function (bullet) {
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
@@ -47,5 +47,5 @@ var Grunt = (function (_super) {
         ]
     };
     return Grunt;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Grunt.js.map

@@ -22,7 +22,7 @@ var Hulk = (function (_super) {
         this.advanceFrame(time, 200);
         if (Math.random() < .005)
             this.setRandomDirection();
-        this.move(time, true);
+        this.move(time);
     };
     Hulk.prototype.kill = function (bullet) {
         if (bullet.velocityX)
@@ -57,5 +57,5 @@ var Hulk = (function (_super) {
         ]
     };
     return Hulk;
-})(AnimatedSprite);
+})(RobotronSprite);
 //# sourceMappingURL=Hulk.js.map

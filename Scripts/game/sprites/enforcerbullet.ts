@@ -2,7 +2,7 @@
 ///<reference path="AnimatedSprite.ts"/>
 ///<reference path="Bullet.ts"/>
 
-class EnforcerBullet extends AnimatedSprite {
+class EnforcerBullet extends RobotronSprite {
     onEdge: boolean = false;
 
     constructor(game: Game, left: number, top: number, velocityX: number, velocityY: number) {
@@ -17,19 +17,16 @@ class EnforcerBullet extends AnimatedSprite {
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 100);
-        this.move(time, false);
+        this.move(time);
         if (this.onEdge && Math.random() < .01) {
             this.game.removeSprite(this);
         }
     }
 
     // override - hug wall
-    move(time: number, wallBounce: boolean){
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
-
+    adjustMoveDelta(deltaX: number, deltaY: number) {
         if ((this.left + this.width + deltaX > this.game.right) ||
-            (this.left + deltaX < this.game.left) ) {
+            (this.left + deltaX < this.game.left)) {
             this.velocityX = 0;
             this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
             deltaX = 0;
@@ -42,9 +39,7 @@ class EnforcerBullet extends AnimatedSprite {
             deltaY = 0;
             this.onEdge = true;
         }
-
-        this.left += deltaX;
-        this.top += deltaY;
+        return { deltaX: deltaX, deltaY: deltaY };
     }
 
     kill(bullet: Bullet){
