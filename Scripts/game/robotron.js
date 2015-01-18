@@ -27,7 +27,7 @@ var Robotron = (function (_super) {
         this.men = 2;
         this.innerWave = true;
         this.spritesheet = new Image();
-        this.spritesheet.src = 'images/robotronsprites.png';
+        this.spritesheet.src = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/images/robotronsprites.png';
         this.left = 20;
         this.right = this.width() - 20;
         this.top = 20;
@@ -58,6 +58,7 @@ var Robotron = (function (_super) {
             this.addRandomSprites(this.currentWave["mikeys"], Mikey);
             this.addRandomSprites(this.currentWave["spheroids"] + Math.ceil(this.currentWave["enforcers"] / 4), Spheroid, true); // enforcers turn back into spheriods
             this.addRandomSprites(this.currentWave["brains"], Brain);
+            this.addRandomSprites(this.currentWave["quarks"], Quark, true);
             this.continueWave = false;
         }
         else {
@@ -69,6 +70,7 @@ var Robotron = (function (_super) {
             this.addRandomSprites(Waves.getRoboCount(this.wave, "mikeys"), Mikey);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "spheroids"), Spheroid, true);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "brains"), Brain);
+            this.addRandomSprites(Waves.getRoboCount(this.wave, "quarks"), Quark, true);
         }
     };
     Robotron.prototype.addRandomSprites = function (number, type, edge) {
@@ -122,7 +124,8 @@ var Robotron = (function (_super) {
         this.context.fillStyle = 'black';
         this.context.fillRect(0, 0, this.width(), this.height());
         this.rotateColors();
-        this.context.strokeStyle = Waves.getBorderColor(this.wave);
+        var borderColor = Waves.getBorderColor(this.wave);
+        this.context.strokeStyle = borderColor == 'rotate' ? this.rgbColors() : borderColor;
         this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
         this.context.fillStyle = this.rgbColors();
         this.context.font = "20px Courier";
@@ -260,7 +263,9 @@ var Robotron = (function (_super) {
             mikeys: this.getSpriteCount("mikey"),
             spheroids: this.getSpriteCount("spheroid"),
             enforcers: this.getSpriteCount("enforcer"),
-            brains: this.getSpriteCount("brain")
+            brains: this.getSpriteCount("brain"),
+            quarks: this.getSpriteCount("quark"),
+            tanks: this.getSpriteCount("tank")
         };
     };
     Robotron.prototype.checkForDeath = function () {

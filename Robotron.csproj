@@ -58,6 +58,7 @@
     <TypeScriptCompile Include="Scripts\game\sprites\mommy.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\robotronSprite.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\skull.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\quark.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\spheroid.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\sprintSheetPainter.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\sprite.ts" />

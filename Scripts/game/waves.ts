@@ -1,16 +1,16 @@
 ﻿// Wave	Grunts	Electrodes	Mommies	Daddies	Mikeys	Hulks	Brains	Spheroids	Quarks   Border
 class Waves {
-    static waves = [
-        [1, 15, 5,  1,  1,  0,  0,  0,  0,  0,  'orange'],
-        [2, 17, 15, 1,  1,  1,  5,  0,  1,  0,  'yellow'],
-        [3, 22, 25, 2,  2,  2,  6,  0,  3,  0,  'red'],
-        [4, 34, 25, 2,  2,  2,  7,  0,  4,  0,  'purple'],
-        [5, 20, 20, 15, 0,  1,  0,  15, 1,  0,  'blue'],  
-        [6,	32,	25,	3,	3,	3,	7,	0,	4,	0],
+    static waves : number[][] = [
+        [1, 15, 5,  1,  1,  0,  0,  0,  0,  0], 
+        [2, 17, 15, 1,  1,  1,  5,  0,  1,  0], 
+        [3, 22, 25, 2,  2,  2,  6,  0,  3,  0], 
+        [4, 34, 25, 2,  2,  2,  7,  0,  4,  0], 
+        [5, 20, 20, 15, 0,  1,  0,  15, 1,  0], 
+        [6,	32,	25,	3,	3,	3,	7,	0,	4,	0], 
         [7,	0,	0,	4,	4,	4,	12,	0,	0,	10],
-        [8,	35,	25,	3,	3,	3,	8,	0,	5,	0],
-        [9,	60,	0,	3,	3,	3,	4,	0,	5,	0],
-        [10,25,	20,	0,	22,	0,	0,	20,	1,	0],
+        [8,	35,	25,	3,	3,	3,	8,	0,	5,	0], 
+        [9,	60,	0,	3,	3,	3,	4,	0,	5,	0], 
+        [10,25,	20,	0,	22,	0,	0,	20,	1,	0], 
         [11,35,	25,	3,	3,	3,	8,	0,	5,	0]
 //12	0	0	3	3	3	13	0	0	12
 //13	35	25	3	3	3	8	0	5	0
@@ -43,6 +43,19 @@ class Waves {
 //40	30	15	10	10	10	2	25	1	1
   
     ]
+    static borderColors = [
+        'orange',
+        'yellow',
+        'red',
+        'purple',
+        'blue',  
+        'purple',
+        'orange',
+        'grey', 
+        'black',
+        'rotate'
+    ];
+
     static waveItems: { [index: string]: number } = {
         wave: 0,
         grunts: 1,
@@ -58,13 +71,12 @@ class Waves {
     }
 
     static getRoboCount(waveNum: number, name:string) : number {
-        var w: number[] = <number[]>this.waves[waveNum];
+        var w: number[] = this.waves[waveNum];
         return w[this.waveItems[name]];
     }
 
     static getBorderColor(waveNum: number): string {
-        var w: string[] = <string[]>this.waves[waveNum];
-        return w[this.waveItems['borderColor']];
+        return this.borderColors[waveNum % 10];
     }
 }
 
