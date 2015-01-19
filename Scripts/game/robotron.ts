@@ -70,9 +70,10 @@ class Robotron extends Game{
             this.addRandomSprites(this.currentWave["mommies"], Mommy);
             this.addRandomSprites(this.currentWave["daddies"], Daddy);
             this.addRandomSprites(this.currentWave["mikeys"], Mikey);
-            this.addRandomSprites(this.currentWave["spheroids"] + Math.ceil(this.currentWave["enforcers"] / 4), Spheroid, true); // enforcers turn back into spheriods
+            this.addRandomSprites(this.currentWave["spheroids"] + Math.ceil(this.currentWave["enforcers"] / Spheroid.enforcersSpawned), Spheroid, true); // enforcers turn back into spheriods
             this.addRandomSprites(this.currentWave["brains"], Brain);
             this.addRandomSprites(this.currentWave["quarks"], Quark, true);
+            this.addRandomSprites(this.currentWave["tanks"], Tank);
             this.continueWave = false;
         }
         else {
@@ -85,6 +86,7 @@ class Robotron extends Game{
             this.addRandomSprites(Waves.getRoboCount(this.wave, "spheroids"), Spheroid, true);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "brains"), Brain);
             this.addRandomSprites(Waves.getRoboCount(this.wave, "quarks"), Quark, true);
+            this.addRandomSprites(Waves.getRoboCount(this.wave, "tanks"), Tank, true);
         }
     }
 

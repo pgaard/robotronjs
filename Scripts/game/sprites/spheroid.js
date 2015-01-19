@@ -33,7 +33,7 @@ var Spheroid = (function (_super) {
             new Enforcer(this.game, this.left, this.top);
             this.game.playSound("sound_enforcerbirth");
             this.spawns++;
-            if (this.spawns == 3) {
+            if (this.spawns == Spheroid.enforcersSpawned) {
                 this.game.removeSprite(this);
             }
         }
@@ -64,6 +64,7 @@ var Spheroid = (function (_super) {
         this.game.removeSprite(this);
         this.game.addSprite(new Bonus(this.game, this.left, this.top, "1000"));
     };
+    Spheroid.enforcersSpawned = 4;
     Spheroid.cells = {
         all: [
             { x: 561 - 42 * 7, y: 81, w: 30, h: 30 },
@@ -84,4 +85,4 @@ var Spheroid = (function (_super) {
     };
     return Spheroid;
 })(RobotronSprite);
-//# sourceMappingURL=Spheroid.js.map
+//# sourceMappingURL=spheroid.js.map

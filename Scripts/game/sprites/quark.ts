@@ -1,6 +1,7 @@
 class Quark extends RobotronSprite {
     spawns: number = 0;
     startTime: number;
+    static tanksSpawned = 4;
     constructor(game: Game, left: number, top: number) {
         super('quark', game, left, top, "all", Quark.cells);
         this.speed = 150;
@@ -20,10 +21,10 @@ class Quark extends RobotronSprite {
 
         // after 5 sec spawn 4 enforcers at random interval
         if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
-            new Enforcer(this.game, this.left, this.top);
+            new Tank(this.game, this.left, this.top);
             this.game.playSound("sound_enforcerbirth");
             this.spawns++;
-            if (this.spawns == 3) {
+            if (this.spawns == Quark.tanksSpawned) {
                 this.game.removeSprite(this);
             }
         }

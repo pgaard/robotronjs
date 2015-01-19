@@ -25,10 +25,10 @@ var Quark = (function (_super) {
             this.setDirectionQuark();
         // after 5 sec spawn 4 enforcers at random interval
         if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
-            new Enforcer(this.game, this.left, this.top);
+            new Tank(this.game, this.left, this.top);
             this.game.playSound("sound_enforcerbirth");
             this.spawns++;
-            if (this.spawns == 3) {
+            if (this.spawns == Quark.tanksSpawned) {
                 this.game.removeSprite(this);
             }
         }
@@ -48,6 +48,7 @@ var Quark = (function (_super) {
         this.game.removeSprite(this);
         this.game.addSprite(new Bonus(this.game, this.left, this.top, "1000"));
     };
+    Quark.tanksSpawned = 4;
     Quark.cells = {
         all: [
             { x: 241 + 42 * 0, y: 235, w: 30, h: 30 },

@@ -7,6 +7,7 @@
 class Spheroid extends RobotronSprite {
     spawns: number = 0;
     startTime: number;
+    static enforcersSpawned = 4;
     constructor(game: Game, left: number, top: number) {
         super('spheroid', game, left, top, "all", Spheroid.cells);
         this.speed = 200;
@@ -29,7 +30,7 @@ class Spheroid extends RobotronSprite {
             new Enforcer(this.game, this.left, this.top);
             this.game.playSound("sound_enforcerbirth");
             this.spawns++;
-            if (this.spawns == 3) {
+            if (this.spawns == Spheroid.enforcersSpawned) {
                 this.game.removeSprite(this);
             }
         }
