@@ -399,7 +399,7 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed: boolean) {
             if (pressed) {
-                game.wave = -1;
+                game.wave = 5;
                 game.paused = false;
                 game.startWave();
                 game.start();

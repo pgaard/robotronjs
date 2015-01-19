@@ -16,7 +16,7 @@ class Quark extends RobotronSprite {
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 25);
-        //if (Math.random() < .005) this.setDirectionQuark();
+        if (Math.random() < .005) this.setDirectionQuark();
 
         // after 5 sec spawn 4 enforcers at random interval
         if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
@@ -30,9 +30,13 @@ class Quark extends RobotronSprite {
         this.move(time);
     }
 
+    static random45degreeAngle() {
+        return 2 * Math.PI * ((Math.round(Math.random() * 4) / 4) + .125);
+    }
+
     // override
-    setDirectionQuark() {
-        var theta = 2 * Math.PI * Math.random();
+    setDirectionQuark() {                
+        var theta = Quark.random45degreeAngle();
         this.velocityX = Math.cos(theta) * this.speed;
         this.velocityY = Math.sin(theta) * this.speed;
     }

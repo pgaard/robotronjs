@@ -21,7 +21,8 @@ var Quark = (function (_super) {
     }
     Quark.prototype.mover = function (context, time) {
         this.advanceFrame(time, 25);
-        //if (Math.random() < .005) this.setDirectionQuark();
+        if (Math.random() < .005)
+            this.setDirectionQuark();
         // after 5 sec spawn 4 enforcers at random interval
         if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
             new Enforcer(this.game, this.left, this.top);
@@ -33,9 +34,12 @@ var Quark = (function (_super) {
         }
         this.move(time);
     };
+    Quark.random45degreeAngle = function () {
+        return 2 * Math.PI * ((Math.round(Math.random() * 4) / 4) + .125);
+    };
     // override
     Quark.prototype.setDirectionQuark = function () {
-        var theta = 2 * Math.PI * Math.random();
+        var theta = Quark.random45degreeAngle();
         this.velocityX = Math.cos(theta) * this.speed;
         this.velocityY = Math.sin(theta) * this.speed;
     };
