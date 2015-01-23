@@ -7,7 +7,14 @@ var __extends = this.__extends || function (d, b) {
 var Tank = (function (_super) {
     __extends(Tank, _super);
     function Tank(game, left, top) {
+        var _this = this;
         _super.call(this, 'tank', game, left, top, "all", Tank.cells);
+        // override
+        this.setRandomDirection = function () {
+            var theta = Quark.random45degreeAngle();
+            _this.velocityX = Math.cos(theta) * _this.speed;
+            _this.velocityY = Math.sin(theta) * _this.speed;
+        };
         this.speed = 50;
         this.width = Tank.cells['all'][0].w * 2;
         this.height = Tank.cells['all'][0].h * 2;
@@ -22,12 +29,6 @@ var Tank = (function (_super) {
         if (Math.random() < .005)
             this.setRandomDirection();
         this.move(time);
-    };
-    // override
-    Tank.prototype.setRandomDirection = function () {
-        var theta = Quark.random45degreeAngle();
-        this.velocityX = Math.cos(theta) * this.speed;
-        this.velocityY = Math.sin(theta) * this.speed;
     };
     Tank.prototype.kill = function (bullet) {
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);

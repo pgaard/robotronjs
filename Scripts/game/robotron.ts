@@ -228,6 +228,8 @@ class Robotron extends Game{
     // override
     startAnimate(time: number) {
 
+        RobotronSprite.currentTime = getTimeNow();
+
         if (this.innerWave)
             return;
         this.handlesKeys();
@@ -239,7 +241,7 @@ class Robotron extends Game{
             ).length == 0) {
             this.startWave();
             return;
-        }
+        }        
 
         this.shoot(time);
         this.checkForKills();
@@ -401,7 +403,7 @@ game.addKeyListener(
         key: 'p',
         listener: function (pressed: boolean) {
             if (pressed) {
-                game.wave = 5;
+                game.wave = -1;
                 game.paused = false;
                 game.startWave();
                 game.start();

@@ -11,7 +11,15 @@ var __extends = this.__extends || function (d, b) {
 var Enforcer = (function (_super) {
     __extends(Enforcer, _super);
     function Enforcer(game, left, top) {
+        var _this = this;
         _super.call(this, 'enforcer', game, left, top, 'all', Enforcer.cells);
+        // override
+        this.setRandomDirectionEnforcer = function () {
+            _this.speed = (Math.random() * 150) + 25;
+            var theta = 2 * Math.PI * Math.random();
+            _this.velocityX = Math.cos(theta) * _this.speed;
+            _this.velocityY = Math.sin(theta) * _this.speed;
+        };
         this.width = 18 * 2;
         this.height = 22 * 2;
         this.enemy = true;
@@ -39,13 +47,6 @@ var Enforcer = (function (_super) {
             bullet.speed = bulletSpeed;
             this.game.playSound("sound_enforcershot");
         }
-    };
-    // override
-    Enforcer.prototype.setRandomDirectionEnforcer = function () {
-        this.speed = (Math.random() * 150) + 25;
-        var theta = 2 * Math.PI * Math.random();
-        this.velocityX = Math.cos(theta) * this.speed;
-        this.velocityY = Math.sin(theta) * this.speed;
     };
     Enforcer.prototype.kill = function (bullet) {
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);

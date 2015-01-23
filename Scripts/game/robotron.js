@@ -198,6 +198,7 @@ var Robotron = (function (_super) {
     };
     // override
     Robotron.prototype.startAnimate = function (time) {
+        RobotronSprite.currentTime = getTimeNow();
         if (this.innerWave)
             return;
         this.handlesKeys();
@@ -335,7 +336,7 @@ game.addKeyListener({
     key: 'p',
     listener: function (pressed) {
         if (pressed) {
-            game.wave = 5;
+            game.wave = -1;
             game.paused = false;
             game.startWave();
             game.start();

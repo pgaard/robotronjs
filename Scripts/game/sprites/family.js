@@ -12,11 +12,11 @@ var Family = (function (_super) {
         _super.call(this, name, game, left, top, "left", cells);
         this.speed = 20;
         this.setRandomDirection();
+        this.queueRandomEvent(2, 0, true, this.setRandomDirection);
     }
     Family.prototype.mover = function (context, time) {
         this.advanceFrame(time, 200);
-        if (Math.random() < .005)
-            this.setRandomDirection();
+        this.fireRandomEvents();
         this.move(time);
     };
     return Family;

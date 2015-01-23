@@ -49,4 +49,4 @@ var Waves = (function () {
     };
     return Waves;
 })();
-//# sourceMappingURL=waves.js.map
+//# sourceMappingURL=Waves.js.map

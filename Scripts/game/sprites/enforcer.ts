@@ -41,7 +41,7 @@ class Enforcer extends RobotronSprite
     }
 
     // override
-    setRandomDirectionEnforcer() {
+    setRandomDirectionEnforcer = () => {
         this.speed = (Math.random() * 150) + 25;
         var theta = 2 * Math.PI * Math.random();
         this.velocityX = Math.cos(theta) * this.speed;

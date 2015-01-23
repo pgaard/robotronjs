@@ -19,7 +19,7 @@
     }
 
     // override
-    setRandomDirection() {
+    setRandomDirection = () => {
         var theta = Quark.random45degreeAngle();
         this.velocityX = Math.cos(theta) * this.speed;
         this.velocityY = Math.sin(theta) * this.speed;
