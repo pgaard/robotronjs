@@ -17,27 +17,27 @@ class Enforcer extends RobotronSprite
         this.score = 150;
         this.speed = 200;
         this.setRandomDirectionEnforcer();
+        this.queueRandomEvent(4, 1, true, this.setRandomDirectionEnforcer);
+        this.queueRandomEvent(3, 1, true, this.shootAtPlayer);
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 200, true); // just grows and stops animating
-        if (Math.random() < .01)
-            this.setRandomDirectionEnforcer();
+        this.fireRandomEvents();
         this.move(time);
+    }
 
-        if (Math.random() < .005) {
-            // shoot
-            var man = Enforcer.getMan();
-            var distance = this.game.distance(this.left, this.top, man.left, man.top);
-            var bulletSpeed = (distance / this.game.width()) * 600;
-            var theta = Math.atan((this.top - man.top) / (this.left - man.left));
-            var reverse = this.left > man.left ? -1 : 1;
-            var velocityX = Math.cos(theta) * bulletSpeed * reverse;
-            var velocityY = Math.sin(theta) * bulletSpeed * reverse;
-            var bullet = new EnforcerBullet(this.game, this.left, this.top, velocityX, velocityY);
-            bullet.speed = bulletSpeed;
-            this.game.playSound("sound_enforcershot");
-        }
+    shootAtPlayer = () => {
+        var man = Enforcer.getMan();
+        var distance = this.game.distance(this.left, this.top, man.left, man.top);
+        var bulletSpeed = (distance / this.game.width()) * 600;
+        var theta = Math.atan((this.top - man.top) / (this.left - man.left));
+        var reverse = this.left > man.left ? -1 : 1;
+        var velocityX = Math.cos(theta) * bulletSpeed * reverse;
+        var velocityY = Math.sin(theta) * bulletSpeed * reverse;
+        var bullet = new EnforcerBullet(this.game, this.left, this.top, velocityX, velocityY);
+        bullet.speed = bulletSpeed;
+        this.game.playSound("sound_enforcershot");
     }
 
     // override

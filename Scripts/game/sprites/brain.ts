@@ -14,12 +14,13 @@ class Brain extends RobotronSprite {
         this.mustKill = true;
         this.score = 500;
         this.setRandomDirection();
+        this.queueRandomEvent(3, 1, true, this.setRandomDirection);
     }
 
     // TODO: random changing movement towards player, towards family or random
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 200);
-        if (Math.random() < .005) this.setRandomDirection();
+        this.fireRandomEvents();
         this.move(time);
     }
 

@@ -20,12 +20,12 @@ var Brain = (function (_super) {
         this.mustKill = true;
         this.score = 500;
         this.setRandomDirection();
+        this.queueRandomEvent(3, 1, true, this.setRandomDirection);
     }
     // TODO: random changing movement towards player, towards family or random
     Brain.prototype.mover = function (context, time) {
         this.advanceFrame(time, 200);
-        if (Math.random() < .005)
-            this.setRandomDirection();
+        this.fireRandomEvents();
         this.move(time);
     };
     Brain.prototype.kill = function (bullet) {
@@ -62,4 +62,4 @@ var Brain = (function (_super) {
     };
     return Brain;
 })(RobotronSprite);
-//# sourceMappingURL=Brain.js.map
+//# sourceMappingURL=brain.js.map
