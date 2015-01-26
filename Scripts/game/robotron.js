@@ -23,6 +23,7 @@ var Robotron = (function (_super) {
     function Robotron() {
         var _this = this;
         _super.call(this, "robotron", "canvas");
+        this.startingWave = 1;
         this.score = 0;
         this.men = 2;
         this.innerWave = true;
@@ -336,7 +337,7 @@ game.addKeyListener({
     key: 'p',
     listener: function (pressed) {
         if (pressed) {
-            game.wave = -1;
+            game.wave = game.startingWave - 2;
             game.paused = false;
             game.startWave();
             game.start();

@@ -3,7 +3,7 @@
 ///<reference path="Bullet.ts"/>
 
 class EnforcerBullet extends RobotronSprite {
-    onEdge: boolean = false;
+    disappearing: boolean = false;
 
     constructor(game: Game, left: number, top: number, velocityX: number, velocityY: number) {
         super('enforcerbullet', game, left, top,'all', EnforcerBullet.cells );
@@ -17,27 +17,30 @@ class EnforcerBullet extends RobotronSprite {
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 100);
+        this.fireRandomEvents();
         this.move(time);
-        if (this.onEdge && Math.random() < .01) {
-            this.game.removeSprite(this);
-        }
     }
 
     // override - hug wall
     adjustMoveDelta(deltaX: number, deltaY: number) {
+        var onEdge = false;
         if ((this.left + this.width + deltaX > this.game.right) ||
             (this.left + deltaX < this.game.left)) {
             this.velocityX = 0;
             this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
             deltaX = 0;
-            this.onEdge = true;
+            onEdge = true;
         }
         else if (this.top + this.height + deltaY > this.game.bottom ||
             (this.top + deltaY < this.game.top)) {
             this.velocityY = 0;
             this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
             deltaY = 0;
-            this.onEdge = true;
+            onEdge = true;
+        }
+        if (onEdge && !this.disappearing) {
+            this.disappearing = true;
+            this.queueRandomEvent(.5, 0, false, () => this.game.removeSprite(this));
         }
         return { deltaX: deltaX, deltaY: deltaY };
     }

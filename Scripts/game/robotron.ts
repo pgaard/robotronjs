@@ -17,6 +17,7 @@ class Robotron extends Game{
     men: number;
     wave: number;
     innerWave: boolean;
+    startingWave: number = 1;
     currentWave: { [id: string]: number; };
     continueWave: boolean;
     gameOver: boolean;
@@ -401,9 +402,9 @@ var game = new Robotron();
 game.addKeyListener(
     {
         key: 'p',
-        listener: function (pressed: boolean) {
+        listener: (pressed: boolean) => {
             if (pressed) {
-                game.wave = -1;
+                game.wave = game.startingWave - 2;
                 game.paused = false;
                 game.startWave();
                 game.start();

@@ -4,7 +4,7 @@
     score: number = 0;
     startTime: number;
     static currentTime: number;
-    queuedEvents: {
+    private queuedEvents: {
         averageSec: number;
         repeat: boolean;
         time: number;
@@ -17,8 +17,7 @@
         this.queuedEvents = [];
     }
 
-    setRandomDirection = () => {
-
+    setRandomDirection() {
         var rand = Math.random() * 4;
 
         this.velocityX = this.velocityY = 0;

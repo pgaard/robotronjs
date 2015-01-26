@@ -7,6 +7,7 @@ var __extends = this.__extends || function (d, b) {
 var Quark = (function (_super) {
     __extends(Quark, _super);
     function Quark(game, left, top) {
+        var _this = this;
         _super.call(this, 'quark', game, left, top, "all", Quark.cells);
         this.spawns = 0;
         this.speed = 150;
@@ -17,22 +18,21 @@ var Quark = (function (_super) {
         this.mustKill = true;
         this.score = 1000;
         this.setDirectionQuark();
-        this.startTime = getTimeNow();
+        this.queueRandomEvent(2, 0, true, function () { return _this.setDirectionQuark(); });
+        this.queueRandomEvent(.5, 5, true, function () { return _this.spawnTank(); });
     }
     Quark.prototype.mover = function (context, time) {
         this.advanceFrame(time, 25);
-        if (Math.random() < .005)
-            this.setDirectionQuark();
-        // after 5 sec spawn 4 enforcers at random interval
-        if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
-            new Tank(this.game, this.left, this.top);
-            this.game.playSound("sound_enforcerbirth");
-            this.spawns++;
-            if (this.spawns == Quark.tanksSpawned) {
-                this.game.removeSprite(this);
-            }
-        }
+        this.fireRandomEvents();
         this.move(time);
+    };
+    Quark.prototype.spawnTank = function () {
+        new Tank(this.game, this.left, this.top);
+        this.game.playSound("sound_enforcerbirth");
+        this.spawns++;
+        if (this.spawns == Quark.tanksSpawned) {
+            this.game.removeSprite(this);
+        }
     };
     Quark.random45degreeAngle = function () {
         return 2 * Math.PI * ((Math.round(Math.random() * 4) / 4) + .125);

@@ -10,12 +10,13 @@ class Hulk extends RobotronSprite {
         this.height = Hulk.cells['left'][0].h * 2;
         this.enemy = true;
         this.setRandomDirection();
+        this.queueRandomEvent(2, 0, true, () => this.setRandomDirection);
     }
 
     // TODO: random changing movement towards player, towards family or random
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 200);
-        if (Math.random() < .005) this.setRandomDirection();
+        this.fireRandomEvents();
         this.move(time);
     }
 

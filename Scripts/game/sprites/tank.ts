@@ -10,16 +10,17 @@
         this.canKill = true;
         this.score = 200;
         this.setRandomDirection();
+        this.queueRandomEvent(3, 0, true, () => this.setRandomDirection());
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 200);
-        if (Math.random() < .005) this.setRandomDirection();
+        this.fireRandomEvents();
         this.move(time);
     }
 
     // override
-    setRandomDirection = () => {
+    setRandomDirection() {
         var theta = Quark.random45degreeAngle();
         this.velocityX = Math.cos(theta) * this.speed;
         this.velocityY = Math.sin(theta) * this.speed;

@@ -9,10 +9,11 @@ var __extends = this.__extends || function (d, b) {
 var Family = (function (_super) {
     __extends(Family, _super);
     function Family(name, game, left, top, cells) {
+        var _this = this;
         _super.call(this, name, game, left, top, "left", cells);
         this.speed = 20;
         this.setRandomDirection();
-        this.queueRandomEvent(2, 0, true, this.setRandomDirection);
+        this.queueRandomEvent(2, 0, true, function () { return _this.setRandomDirection(); });
     }
     Family.prototype.mover = function (context, time) {
         this.advanceFrame(time, 200);

@@ -11,7 +11,7 @@ var EnforcerBullet = (function (_super) {
     __extends(EnforcerBullet, _super);
     function EnforcerBullet(game, left, top, velocityX, velocityY) {
         _super.call(this, 'enforcerbullet', game, left, top, 'all', EnforcerBullet.cells);
-        this.onEdge = false;
+        this.disappearing = false;
         this.width = 14 * 2;
         this.height = 14 * 2;
         this.velocityX = velocityX;
@@ -21,24 +21,28 @@ var EnforcerBullet = (function (_super) {
     }
     EnforcerBullet.prototype.mover = function (context, time) {
         this.advanceFrame(time, 100);
+        this.fireRandomEvents();
         this.move(time);
-        if (this.onEdge && Math.random() < .01) {
-            this.game.removeSprite(this);
-        }
     };
     // override - hug wall
     EnforcerBullet.prototype.adjustMoveDelta = function (deltaX, deltaY) {
+        var _this = this;
+        var onEdge = false;
         if ((this.left + this.width + deltaX > this.game.right) || (this.left + deltaX < this.game.left)) {
             this.velocityX = 0;
             this.velocityY = (Math.random() < .5) ? this.speed : -this.speed;
             deltaX = 0;
-            this.onEdge = true;
+            onEdge = true;
         }
         else if (this.top + this.height + deltaY > this.game.bottom || (this.top + deltaY < this.game.top)) {
             this.velocityY = 0;
             this.velocityX = (Math.random() < .5) ? this.speed : -this.speed;
             deltaY = 0;
-            this.onEdge = true;
+            onEdge = true;
+        }
+        if (onEdge && !this.disappearing) {
+            this.disappearing = true;
+            this.queueRandomEvent(.5, 0, false, function () { return _this.game.removeSprite(_this); });
         }
         return { deltaX: deltaX, deltaY: deltaY };
     };

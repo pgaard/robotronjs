@@ -13,25 +13,6 @@ var Enforcer = (function (_super) {
     function Enforcer(game, left, top) {
         var _this = this;
         _super.call(this, 'enforcer', game, left, top, 'all', Enforcer.cells);
-        this.shootAtPlayer = function () {
-            var man = Enforcer.getMan();
-            var distance = _this.game.distance(_this.left, _this.top, man.left, man.top);
-            var bulletSpeed = (distance / _this.game.width()) * 600;
-            var theta = Math.atan((_this.top - man.top) / (_this.left - man.left));
-            var reverse = _this.left > man.left ? -1 : 1;
-            var velocityX = Math.cos(theta) * bulletSpeed * reverse;
-            var velocityY = Math.sin(theta) * bulletSpeed * reverse;
-            var bullet = new EnforcerBullet(_this.game, _this.left, _this.top, velocityX, velocityY);
-            bullet.speed = bulletSpeed;
-            _this.game.playSound("sound_enforcershot");
-        };
-        // override
-        this.setRandomDirectionEnforcer = function () {
-            _this.speed = (Math.random() * 150) + 25;
-            var theta = 2 * Math.PI * Math.random();
-            _this.velocityX = Math.cos(theta) * _this.speed;
-            _this.velocityY = Math.sin(theta) * _this.speed;
-        };
         this.width = 18 * 2;
         this.height = 22 * 2;
         this.enemy = true;
@@ -40,13 +21,32 @@ var Enforcer = (function (_super) {
         this.score = 150;
         this.speed = 200;
         this.setRandomDirectionEnforcer();
-        this.queueRandomEvent(4, 1, true, this.setRandomDirectionEnforcer);
-        this.queueRandomEvent(3, 1, true, this.shootAtPlayer);
+        this.queueRandomEvent(4, 1, true, function () { return _this.setRandomDirectionEnforcer(); });
+        this.queueRandomEvent(3, 1, true, function () { return _this.shootAtPlayer(); });
     }
     Enforcer.prototype.mover = function (context, time) {
         this.advanceFrame(time, 200, true); // just grows and stops animating
         this.fireRandomEvents();
         this.move(time);
+    };
+    Enforcer.prototype.shootAtPlayer = function () {
+        var man = Enforcer.getMan();
+        var distance = this.game.distance(this.left, this.top, man.left, man.top);
+        var bulletSpeed = (distance / this.game.width()) * 600;
+        var theta = Math.atan((this.top - man.top) / (this.left - man.left));
+        var reverse = this.left > man.left ? -1 : 1;
+        var velocityX = Math.cos(theta) * bulletSpeed * reverse;
+        var velocityY = Math.sin(theta) * bulletSpeed * reverse;
+        var bullet = new EnforcerBullet(this.game, this.left, this.top, velocityX, velocityY);
+        bullet.speed = bulletSpeed;
+        this.game.playSound("sound_enforcershot");
+    };
+    // override
+    Enforcer.prototype.setRandomDirectionEnforcer = function () {
+        this.speed = (Math.random() * 150) + 25;
+        var theta = 2 * Math.PI * Math.random();
+        this.velocityX = Math.cos(theta) * this.speed;
+        this.velocityY = Math.sin(theta) * this.speed;
     };
     Enforcer.prototype.kill = function (bullet) {
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
@@ -66,4 +66,4 @@ var Enforcer = (function (_super) {
     };
     return Enforcer;
 })(RobotronSprite);
-//# sourceMappingURL=enforcer.js.map
+//# sourceMappingURL=Enforcer.js.map

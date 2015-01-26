@@ -1,6 +1,5 @@
 class Quark extends RobotronSprite {
     spawns: number = 0;
-    startTime: number;
     static tanksSpawned = 4;
     constructor(game: Game, left: number, top: number) {
         super('quark', game, left, top, "all", Quark.cells);
@@ -12,23 +11,23 @@ class Quark extends RobotronSprite {
         this.mustKill = true;
         this.score = 1000;
         this.setDirectionQuark();
-        this.startTime = getTimeNow();
+        this.queueRandomEvent(2, 0, true, () => this.setDirectionQuark());
+        this.queueRandomEvent(.5, 5, true, () => this.spawnTank());
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 25);
-        if (Math.random() < .005) this.setDirectionQuark();
-
-        // after 5 sec spawn 4 enforcers at random interval
-        if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
-            new Tank(this.game, this.left, this.top);
-            this.game.playSound("sound_enforcerbirth");
-            this.spawns++;
-            if (this.spawns == Quark.tanksSpawned) {
-                this.game.removeSprite(this);
-            }
-        }
+        this.fireRandomEvents();
         this.move(time);
+    }
+
+    spawnTank() {
+        new Tank(this.game, this.left, this.top);
+        this.game.playSound("sound_enforcerbirth");
+        this.spawns++;
+        if (this.spawns == Quark.tanksSpawned) {
+            this.game.removeSprite(this);
+        }
     }
 
     static random45degreeAngle() {

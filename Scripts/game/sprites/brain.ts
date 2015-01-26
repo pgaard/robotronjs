@@ -14,7 +14,7 @@ class Brain extends RobotronSprite {
         this.mustKill = true;
         this.score = 500;
         this.setRandomDirection();
-        this.queueRandomEvent(3, 1, true, this.setRandomDirection);
+        this.queueRandomEvent(3, 1, true, () => this.setRandomDirection());
     }
 
     // TODO: random changing movement towards player, towards family or random

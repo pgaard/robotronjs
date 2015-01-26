@@ -6,7 +6,6 @@
 
 class Spheroid extends RobotronSprite {
     spawns: number = 0;
-    startTime: number;
     static enforcersSpawned = 4;
     constructor(game: Game, left: number, top: number) {
         super('spheroid', game, left, top, "all", Spheroid.cells);
@@ -18,23 +17,23 @@ class Spheroid extends RobotronSprite {
         this.mustKill = true;
         this.score = 1000;
         this.setDirectionSpheroid();
-        this.startTime = getTimeNow();
+        this.queueRandomEvent(2, 0, true, () => this.setDirectionSpheroid());
+        this.queueRandomEvent(.5, 5, true, () => this.spawnEnforcer());
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
         this.advanceFrame(time, 25);
-        if (Math.random() < .005) this.setDirectionSpheroid();
-
-        // after 5 sec spawn 4 enforcers at random interval
-        if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
-            new Enforcer(this.game, this.left, this.top);
-            this.game.playSound("sound_enforcerbirth");
-            this.spawns++;
-            if (this.spawns == Spheroid.enforcersSpawned) {
-                this.game.removeSprite(this);
-            }
-        }
+        this.fireRandomEvents();
         this.move(time);
+    }
+
+    spawnEnforcer() {
+        new Enforcer(this.game, this.left, this.top);
+        this.game.playSound("sound_enforcerbirth");
+        this.spawns++;
+        if (this.spawns == Spheroid.enforcersSpawned) {
+            this.game.removeSprite(this);
+        }
     }
 
     // override

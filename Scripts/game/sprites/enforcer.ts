@@ -17,8 +17,8 @@ class Enforcer extends RobotronSprite
         this.score = 150;
         this.speed = 200;
         this.setRandomDirectionEnforcer();
-        this.queueRandomEvent(4, 1, true, this.setRandomDirectionEnforcer);
-        this.queueRandomEvent(3, 1, true, this.shootAtPlayer);
+        this.queueRandomEvent(4, 1, true, () => this.setRandomDirectionEnforcer());
+        this.queueRandomEvent(3, 1, true, () => this.shootAtPlayer());
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
@@ -27,7 +27,7 @@ class Enforcer extends RobotronSprite
         this.move(time);
     }
 
-    shootAtPlayer = () => {
+    shootAtPlayer() {
         var man = Enforcer.getMan();
         var distance = this.game.distance(this.left, this.top, man.left, man.top);
         var bulletSpeed = (distance / this.game.width()) * 600;
@@ -41,7 +41,7 @@ class Enforcer extends RobotronSprite
     }
 
     // override
-    setRandomDirectionEnforcer = () => {
+    setRandomDirectionEnforcer() {
         this.speed = (Math.random() * 150) + 25;
         var theta = 2 * Math.PI * Math.random();
         this.velocityX = Math.cos(theta) * this.speed;

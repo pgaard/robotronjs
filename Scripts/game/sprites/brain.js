@@ -11,6 +11,7 @@ var __extends = this.__extends || function (d, b) {
 var Brain = (function (_super) {
     __extends(Brain, _super);
     function Brain(game, left, top) {
+        var _this = this;
         _super.call(this, 'brain', game, left, top, "left", Brain.cells);
         this.speed = 50;
         this.width = Brain.cells['left'][0].w * 2;
@@ -20,7 +21,7 @@ var Brain = (function (_super) {
         this.mustKill = true;
         this.score = 500;
         this.setRandomDirection();
-        this.queueRandomEvent(3, 1, true, this.setRandomDirection);
+        this.queueRandomEvent(3, 1, true, function () { return _this.setRandomDirection(); });
     }
     // TODO: random changing movement towards player, towards family or random
     Brain.prototype.mover = function (context, time) {
@@ -62,4 +63,4 @@ var Brain = (function (_super) {
     };
     return Brain;
 })(RobotronSprite);
-//# sourceMappingURL=brain.js.map
+//# sourceMappingURL=Brain.js.map

@@ -12,6 +12,7 @@ var __extends = this.__extends || function (d, b) {
 var Spheroid = (function (_super) {
     __extends(Spheroid, _super);
     function Spheroid(game, left, top) {
+        var _this = this;
         _super.call(this, 'spheroid', game, left, top, "all", Spheroid.cells);
         this.spawns = 0;
         this.speed = 200;
@@ -22,22 +23,21 @@ var Spheroid = (function (_super) {
         this.mustKill = true;
         this.score = 1000;
         this.setDirectionSpheroid();
-        this.startTime = getTimeNow();
+        this.queueRandomEvent(2, 0, true, function () { return _this.setDirectionSpheroid(); });
+        this.queueRandomEvent(.5, 5, true, function () { return _this.spawnEnforcer(); });
     }
     Spheroid.prototype.mover = function (context, time) {
         this.advanceFrame(time, 25);
-        if (Math.random() < .005)
-            this.setDirectionSpheroid();
-        // after 5 sec spawn 4 enforcers at random interval
-        if ((getTimeNow() - this.startTime > 5000) && Math.random() < 0.01) {
-            new Enforcer(this.game, this.left, this.top);
-            this.game.playSound("sound_enforcerbirth");
-            this.spawns++;
-            if (this.spawns == Spheroid.enforcersSpawned) {
-                this.game.removeSprite(this);
-            }
-        }
+        this.fireRandomEvents();
         this.move(time);
+    };
+    Spheroid.prototype.spawnEnforcer = function () {
+        new Enforcer(this.game, this.left, this.top);
+        this.game.playSound("sound_enforcerbirth");
+        this.spawns++;
+        if (this.spawns == Spheroid.enforcersSpawned) {
+            this.game.removeSprite(this);
+        }
     };
     // override
     Spheroid.prototype.setDirectionSpheroid = function () {

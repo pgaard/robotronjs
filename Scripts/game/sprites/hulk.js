@@ -10,18 +10,19 @@ var __extends = this.__extends || function (d, b) {
 var Hulk = (function (_super) {
     __extends(Hulk, _super);
     function Hulk(game, left, top) {
+        var _this = this;
         _super.call(this, 'hulk', game, left, top, "left", Hulk.cells);
         this.speed = 50;
         this.width = Hulk.cells['left'][0].w * 2;
         this.height = Hulk.cells['left'][0].h * 2;
         this.enemy = true;
         this.setRandomDirection();
+        this.queueRandomEvent(2, 0, true, function () { return _this.setRandomDirection; });
     }
     // TODO: random changing movement towards player, towards family or random
     Hulk.prototype.mover = function (context, time) {
         this.advanceFrame(time, 200);
-        if (Math.random() < .005)
-            this.setRandomDirection();
+        this.fireRandomEvents();
         this.move(time);
     };
     Hulk.prototype.kill = function (bullet) {
