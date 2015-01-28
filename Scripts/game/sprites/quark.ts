@@ -12,7 +12,7 @@ class Quark extends RobotronSprite {
         this.score = 1000;
         this.setDirectionQuark();
         this.queueRandomEvent(2, 0, true, () => this.setDirectionQuark());
-        this.queueRandomEvent(.5, 5, true, () => this.spawnTank());
+        this.queueRandomEvent(2, 4, true, () => this.spawnTank());
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {

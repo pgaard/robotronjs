@@ -16,7 +16,6 @@ class Bullet extends RobotronSprite {
         this.velocityY = shootY * this.bulletSpeed;
         this.bulletLength = 10;
         this.canKill = true;
-        game.addSprite(this);
     }
 
     painter(context: CanvasRenderingContext2D) {
@@ -38,18 +37,17 @@ class Bullet extends RobotronSprite {
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
+        this.move(time);
+    }
 
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+    adjustMoveDelta(deltaX: number, deltaY: number) {
         if (this.left + deltaX > this.game.right ||
             this.left + deltaX < this.game.left ||
             this.top + deltaY > this.game.bottom ||
             this.top + deltaY < this.game.top) {
             this.game.removeSprite(this);
-            return;
         }
-        this.left += deltaX;
-        this.top += deltaY;
-    }
+        return { deltaX: deltaX, deltaY: deltaY };
+    }  
 }
     

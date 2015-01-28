@@ -14,7 +14,6 @@ var Bonus = (function (_super) {
         this.width = 10 * 2;
         this.height = 18 * 2;
         this.startTime = getTimeNow();
-        game.addSprite(this);
     }
     Bonus.prototype.mover = function (context, time) {
         if (getTimeNow() - this.startTime > 2500)
@@ -29,4 +28,4 @@ var Bonus = (function (_super) {
     };
     return Bonus;
 })(RobotronSprite);
-//# sourceMappingURL=Bonus.js.map
+//# sourceMappingURL=bonus.js.map

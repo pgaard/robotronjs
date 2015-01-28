@@ -15,14 +15,18 @@ var AnimatedSprite = (function (_super) {
         this.velocityX = 0;
         this.velocityY = 0;
         this.lastStepTime = 0;
-        this.spriteSheetPainter = new SpriteSheetPainter(cells, game.spritesheet, startDirection, 2);
+        if (cells)
+            this.spriteSheetPainter = new SpriteSheetPainter(cells, game.spritesheet, startDirection, 2);
         this.direction = startDirection;
         game.addSprite(this);
     }
     AnimatedSprite.prototype.painter = function (context) {
-        this.spriteSheetPainter.paint(this, context);
+        if (this.spriteSheetPainter)
+            this.spriteSheetPainter.paint(this, context);
     };
     AnimatedSprite.prototype.advanceFrame = function (time, stepMs, oneShot) {
+        if (!this.spriteSheetPainter)
+            return false;
         var timeDiff = time - this.lastStepTime;
         if (timeDiff > stepMs) {
             this.spriteSheetPainter.advance(this.direction, oneShot);

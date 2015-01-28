@@ -17,7 +17,6 @@ var Electrode = (function (_super) {
         this.enemy = true;
         this.rgbColors = rgbColors;
         this.canKill = true;
-        game.addSprite(this);
     }
     Electrode.prototype.painter = function (context) {
         context.save();

@@ -19,7 +19,7 @@ var Quark = (function (_super) {
         this.score = 1000;
         this.setDirectionQuark();
         this.queueRandomEvent(2, 0, true, function () { return _this.setDirectionQuark(); });
-        this.queueRandomEvent(.5, 5, true, function () { return _this.spawnTank(); });
+        this.queueRandomEvent(2, 4, true, function () { return _this.spawnTank(); });
     }
     Quark.prototype.mover = function (context, time) {
         this.advanceFrame(time, 25);

@@ -11,7 +11,6 @@ class Bonus extends RobotronSprite
         this.width = 10 * 2;
         this.height = 18 * 2;
         this.startTime = getTimeNow();
-        game.addSprite(this);
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {

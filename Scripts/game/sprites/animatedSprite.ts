@@ -13,16 +13,19 @@ class AnimatedSprite extends Sprite{
 
     constructor(name: string, game: Game, left: number, top: number, startDirection: string, cells: ISpriteCells) {
         super(name, game, left, top);
-        this.spriteSheetPainter = new SpriteSheetPainter(cells, game.spritesheet, startDirection, 2)
+        if(cells)
+            this.spriteSheetPainter = new SpriteSheetPainter(cells, game.spritesheet, startDirection, 2)
         this.direction = startDirection;
         game.addSprite(this);
     }
 
-    painter(context:CanvasRenderingContext2D){
-        this.spriteSheetPainter.paint(this, context);
+    painter(context: CanvasRenderingContext2D) {
+        if(this.spriteSheetPainter)
+            this.spriteSheetPainter.paint(this, context);
     }
 
-    advanceFrame(time: number, stepMs: number, oneShot?: boolean){
+    advanceFrame(time: number, stepMs: number, oneShot?: boolean) {
+        if (!this.spriteSheetPainter) return false;
         var timeDiff = time - this.lastStepTime;
 
         if (timeDiff > stepMs) {

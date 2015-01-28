@@ -14,7 +14,6 @@ class Electrode extends RobotronSprite {
         this.enemy = true;
         this.rgbColors = rgbColors;
         this.canKill = true;
-        game.addSprite(this);
     }
 
     painter(context: CanvasRenderingContext2D) {

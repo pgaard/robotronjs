@@ -16,7 +16,6 @@ var Bullet = (function (_super) {
         this.velocityY = shootY * this.bulletSpeed;
         this.bulletLength = 10;
         this.canKill = true;
-        game.addSprite(this);
     }
     Bullet.prototype.painter = function (context) {
         context.save();
@@ -39,14 +38,13 @@ var Bullet = (function (_super) {
         context.restore();
     };
     Bullet.prototype.mover = function (context, time) {
-        var deltaX = this.game.pixelsPerFrame(time, this.velocityX);
-        var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
+        this.move(time);
+    };
+    Bullet.prototype.adjustMoveDelta = function (deltaX, deltaY) {
         if (this.left + deltaX > this.game.right || this.left + deltaX < this.game.left || this.top + deltaY > this.game.bottom || this.top + deltaY < this.game.top) {
             this.game.removeSprite(this);
-            return;
         }
-        this.left += deltaX;
-        this.top += deltaY;
+        return { deltaX: deltaX, deltaY: deltaY };
     };
     return Bullet;
 })(RobotronSprite);

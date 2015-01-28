@@ -11,7 +11,6 @@ class Explosion extends Sprite {
         this.width = width;
         this.horizontal = horizontal;
         this.spacing = 1;
-        game.addSprite(this);
     }
 
     painter(context: CanvasRenderingContext2D) {
