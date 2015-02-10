@@ -1,7 +1,7 @@
 class Quark extends RobotronSprite {
     spawns: number = 0;
     static tanksSpawned = 4;
-    constructor(game: Game, left: number, top: number) {
+    constructor(game: Game, left: number, top: number, private rgbColors: () => string) {
         super('quark', game, left, top, "all", Quark.cells);
         this.speed = 150;
         this.width = Quark.cells['all'][0].w * 2;
@@ -22,7 +22,7 @@ class Quark extends RobotronSprite {
     }
 
     spawnTank() {
-        new Tank(this.game, this.left, this.top);
+        new Tank(this.game, this.left, this.top, this.rgbColors );
         this.game.playSound("sound_enforcerbirth");
         this.spawns++;
         if (this.spawns == Quark.tanksSpawned) {

@@ -38,7 +38,8 @@ var Robotron = (function (_super) {
             g: 0,
             b: 0
         };
-        Enforcer.getMan = function () { return _this.manSprite; };
+        RobotronSprite.getMan = function () { return _this.manSprite; };
+        RobotronSprite.rgbColors = function () { return _this.rgbColors(); };
     }
     Robotron.prototype.rgbColors = function () {
         return 'rgb(' + this.colors.r + ',' + this.colors.g + ',' + this.colors.b + ')';
@@ -112,6 +113,8 @@ var Robotron = (function (_super) {
                 new Grunt(game, left, t, function () { return _this.waveDuration(); }, function () { return _this.manLocation(); });
             else if (type == Electrode)
                 new Electrode(game, left, t, function () { return _this.rgbColors(); });
+            else if (type == Quark)
+                new Quark(game, left, t, function () { return _this.rgbColors(); });
             else
                 new type(game, left, t);
         }

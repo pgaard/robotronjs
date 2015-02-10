@@ -73,7 +73,17 @@ var RobotronSprite = (function (_super) {
             averageSec: averageSec,
             repeat: repeat,
             time: RobotronSprite.currentTime + (delaySec * 1000) + Math.random() * (averageSec * 1000 * 2),
-            event: event
+            event: event,
+            fixed: false
+        });
+    };
+    RobotronSprite.prototype.queueFixedEvent = function (sec, repeat, event) {
+        this.queuedEvents.push({
+            averageSec: sec,
+            repeat: repeat,
+            time: RobotronSprite.currentTime + (sec * 1000),
+            event: event,
+            fixed: true
         });
     };
     RobotronSprite.prototype.fireRandomEvents = function () {
@@ -81,10 +91,17 @@ var RobotronSprite = (function (_super) {
         while (i--) {
             if (RobotronSprite.currentTime > this.queuedEvents[i].time) {
                 this.queuedEvents[i].event();
-                if (this.queuedEvents[i].repeat)
-                    this.queuedEvents[i].time = RobotronSprite.currentTime + Math.random() * (this.queuedEvents[i].averageSec * 1000 * 2);
-                else
+                if (this.queuedEvents[i].repeat) {
+                    if (this.queuedEvents[i].fixed) {
+                        this.queuedEvents[i].time = RobotronSprite.currentTime + this.queuedEvents[i].averageSec * 1000;
+                    }
+                    else {
+                        this.queuedEvents[i].time = RobotronSprite.currentTime + Math.random() * (this.queuedEvents[i].averageSec * 1000 * 2);
+                    }
+                }
+                else {
                     this.queuedEvents.splice(i, 1);
+                }
             }
         }
     };

@@ -48,7 +48,8 @@ class Robotron extends Game{
             b: 0
         };
 
-        Enforcer.getMan = () => this.manSprite;
+        RobotronSprite.getMan = () => this.manSprite;
+        RobotronSprite.rgbColors = () => this.rgbColors();
     }
 
     rgbColors() {
@@ -128,6 +129,8 @@ class Robotron extends Game{
                 new Grunt(game, left, t, () => this.waveDuration(), () => this.manLocation());
             else if(type == Electrode)
                 new Electrode(game, left, t, () => this.rgbColors());
+            else if (type == Quark)
+                new Quark(game, left, t, () => this.rgbColors());
             else
                 new type(game, left, t);
         }

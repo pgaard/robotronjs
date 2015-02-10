@@ -5,8 +5,6 @@
 
 class Enforcer extends RobotronSprite
 {
-    static getMan: () => Sprite;
-
     constructor(game: Game, left: number, top: number) {
         super('enforcer', game, left, top, 'all', Enforcer.cells);
         this.width = 18 * 2;
@@ -28,7 +26,7 @@ class Enforcer extends RobotronSprite
     }
 
     shootAtPlayer() {
-        var man = Enforcer.getMan();
+        var man = RobotronSprite.getMan();
         var distance = this.game.distance(this.left, this.top, man.left, man.top);
         var bulletSpeed = (distance / this.game.width()) * 600;
         var theta = Math.atan((this.top - man.top) / (this.left - man.left));

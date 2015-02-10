@@ -6,9 +6,10 @@ var __extends = this.__extends || function (d, b) {
 };
 var Quark = (function (_super) {
     __extends(Quark, _super);
-    function Quark(game, left, top) {
+    function Quark(game, left, top, rgbColors) {
         var _this = this;
         _super.call(this, 'quark', game, left, top, "all", Quark.cells);
+        this.rgbColors = rgbColors;
         this.spawns = 0;
         this.speed = 150;
         this.width = Quark.cells['all'][0].w * 2;
@@ -27,7 +28,7 @@ var Quark = (function (_super) {
         this.move(time);
     };
     Quark.prototype.spawnTank = function () {
-        new Tank(this.game, this.left, this.top);
+        new Tank(this.game, this.left, this.top, this.rgbColors);
         this.game.playSound("sound_enforcerbirth");
         this.spawns++;
         if (this.spawns == Quark.tanksSpawned) {

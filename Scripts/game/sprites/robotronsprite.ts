@@ -3,13 +3,18 @@
     mustKill: boolean = false;
     score: number = 0;
     startTime: number;
-    static currentTime: number;
+    
     private queuedEvents: {
         averageSec: number;
         repeat: boolean;
         time: number;
-        event: () => void
+        fixed: boolean;
+        event: () => void;
     }[];
+
+    static currentTime: number;
+    static getMan: () => Sprite;
+    static rgbColors: () => string; 
 
     constructor(name: string, game: Game, left: number, top: number, startDirection?: string, cells?: ISpriteCells) {
         super(name, game, left, top, startDirection, cells);
@@ -67,9 +72,20 @@
         this.queuedEvents.push({
             averageSec: averageSec,
             repeat: repeat,
-            time: RobotronSprite.currentTime + (delaySec * 1000) + Math.random() * (averageSec * 1000 * 2),            
-            event: event
+            time: RobotronSprite.currentTime + (delaySec * 1000) + Math.random() * (averageSec * 1000 * 2),
+            event: event,
+            fixed: false
         });            
+    }
+
+    queueFixedEvent(sec: number, repeat: boolean, event: () => void) {
+        this.queuedEvents.push({
+            averageSec: sec,
+            repeat: repeat,
+            time: RobotronSprite.currentTime + (sec * 1000),
+            event: event,
+            fixed: true
+        });
     }
 
     fireRandomEvents() {
@@ -77,10 +93,16 @@
         while (i--) {
             if (RobotronSprite.currentTime > this.queuedEvents[i].time) {
                 this.queuedEvents[i].event();
-                if (this.queuedEvents[i].repeat)
-                    this.queuedEvents[i].time = RobotronSprite.currentTime + Math.random() * (this.queuedEvents[i].averageSec * 1000 * 2)
-                else
+                if (this.queuedEvents[i].repeat) {
+                    
+                    if (this.queuedEvents[i].fixed) {
+                        this.queuedEvents[i].time = RobotronSprite.currentTime + this.queuedEvents[i].averageSec * 1000;
+                    } else {
+                        this.queuedEvents[i].time = RobotronSprite.currentTime + Math.random() * (this.queuedEvents[i].averageSec * 1000 * 2)
+                    }
+                } else {
                     this.queuedEvents.splice(i, 1);
+                }
             }
         }
     }

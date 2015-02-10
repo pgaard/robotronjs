@@ -30,7 +30,7 @@ var Enforcer = (function (_super) {
         this.move(time);
     };
     Enforcer.prototype.shootAtPlayer = function () {
-        var man = Enforcer.getMan();
+        var man = RobotronSprite.getMan();
         var distance = this.game.distance(this.left, this.top, man.left, man.top);
         var bulletSpeed = (distance / this.game.width()) * 600;
         var theta = Math.atan((this.top - man.top) / (this.left - man.left));
@@ -66,4 +66,4 @@ var Enforcer = (function (_super) {
     };
     return Enforcer;
 })(RobotronSprite);
-//# sourceMappingURL=Enforcer.js.map
+//# sourceMappingURL=enforcer.js.map

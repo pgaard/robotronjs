@@ -6,9 +6,10 @@ var __extends = this.__extends || function (d, b) {
 };
 var Tank = (function (_super) {
     __extends(Tank, _super);
-    function Tank(game, left, top) {
+    function Tank(game, left, top, rgbColors) {
         var _this = this;
         _super.call(this, 'tank', game, left, top, "all", Tank.cells);
+        this.rgbColors = rgbColors;
         this.speed = 50;
         this.width = Tank.cells['all'][0].w * 2;
         this.height = Tank.cells['all'][0].h * 2;
@@ -18,6 +19,7 @@ var Tank = (function (_super) {
         this.score = 200;
         this.setRandomDirection();
         this.queueRandomEvent(3, 0, true, function () { return _this.setRandomDirection(); });
+        this.queueRandomEvent(4, 1, true, function () { return _this.shootAtPlayer(); });
     }
     Tank.prototype.mover = function (context, time) {
         this.advanceFrame(time, 200);
@@ -29,6 +31,15 @@ var Tank = (function (_super) {
         var theta = Quark.random45degreeAngle();
         this.velocityX = Math.cos(theta) * this.speed;
         this.velocityY = Math.sin(theta) * this.speed;
+    };
+    Tank.prototype.shootAtPlayer = function () {
+        var man = RobotronSprite.getMan();
+        var theta = Math.atan((this.top - man.top) / (this.left - man.left));
+        var reverse = this.left > man.left ? -1 : 1;
+        var shootX = Math.cos(theta) * reverse;
+        var shootY = Math.sin(theta) * reverse;
+        var bullet = new TankShot(this.game, this.left, this.top, shootX, shootY, this.rgbColors);
+        this.game.playSound("sound_enforcershot");
     };
     Tank.prototype.kill = function (bullet) {
         var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);

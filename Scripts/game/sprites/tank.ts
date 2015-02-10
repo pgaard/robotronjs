@@ -1,6 +1,6 @@
 ﻿class Tank extends RobotronSprite
 {    
-    constructor(game: Game, left: number, top: number) {
+    constructor(game: Game, left: number, top: number, private rgbColors: () => string) {
         super('tank', game, left, top, "all", Tank.cells);
         this.speed = 50;
         this.width = Tank.cells['all'][0].w * 2;
@@ -11,6 +11,7 @@
         this.score = 200;
         this.setRandomDirection();
         this.queueRandomEvent(3, 0, true, () => this.setRandomDirection());
+        this.queueRandomEvent(4, 1, true, () => this.shootAtPlayer());
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
@@ -24,6 +25,16 @@
         var theta = Quark.random45degreeAngle();
         this.velocityX = Math.cos(theta) * this.speed;
         this.velocityY = Math.sin(theta) * this.speed;
+    }
+
+    shootAtPlayer() {
+        var man = RobotronSprite.getMan();
+        var theta = Math.atan((this.top - man.top) / (this.left - man.left));
+        var reverse = this.left > man.left ? -1 : 1;
+        var shootX = Math.cos(theta) * reverse;
+        var shootY = Math.sin(theta) *  reverse;
+        var bullet = new TankShot(this.game, this.left, this.top, shootX, shootY, this.rgbColors);
+        this.game.playSound("sound_enforcershot");
     }
 
     kill(bullet: Bullet) {

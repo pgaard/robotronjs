@@ -9,13 +9,17 @@ var __extends = this.__extends || function (d, b) {
 var Explosion = (function (_super) {
     __extends(Explosion, _super);
     function Explosion(game, left, top, width, height, horizontal) {
+        var _this = this;
         _super.call(this, 'explosion', game, left, top);
         this.height = height;
         this.width = width;
         this.horizontal = horizontal;
-        this.spacing = 1;
-        game.addSprite(this);
+        this.spacing = 2;
+        this.queueFixedEvent(.02, true, function () { return _this.changeSpacing(); });
     }
+    Explosion.prototype.mover = function (context, time) {
+        this.fireRandomEvents();
+    };
     Explosion.prototype.painter = function (context) {
         context.save();
         context.strokeStyle = 'white';
@@ -43,13 +47,13 @@ var Explosion = (function (_super) {
         }
         context.restore();
     };
-    Explosion.prototype.mover = function (context, time) {
-        this.spacing += .5;
-        if (this.spacing > 10) {
+    Explosion.prototype.changeSpacing = function () {
+        this.spacing += 2;
+        if (this.spacing > 11) {
             this.game.removeSprite(this);
             return;
         }
     };
     return Explosion;
-})(Sprite);
+})(RobotronSprite);
 //# sourceMappingURL=Explosion.js.map

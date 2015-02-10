@@ -1,7 +1,7 @@
 ﻿///<reference path="../Game.ts"/>
 ///<reference path="sprite.ts"/>
 
-class Explosion extends Sprite {
+class Explosion extends RobotronSprite {
     horizontal: boolean;
     spacing: number;
 
@@ -10,7 +10,12 @@ class Explosion extends Sprite {
         this.height = height;
         this.width = width;
         this.horizontal = horizontal;
-        this.spacing = 1;
+        this.spacing = 2;
+        this.queueFixedEvent(.02, true, () => this.changeSpacing());
+    }
+
+    mover(context: CanvasRenderingContext2D, time: number) {
+        this.fireRandomEvents();
     }
 
     painter(context: CanvasRenderingContext2D) {
@@ -44,10 +49,10 @@ class Explosion extends Sprite {
 
         context.restore();
     }
-    
-    mover(context: CanvasRenderingContext2D, time: number) {
-        this.spacing += .5;
-        if (this.spacing > 10) {
+   
+    changeSpacing() {
+        this.spacing += 2;
+        if (this.spacing > 11) {
             this.game.removeSprite(this);
             return;
         }
