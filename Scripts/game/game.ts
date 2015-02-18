@@ -372,6 +372,7 @@ class Game {
 
     // Given an identifier, play the associated sound.
     playSound(id: string) {
+        return;
         var channel = this.getAvailableSoundChannel(),
             element = <HTMLAudioElement> document.getElementById(id);
         if (channel && element) {

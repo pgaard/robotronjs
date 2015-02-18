@@ -283,6 +283,7 @@ var Game = (function () {
     };
     // Given an identifier, play the associated sound.
     Game.prototype.playSound = function (id) {
+        return;
         var channel = this.getAvailableSoundChannel(), element = document.getElementById(id);
         if (channel && element) {
             channel.src = element.src === '' ? element.currentSrc : element.src;

@@ -31,7 +31,7 @@ var Robotron = (function (_super) {
         this.spritesheet.src = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/images/robotronsprites.png';
         this.left = 20;
         this.right = this.width() - 20;
-        this.top = 20;
+        this.top = 35;
         this.bottom = this.height() - 20;
         this.colors = {
             r: 255,
@@ -134,13 +134,11 @@ var Robotron = (function (_super) {
         this.context.strokeStyle = borderColor == 'rotate' ? this.rgbColors() : borderColor;
         this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
         this.context.fillStyle = this.rgbColors();
-        this.context.font = "20px Courier";
-        this.context.fillText(this.wave + 1 + " Wave", this.left + this.width() / 2 - 50, this.bottom + 16);
-        this.context.fillText("Score: " + this.score + " men:" + this.men, this.left + 100, 15);
+        var textWriter = new TextWriter(this.context, this.spritesheet);
+        textWriter.write(this.wave + 1 + " wave", this.left + this.width() / 2 - 50, this.bottom + 4, 1);
+        textWriter.write(this.score + "  " + Array(this.men + 1).join("!"), this.left + 100, 5, 2);
         if (this.gameOver) {
-            this.context.fillStyle = "red";
-            this.context.font = "40px Courier bold";
-            this.context.fillText("GAME OVER", this.left + this.width() / 2 - 100, this.top + this.height() / 2);
+            textWriter.write("game over", this.left + this.width() / 2 - 120, this.top + this.height() / 2, 3);
         }
         else if (this.innerWave) {
             this.drawInnerWave();

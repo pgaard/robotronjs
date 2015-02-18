@@ -63,6 +63,7 @@
     <TypeScriptCompile Include="Scripts\game\sprites\sprintSheetPainter.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\sprite.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\tank.ts" />
+    <TypeScriptCompile Include="Scripts\game\sprites\tankshot.ts" />
     <TypeScriptCompile Include="Scripts\game\waves.ts" />
   </ItemGroup>
   <PropertyGroup>
