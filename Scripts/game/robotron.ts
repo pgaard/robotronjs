@@ -41,7 +41,7 @@ class Robotron extends Game{
         this.left = 20;
         this.right = this.width() - 20;
         this.top = 35;
-        this.bottom = this.height() - 20;
+        this.bottom = this.height() - 22;
         this.colors = {
             r: 255,
             g: 0,
@@ -154,7 +154,7 @@ class Robotron extends Game{
         this.context.fillStyle = this.rgbColors();
 
         var textWriter = new TextWriter(this.context, this.spritesheet);        
-        textWriter.write(this.wave + 1 + " wave", this.left + this.width() / 2 - 50, this.bottom + 4, 1);
+        textWriter.write(this.wave + 1 + " wave", this.left + this.width() / 2 - 50, this.bottom + 6, 1);
         textWriter.write(this.score + "  " + Array(this.men + 1).join("!"), this.left + 100, 5, 2);
 
         if (this.gameOver) {           
@@ -284,7 +284,7 @@ class Robotron extends Game{
 
     increaseScore(amount: number) {
 
-        if (Math.round((this.score + amount) / 25000) > Math.round(this.score / 25000))
+        if (Math.floor((this.score + amount) / 25000) > Math.floor(this.score / 25000))
             this.men++;
         this.score += amount;
     }
@@ -402,15 +402,17 @@ class Robotron extends Game{
 
 var game = new Robotron();
 
+game.wave = game.startingWave - 2;
+game.paused = false;
+game.startWave();
+game.start();
+
 game.addKeyListener(
     {
         key: 'p',
         listener: (pressed: boolean) => {
             if (pressed) {
-                game.wave = game.startingWave - 2;
-                game.paused = false;
-                game.startWave();
-                game.start();
+                game.paused = !game.paused;
             }
         }
     }
