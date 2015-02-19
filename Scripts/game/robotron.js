@@ -130,15 +130,14 @@ var Robotron = (function (_super) {
         this.context.fillStyle = 'black';
         this.context.fillRect(0, 0, this.width(), this.height());
         this.rotateColors();
-        var borderColor = Waves.getBorderColor(this.wave);
-        this.context.strokeStyle = borderColor == 'rotate' ? this.rgbColors() : borderColor;
-        this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
-        this.context.fillStyle = this.rgbColors();
+    };
+    // override
+    Robotron.prototype.paintOverSprites = function () {
         var textWriter = new TextWriter(this.context, this.spritesheet);
         textWriter.write(this.wave + 1 + " wave", this.left + this.width() / 2 - 50, this.bottom + 6, 1);
         textWriter.write(this.score + "  " + Array(this.men + 1).join("!"), this.left + 100, 5, 2);
         if (this.gameOver) {
-            textWriter.write("game over", this.left + this.width() / 2 - 120, this.top + this.height() / 2, 3);
+            textWriter.write("game over", this.left + ((this.right - this.left) / 2) - (36 * 8 + 18) / 2, this.top + (this.bottom - this.top) / 2 - (36 / 2), 3);
         }
         else if (this.innerWave) {
             this.drawInnerWave();
@@ -150,6 +149,10 @@ var Robotron = (function (_super) {
             }
         }
         ;
+        var borderColor = Waves.getBorderColor(this.wave);
+        this.context.strokeStyle = borderColor == 'rotate' ? this.rgbColors() : borderColor;
+        this.context.strokeRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
+        this.context.fillStyle = this.rgbColors();
     };
     Robotron.prototype.startWave = function () {
         if (!this.continueWave)
@@ -160,31 +163,32 @@ var Robotron = (function (_super) {
         this.innerWaveTime = getTimeNow();
     };
     Robotron.prototype.drawInnerWave = function () {
-        var _this = this;
         var progress = getTimeNow() - this.innerWaveTime;
         var drawTime = 800;
-        var widthAdj = function (percent) { return Math.round((1 - percent) * (_this.right - _this.left) / 2); };
-        var heightAdj = function (percent) { return Math.round((1 - percent) * (_this.bottom - _this.top) / 2); };
+        var width = this.right - this.left;
+        var height = this.bottom - this.top;
+        var widthAdj = function (percent) { return Math.round((1 - percent) * width / 2); };
+        var heightAdj = function (percent) { return Math.round((1 - percent) * height / 2); };
         if (progress < drawTime) {
             var percent = progress / drawTime;
             this.context.fillStyle = this.rgbColors();
-            this.context.fillRect(this.left + widthAdj(percent), this.top + heightAdj(percent), (this.right - this.left) * percent, (this.bottom - this.top) * percent);
+            this.context.fillRect(this.left + widthAdj(percent), this.top + heightAdj(percent), width * percent, height * percent);
             this.context.strokeStyle = 'black';
             this.context.lineWidth = 5;
             for (var p = 0; p < percent; p += .025) {
-                this.context.strokeRect(this.left + widthAdj(p), this.top + heightAdj(p), (this.right - this.left) * p, (this.bottom - this.top) * p);
+                this.context.strokeRect(this.left + widthAdj(p), this.top + heightAdj(p), width * p, height * p);
             }
         }
         else if (progress < drawTime * 2) {
             percent = (progress - drawTime) / drawTime;
             this.context.fillStyle = this.rgbColors();
-            this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
+            this.context.fillRect(this.left, this.top, width, height);
             this.context.fillStyle = 'black';
-            this.context.fillRect(this.left + widthAdj(percent), this.top + heightAdj(percent), (this.right - this.left) * percent, (this.bottom - this.top) * percent);
+            this.context.fillRect(this.left + widthAdj(percent), this.top + heightAdj(percent), width * percent, height * percent);
             this.context.strokeStyle = 'black';
             this.context.lineWidth = 5;
             for (var p = 1; p > percent; p -= .025) {
-                this.context.strokeRect(this.left + widthAdj(p), this.top + heightAdj(p), (this.right - this.left) * p, (this.bottom - this.top) * p);
+                this.context.strokeRect(this.left + widthAdj(p), this.top + heightAdj(p), width * p, height * p);
             }
         }
         else {
