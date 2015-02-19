@@ -21,6 +21,7 @@
     <Content Include="images\robotronsprites.jpg" />
     <Content Include="images\robotronsprites.png" />
     <Content Include="robotron.html" />
+    <Content Include="Scripts\game\excanvas.js" />
     <Content Include="sounds\death.mp3" />
     <Content Include="sounds\enforcer birth.mp3" />
     <Content Include="sounds\enforcer shot.mp3" />
@@ -64,6 +65,7 @@
     <TypeScriptCompile Include="Scripts\game\sprites\sprite.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\tank.ts" />
     <TypeScriptCompile Include="Scripts\game\sprites\tankshot.ts" />
+    <TypeScriptCompile Include="Scripts\game\textwriter.ts" />
     <TypeScriptCompile Include="Scripts\game\waves.ts" />
   </ItemGroup>
   <PropertyGroup>
