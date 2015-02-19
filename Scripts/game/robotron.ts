@@ -63,7 +63,7 @@ class Robotron extends Game{
         this.shootY = 0;
         this.bonus = 1000;
 
-        this.manSprite = new Man(game, this.middle().x, this.middle().y);
+        this.manSprite = new Man(this, this.middle().x, this.middle().y);
 
         if (this.continueWave) {
             this.addRandomSprites(this.currentWave["electrodes"], Electrode);
@@ -126,13 +126,13 @@ class Robotron extends Game{
             } while (distance < 150);
 
             if (type == Grunt)
-                new Grunt(game, left, t, () => this.waveDuration(), () => this.manLocation());
+                new Grunt(this, left, t, () => this.waveDuration(), () => this.manLocation());
             else if(type == Electrode)
-                new Electrode(game, left, t, () => this.rgbColors());
+                new Electrode(this, left, t, () => this.rgbColors());
             else if (type == Quark)
-                new Quark(game, left, t, () => this.rgbColors());
+                new Quark(this, left, t, () => this.rgbColors());
             else
-                new type(game, left, t);
+                new type(this, left, t);
         }
     }
 
@@ -183,30 +183,50 @@ class Robotron extends Game{
 
     drawInnerWave() {
         var progress = getTimeNow() - this.innerWaveTime;
+        var drawTime = 800;
+        var widthAdj = (percent: number) => Math.round((1 - percent) * (this.right - this.left) / 2);
+        var heightAdj = (percent: number) => Math.round((1 - percent) * (this.bottom - this.top) / 2);
 
-        if (progress < 1000) {
-            var percent = progress / 1000.0;
-            var widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
-            var heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
+        if (progress < drawTime) {
+            var percent = progress / drawTime;
             this.context.fillStyle = this.rgbColors();
             this.context.fillRect(
-                    this.left + widthAdj,
-                    this.top + heightAdj,
+                    this.left + widthAdj(percent),
+                    this.top + heightAdj(percent),
                     (this.right - this.left) * percent,
                     (this.bottom - this.top) * percent);
+
+            this.context.strokeStyle = 'black';
+            this.context.lineWidth = 5;
+            for (var p = 0; p < percent; p += .025) {
+                this.context.strokeRect(
+                    this.left + widthAdj(p),
+                    this.top + heightAdj(p),
+                    (this.right - this.left) * p,
+                    (this.bottom - this.top) * p);
+            } 
         }
-        else if (progress < 2000) {
-            percent = (progress - 1000) / 1000.0;
-            widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
-            heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
+        else if (progress < drawTime * 2) {
+            percent = (progress - drawTime) / drawTime;
             this.context.fillStyle = this.rgbColors();
             this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
+
             this.context.fillStyle = 'black';
             this.context.fillRect(
-                    this.left + widthAdj,
-                    this.top + heightAdj,
+                    this.left + widthAdj(percent),
+                    this.top + heightAdj(percent),
                     (this.right - this.left) * percent,
                     (this.bottom - this.top) * percent);
+
+            this.context.strokeStyle = 'black';
+            this.context.lineWidth = 5;
+            for (var p = 1; p > percent; p -= .025) {
+                this.context.strokeRect(
+                    this.left + widthAdj(p),
+                    this.top + heightAdj(p),
+                    (this.right - this.left) * p,
+                    (this.bottom - this.top) * p);
+            } 
         }
         else {
             this.initWave();
@@ -270,7 +290,7 @@ class Robotron extends Game{
                     this.lastShotTime = time;
                     this.playSound("sound_shot");
                     var bullet = new Bullet(
-                        game,
+                        this,
                             this.manSprite.left + this.manSprite.width / 2,
                             this.manSprite.top + this.manSprite.height / 2,
                             this.shootX,
@@ -368,7 +388,7 @@ class Robotron extends Game{
                     {
                         // points
                         this.increaseScore(this.bonus);
-                        addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus.toString()));
+                        addSprites.push(new Bonus(this, sprite.left, sprite.top, this.bonus.toString()));
                         this.playSound("sound_rescue");
 
                         if (this.bonus < 5000)
@@ -383,7 +403,7 @@ class Robotron extends Game{
                             if((hulk.left + hulk.width) >= sprite.left && hulk.left <= sprite.left + sprite.width &&
                                 (hulk.top + hulk.height) >= sprite.top && hulk.top <= sprite.top + sprite.height){
                                 removeSprites.push(sprite);
-                                addSprites.push(new Skull(game, sprite.left, sprite.top ));
+                                addSprites.push(new Skull(this, sprite.left, sprite.top ));
                                 this.playSound("sound_familydie");
                             }
                         }
@@ -400,20 +420,22 @@ class Robotron extends Game{
     }
 }
 
-var game = new Robotron();
+document.addEventListener('DOMContentLoaded', () => {
+    var game = new Robotron();
 
-game.wave = game.startingWave - 2;
-game.paused = false;
-game.startWave();
-game.start();
+    game.wave = game.startingWave - 2;
+    game.paused = false;
+    game.startWave();
+    game.start();
 
-game.addKeyListener(
-    {
-        key: 'p',
-        listener: (pressed: boolean) => {
-            if (pressed) {
-                game.paused = !game.paused;
+    game.addKeyListener(
+        {
+            key: 'p',
+            listener: (pressed: boolean) => {
+                if (pressed) {
+                    game.paused = !game.paused;
+                }
             }
         }
-    }
-);
+        );
+});

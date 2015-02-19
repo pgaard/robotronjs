@@ -50,7 +50,7 @@ var Robotron = (function (_super) {
         this.shootX = 0;
         this.shootY = 0;
         this.bonus = 1000;
-        this.manSprite = new Man(game, this.middle().x, this.middle().y);
+        this.manSprite = new Man(this, this.middle().x, this.middle().y);
         if (this.continueWave) {
             this.addRandomSprites(this.currentWave["electrodes"], Electrode);
             this.addRandomSprites(this.currentWave["hulks"], Hulk);
@@ -110,13 +110,13 @@ var Robotron = (function (_super) {
                 var distance = this.distance(left, t, this.manSprite.left, this.manSprite.top);
             } while (distance < 150);
             if (type == Grunt)
-                new Grunt(game, left, t, function () { return _this.waveDuration(); }, function () { return _this.manLocation(); });
+                new Grunt(this, left, t, function () { return _this.waveDuration(); }, function () { return _this.manLocation(); });
             else if (type == Electrode)
-                new Electrode(game, left, t, function () { return _this.rgbColors(); });
+                new Electrode(this, left, t, function () { return _this.rgbColors(); });
             else if (type == Quark)
-                new Quark(game, left, t, function () { return _this.rgbColors(); });
+                new Quark(this, left, t, function () { return _this.rgbColors(); });
             else
-                new type(game, left, t);
+                new type(this, left, t);
         }
     };
     Robotron.prototype.manLocation = function () {
@@ -160,22 +160,32 @@ var Robotron = (function (_super) {
         this.innerWaveTime = getTimeNow();
     };
     Robotron.prototype.drawInnerWave = function () {
+        var _this = this;
         var progress = getTimeNow() - this.innerWaveTime;
-        if (progress < 1000) {
-            var percent = progress / 1000.0;
-            var widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
-            var heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
+        var drawTime = 800;
+        var widthAdj = function (percent) { return Math.round((1 - percent) * (_this.right - _this.left) / 2); };
+        var heightAdj = function (percent) { return Math.round((1 - percent) * (_this.bottom - _this.top) / 2); };
+        if (progress < drawTime) {
+            var percent = progress / drawTime;
             this.context.fillStyle = this.rgbColors();
-            this.context.fillRect(this.left + widthAdj, this.top + heightAdj, (this.right - this.left) * percent, (this.bottom - this.top) * percent);
+            this.context.fillRect(this.left + widthAdj(percent), this.top + heightAdj(percent), (this.right - this.left) * percent, (this.bottom - this.top) * percent);
+            this.context.strokeStyle = 'black';
+            this.context.lineWidth = 5;
+            for (var p = 0; p < percent; p += .025) {
+                this.context.strokeRect(this.left + widthAdj(p), this.top + heightAdj(p), (this.right - this.left) * p, (this.bottom - this.top) * p);
+            }
         }
-        else if (progress < 2000) {
-            percent = (progress - 1000) / 1000.0;
-            widthAdj = Math.round((1 - percent) * (this.right - this.left) / 2);
-            heightAdj = Math.round((1 - percent) * (this.bottom - this.top) / 2);
+        else if (progress < drawTime * 2) {
+            percent = (progress - drawTime) / drawTime;
             this.context.fillStyle = this.rgbColors();
             this.context.fillRect(this.left, this.top, this.right - this.left, this.bottom - this.top);
             this.context.fillStyle = 'black';
-            this.context.fillRect(this.left + widthAdj, this.top + heightAdj, (this.right - this.left) * percent, (this.bottom - this.top) * percent);
+            this.context.fillRect(this.left + widthAdj(percent), this.top + heightAdj(percent), (this.right - this.left) * percent, (this.bottom - this.top) * percent);
+            this.context.strokeStyle = 'black';
+            this.context.lineWidth = 5;
+            for (var p = 1; p > percent; p -= .025) {
+                this.context.strokeRect(this.left + widthAdj(p), this.top + heightAdj(p), (this.right - this.left) * p, (this.bottom - this.top) * p);
+            }
         }
         else {
             this.initWave();
@@ -229,7 +239,7 @@ var Robotron = (function (_super) {
                     // new bullet
                     this.lastShotTime = time;
                     this.playSound("sound_shot");
-                    var bullet = new Bullet(game, this.manSprite.left + this.manSprite.width / 2, this.manSprite.top + this.manSprite.height / 2, this.shootX, this.shootY, function () { return _this.rgbColors(); });
+                    var bullet = new Bullet(this, this.manSprite.left + this.manSprite.width / 2, this.manSprite.top + this.manSprite.height / 2, this.shootX, this.shootY, function () { return _this.rgbColors(); });
                 }
             }
         }
@@ -307,7 +317,7 @@ var Robotron = (function (_super) {
                     if ((left + width) >= sprite.left && left <= sprite.left + sprite.width && (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
                         // points
                         this.increaseScore(this.bonus);
-                        addSprites.push(new Bonus(game, sprite.left, sprite.top, this.bonus.toString()));
+                        addSprites.push(new Bonus(this, sprite.left, sprite.top, this.bonus.toString()));
                         this.playSound("sound_rescue");
                         if (this.bonus < 5000)
                             this.bonus += 1000;
@@ -318,7 +328,7 @@ var Robotron = (function (_super) {
                             var hulk = hulks[h];
                             if ((hulk.left + hulk.width) >= sprite.left && hulk.left <= sprite.left + sprite.width && (hulk.top + hulk.height) >= sprite.top && hulk.top <= sprite.top + sprite.height) {
                                 removeSprites.push(sprite);
-                                addSprites.push(new Skull(game, sprite.left, sprite.top));
+                                addSprites.push(new Skull(this, sprite.left, sprite.top));
                                 this.playSound("sound_familydie");
                             }
                         }
@@ -333,17 +343,19 @@ var Robotron = (function (_super) {
     };
     return Robotron;
 })(Game);
-var game = new Robotron();
-game.wave = game.startingWave - 2;
-game.paused = false;
-game.startWave();
-game.start();
-game.addKeyListener({
-    key: 'p',
-    listener: function (pressed) {
-        if (pressed) {
-            game.paused = !game.paused;
+document.addEventListener('DOMContentLoaded', function () {
+    var game = new Robotron();
+    game.wave = game.startingWave - 2;
+    game.paused = false;
+    game.startWave();
+    game.start();
+    game.addKeyListener({
+        key: 'p',
+        listener: function (pressed) {
+            if (pressed) {
+                game.paused = !game.paused;
+            }
         }
-    }
+    });
 });
 //# sourceMappingURL=robotron.js.map
