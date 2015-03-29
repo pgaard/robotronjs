@@ -1,4 +1,4 @@
-﻿// Wave	Grunts	Electrodes	Mommies	Daddies	Mikeys	Hulks	Brains	Spheroids	Quarks   Border
+﻿// Wave	Grunts	Electrodes	Mommies	Daddies	Mikeys	Hulks	Brains	Spheroids	Quarks   
 class Waves {
     static waves : number[][] = [
         [1, 15, 5,  1,  1,  0,  0,  0,  0,  0], 
