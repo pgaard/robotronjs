@@ -2,7 +2,7 @@
     men: number;
     wave: number;
     innerWave: boolean;
-    startingWave: number = 1;
+    startingWave: number = 5;
     currentWave: { [id: string]: number; };
     continueWave: boolean;
     gameOver: boolean;
@@ -112,6 +112,8 @@
 
             if (type == Grunt)
                 new Grunt(this, left, t, () => this.waveDuration(), () => this.manLocation());
+            else if (type == Brain)
+                new Brain(this, left, t, () => this.manLocation());
             else if(type == Electrode)
                 new Electrode(this, left, t, () => this.rgbColors());
             else if (type == Quark)

@@ -1,4 +1,4 @@
-// Wave	Grunts	Electrodes	Mommies	Daddies	Mikeys	Hulks	Brains	Spheroids	Quarks   Border
+// Wave	Grunts	Electrodes	Mommies	Daddies	Mikeys	Hulks	Brains	Spheroids	Quarks   
 var Waves = (function () {
     function Waves() {
     }
@@ -49,4 +49,4 @@ var Waves = (function () {
     };
     return Waves;
 })();
-//# sourceMappingURL=Waves.js.map
+//# sourceMappingURL=waves.js.map

@@ -40,4 +40,4 @@ var Daddy = (function (_super) {
     };
     return Daddy;
 })(Family);
-//# sourceMappingURL=Daddy.js.map
+//# sourceMappingURL=daddy.js.map

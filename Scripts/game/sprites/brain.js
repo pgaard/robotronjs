@@ -10,7 +10,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var Brain = (function (_super) {
     __extends(Brain, _super);
-    function Brain(game, left, top) {
+    function Brain(game, left, top, manPosition) {
         var _this = this;
         _super.call(this, 'brain', game, left, top, "left", Brain.cells);
         this.speed = 50;
@@ -20,8 +20,10 @@ var Brain = (function (_super) {
         this.canKill = true;
         this.mustKill = true;
         this.score = 500;
+        this.manPosition = manPosition;
         this.setRandomDirection();
         this.queueRandomEvent(3, 1, true, function () { return _this.setRandomDirection(); });
+        this.queueRandomEvent(3, 3, true, function () { return _this.fireMissle(); });
     }
     // TODO: random changing movement towards player, towards family or random
     Brain.prototype.mover = function (context, time) {
@@ -34,6 +36,9 @@ var Brain = (function (_super) {
         var explosion = new Explosion(this.game, this.left, this.top, this.width, this.height, horizontal);
         this.game.playSound("sound_kill");
         this.game.removeSprite(this);
+    };
+    Brain.prototype.fireMissle = function () {
+        var missle = new CruiseMissile(this.game, this.left, this.top, this.manPosition);
     };
     Brain.cells = {
         left: [
@@ -63,4 +68,4 @@ var Brain = (function (_super) {
     };
     return Brain;
 })(RobotronSprite);
-//# sourceMappingURL=Brain.js.map
+//# sourceMappingURL=brain.js.map

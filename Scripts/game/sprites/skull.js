@@ -23,4 +23,4 @@ var Skull = (function (_super) {
     };
     return Skull;
 })(RobotronSprite);
-//# sourceMappingURL=Skull.js.map
+//# sourceMappingURL=skull.js.map

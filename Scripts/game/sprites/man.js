@@ -75,4 +75,4 @@ var Man = (function (_super) {
     };
     return Man;
 })(RobotronSprite);
-//# sourceMappingURL=Man.js.map
+//# sourceMappingURL=man.js.map

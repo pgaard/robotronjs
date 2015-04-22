@@ -4,7 +4,9 @@
 ///<reference path="AnimatedSprite.ts"/>
 
 class Brain extends RobotronSprite {
-    constructor(game: Game, left: number, top: number) {
+    manPosition: ManPositionFunction;
+
+    constructor(game: Game, left: number, top: number, manPosition: ManPositionFunction) {
         super('brain', game, left, top, "left", Brain.cells );
         this.speed = 50;
         this.width = Brain.cells['left'][0].w * 2;
@@ -13,8 +15,10 @@ class Brain extends RobotronSprite {
         this.canKill = true;
         this.mustKill = true;
         this.score = 500;
+        this.manPosition = manPosition;
         this.setRandomDirection();
         this.queueRandomEvent(3, 1, true, () => this.setRandomDirection());
+        this.queueRandomEvent(3, 3, true, () => this.fireMissle());
     }
 
     // TODO: random changing movement towards player, towards family or random
@@ -29,6 +33,10 @@ class Brain extends RobotronSprite {
         var explosion = new Explosion(this.game, this.left, this.top, this.width, this.height, horizontal);
         this.game.playSound("sound_kill");
         this.game.removeSprite(this);
+    }
+
+    fireMissle() {
+        var missle = new CruiseMissile(this.game, this.left, this.top, this.manPosition);
     }
 
     static cells : ISpriteCells = {

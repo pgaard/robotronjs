@@ -14,3 +14,8 @@ interface ISpriteCells {
         h: number;
     }[];
 }
+
+interface Point {
+    x: number;
+    y: number;
+}

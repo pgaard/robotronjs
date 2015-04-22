@@ -59,4 +59,4 @@ var Hulk = (function (_super) {
     };
     return Hulk;
 })(RobotronSprite);
-//# sourceMappingURL=Hulk.js.map
+//# sourceMappingURL=hulk.js.map

@@ -85,4 +85,4 @@ var Spheroid = (function (_super) {
     };
     return Spheroid;
 })(RobotronSprite);
-//# sourceMappingURL=Spheroid.js.map
+//# sourceMappingURL=spheroid.js.map

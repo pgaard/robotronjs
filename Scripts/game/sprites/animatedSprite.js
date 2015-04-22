@@ -47,4 +47,4 @@ var AnimatedSprite = (function (_super) {
     };
     return AnimatedSprite;
 })(Sprite);
-//# sourceMappingURL=AnimatedSprite.js.map
+//# sourceMappingURL=animatedSprite.js.map

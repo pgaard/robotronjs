@@ -1,17 +1,3 @@
-///<reference path="Game.ts" />
-///<reference path="Waves.ts" />
-///<reference path="Sprites/Man.ts" />
-///<reference path="Sprites/Daddy.ts" />
-///<reference path="Sprites/Mommy.ts" />
-///<reference path="Sprites/Mikey.ts" />
-///<reference path="Sprites/Electrode.ts" />
-///<reference path="Sprites/Brain.ts" />
-///<reference path="Sprites/Grunt.ts" />
-///<reference path="Sprites/Hulk.ts" />
-///<reference path="Sprites/Bonus.ts" />
-///<reference path="Sprites/Spheroid.ts" />
-///<reference path="Sprites/Man.ts" />
-///<reference path="Sprites/Skull.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -23,7 +9,7 @@ var Robotron = (function (_super) {
     function Robotron() {
         var _this = this;
         _super.call(this, "robotron", "canvas");
-        this.startingWave = 1;
+        this.startingWave = 5;
         this.score = 0;
         this.men = 2;
         this.innerWave = true;
@@ -111,6 +97,8 @@ var Robotron = (function (_super) {
             } while (distance < 150);
             if (type == Grunt)
                 new Grunt(this, left, t, function () { return _this.waveDuration(); }, function () { return _this.manLocation(); });
+            else if (type == Brain)
+                new Brain(this, left, t, function () { return _this.manLocation(); });
             else if (type == Electrode)
                 new Electrode(this, left, t, function () { return _this.rgbColors(); });
             else if (type == Quark)
@@ -227,12 +215,22 @@ var Robotron = (function (_super) {
         this.shoot(time);
         this.checkForKills();
         this.checkForDeath();
+        this.checkForEndOfWave();
     };
     Robotron.prototype.handlesKeys = function () {
         var keys = this.pressedKeys;
         this.manSprite.setDirection(keys['a'], keys['d'], keys['w'], keys['s']);
         this.shootX = keys['l'] ? 1 : keys['j'] ? -1 : 0;
         this.shootY = keys['k'] ? 1 : keys['i'] ? -1 : 0;
+    };
+    Robotron.prototype.checkForEndOfWave = function () {
+        if (!this.innerWave && this.getAllSprites(function (sprite) {
+            return sprite.mustKill == true;
+        }).length == 0) {
+            this.startWave();
+            return true;
+        }
+        return false;
     };
     Robotron.prototype.shoot = function (time) {
         var _this = this;
