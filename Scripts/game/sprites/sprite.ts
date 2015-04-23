@@ -40,4 +40,12 @@ class Sprite {
 
     painter(context:CanvasRenderingContext2D){
     }
+
+    centerX() {
+        return this.left + this.width / 2;
+    }
+
+    centerY() {
+        return this.top + this.height / 2;
+    }
 }

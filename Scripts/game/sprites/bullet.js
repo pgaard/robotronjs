@@ -48,4 +48,4 @@ var Bullet = (function (_super) {
     };
     return Bullet;
 })(RobotronSprite);
-//# sourceMappingURL=Bullet.js.map
+//# sourceMappingURL=bullet.js.map

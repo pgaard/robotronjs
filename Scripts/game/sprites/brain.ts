@@ -18,7 +18,7 @@ class Brain extends RobotronSprite {
         this.manPosition = manPosition;
         this.setRandomDirection();
         this.queueRandomEvent(3, 1, true, () => this.setRandomDirection());
-        this.queueRandomEvent(3, 3, true, () => this.fireMissle());
+        this.queueRandomEvent(3, 6, true, () => this.fireMissle());
     }
 
     // TODO: random changing movement towards player, towards family or random
@@ -36,7 +36,7 @@ class Brain extends RobotronSprite {
     }
 
     fireMissle() {
-        var missle = new CruiseMissile(this.game, this.left, this.top, this.manPosition);
+        var missle = new CruiseMissile(this.game, this.centerX(), this.centerY(), this.manPosition);
     }
 
     static cells : ISpriteCells = {

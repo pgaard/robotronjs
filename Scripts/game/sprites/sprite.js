@@ -26,6 +26,12 @@ var Sprite = (function () {
     };
     Sprite.prototype.painter = function (context) {
     };
+    Sprite.prototype.centerX = function () {
+        return this.left + this.width / 2;
+    };
+    Sprite.prototype.centerY = function () {
+        return this.top + this.height / 2;
+    };
     return Sprite;
 })();
-//# sourceMappingURL=Sprite.js.map
+//# sourceMappingURL=sprite.js.map

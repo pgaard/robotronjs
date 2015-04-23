@@ -2,18 +2,23 @@
 {
     static distanceHorizontal = 40;
     static distanceVertical = 20;
-    static velocityHorizontal = 100;
-    static velocityVertical = 50;
+    static velocityHorizontal = 200;
+    static velocityVertical = 100;
     manPosition: ManPositionFunction;
     front: Point;
     middle: Point;
     end: Point;
     percentage: number;
+    velocityEndX: number;
+    velocityEndY: number;
 
     constructor(game: Game, left: number, top: number, manPosition: ManPositionFunction) {
         super('cruisemissile', game, left, top);
         this.manPosition = manPosition;
         this.canKill = true;
+        this.enemy = true;
+        this.width = 5;
+        this.height = 5;
 
         this.front = { x: left, y: top };
         this.middle = { x: left, y: top };
@@ -31,6 +36,17 @@
 
         this.front.x += deltaX;
         this.front.y += deltaY;
+
+        this.top = this.front.y;
+        this.left = this.front.x;
+
+        if (this.end) {
+            var deltaX = this.game.pixelsPerFrame(time, this.velocityEndX);
+            var deltaY = this.game.pixelsPerFrame(time, this.velocityEndY);
+
+            this.end.x += deltaX;
+            this.end.y += deltaY;
+        }
     }
 
     mover(context: CanvasRenderingContext2D, time: number) {
@@ -42,7 +58,7 @@
         context.beginPath();
         context.strokeStyle = 'white';
 
-        context.lineWidth = 5;
+        context.lineWidth = this.width;
         context.moveTo(this.front.x, this.front.y);
         context.lineTo(this.middle.x, this.middle.y);
         if (this.end)
@@ -75,16 +91,24 @@
         } else {
             this.velocityX = 0;
         }
-
-        if (this.velocityX == 0 && this.velocityY == 0) {
-            console.log("o vel");
-        }
     }
 
     advanceMissle() {
+
+        this.end = { x: this.middle.x, y: this.middle.y };
+
         this.middle.x = this.front.x;
         this.middle.y = this.front.y;
 
+        this.velocityEndX = this.velocityX;
+        this.velocityEndY = this.velocityY;
+
         this.setRandomVelocity(this.front);
     }
-}
+
+    kill(bullet: Bullet) {
+        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
+        var explosion = new Explosion(bullet.game, this.left, this.top, this.width, this.height, horizontal);
+        this.game.removeSprite(this);
+    }
+}   

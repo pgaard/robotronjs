@@ -11,7 +11,7 @@ var Robotron = (function (_super) {
         _super.call(this, "robotron", "canvas");
         this.startingWave = 5;
         this.score = 0;
-        this.men = 2;
+        this.men = 4;
         this.innerWave = true;
         this.spritesheet = new Image();
         this.spritesheet.src = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/images/robotronsprites.png';
@@ -123,7 +123,7 @@ var Robotron = (function (_super) {
     Robotron.prototype.paintOverSprites = function () {
         var textWriter = new TextWriter(this.context, this.spritesheet);
         textWriter.write(this.wave + 1 + " wave", this.left + this.width() / 2 - 50, this.bottom + 6, 1);
-        textWriter.write(this.score + "  " + Array(this.men + 1).join("!"), this.left + 100, 5, 2);
+        textWriter.write(this.score + "  " + Array(this.men).join("!"), this.left + 100, 5, 2);
         if (this.gameOver) {
             textWriter.write("game over", this.left + ((this.right - this.left) / 2) - (36 * 8 + 18) / 2, this.top + (this.bottom - this.top) / 2 - (36 / 2), 3);
         }
@@ -303,8 +303,8 @@ var Robotron = (function (_super) {
                     this.playSound("sound_death");
                     this.dead = true;
                     // TODO: remove bullet and explosion sprites, make man flash
+                    this.men--;
                     if (this.men > 0) {
-                        this.men--;
                         this.continueWave = true;
                         this.currentWave = this.getSpriteCounts();
                         this.deathPause = true;

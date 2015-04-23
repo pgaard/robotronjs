@@ -10,6 +10,9 @@ var CruiseMissile = (function (_super) {
         _super.call(this, 'cruisemissile', game, left, top);
         this.manPosition = manPosition;
         this.canKill = true;
+        this.enemy = true;
+        this.width = 5;
+        this.height = 5;
         this.front = { x: left, y: top };
         this.middle = { x: left, y: top };
         this.setRandomVelocity(this.front);
@@ -22,6 +25,14 @@ var CruiseMissile = (function (_super) {
         var deltaY = this.game.pixelsPerFrame(time, this.velocityY);
         this.front.x += deltaX;
         this.front.y += deltaY;
+        this.top = this.front.y;
+        this.left = this.front.x;
+        if (this.end) {
+            var deltaX = this.game.pixelsPerFrame(time, this.velocityEndX);
+            var deltaY = this.game.pixelsPerFrame(time, this.velocityEndY);
+            this.end.x += deltaX;
+            this.end.y += deltaY;
+        }
     };
     CruiseMissile.prototype.mover = function (context, time) {
         this.move(time);
@@ -30,7 +41,7 @@ var CruiseMissile = (function (_super) {
         context.save();
         context.beginPath();
         context.strokeStyle = 'white';
-        context.lineWidth = 5;
+        context.lineWidth = this.width;
         context.moveTo(this.front.x, this.front.y);
         context.lineTo(this.middle.x, this.middle.y);
         if (this.end)
@@ -61,19 +72,24 @@ var CruiseMissile = (function (_super) {
         else {
             this.velocityX = 0;
         }
-        if (this.velocityX == 0 && this.velocityY == 0) {
-            console.log("o vel");
-        }
     };
     CruiseMissile.prototype.advanceMissle = function () {
+        this.end = { x: this.middle.x, y: this.middle.y };
         this.middle.x = this.front.x;
         this.middle.y = this.front.y;
+        this.velocityEndX = this.velocityX;
+        this.velocityEndY = this.velocityY;
         this.setRandomVelocity(this.front);
+    };
+    CruiseMissile.prototype.kill = function (bullet) {
+        var horizontal = Math.abs(bullet.velocityY) > Math.abs(bullet.velocityX);
+        var explosion = new Explosion(bullet.game, this.left, this.top, this.width, this.height, horizontal);
+        this.game.removeSprite(this);
     };
     CruiseMissile.distanceHorizontal = 40;
     CruiseMissile.distanceVertical = 20;
-    CruiseMissile.velocityHorizontal = 100;
-    CruiseMissile.velocityVertical = 50;
+    CruiseMissile.velocityHorizontal = 200;
+    CruiseMissile.velocityVertical = 100;
     return CruiseMissile;
 })(RobotronSprite);
 //# sourceMappingURL=cruisemissile.js.map

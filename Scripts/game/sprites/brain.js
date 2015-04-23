@@ -23,7 +23,7 @@ var Brain = (function (_super) {
         this.manPosition = manPosition;
         this.setRandomDirection();
         this.queueRandomEvent(3, 1, true, function () { return _this.setRandomDirection(); });
-        this.queueRandomEvent(3, 3, true, function () { return _this.fireMissle(); });
+        this.queueRandomEvent(3, 6, true, function () { return _this.fireMissle(); });
     }
     // TODO: random changing movement towards player, towards family or random
     Brain.prototype.mover = function (context, time) {
@@ -38,7 +38,7 @@ var Brain = (function (_super) {
         this.game.removeSprite(this);
     };
     Brain.prototype.fireMissle = function () {
-        var missle = new CruiseMissile(this.game, this.left, this.top, this.manPosition);
+        var missle = new CruiseMissile(this.game, this.centerX(), this.centerY(), this.manPosition);
     };
     Brain.cells = {
         left: [
