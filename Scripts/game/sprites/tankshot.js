@@ -14,6 +14,7 @@ var TankShot = (function (_super) {
         this.canKill = true;
         this.enemy = true;
         this.width = this.height = TankShot.radius * 2;
+        this.rgbColors = rgbColors;
     }
     TankShot.prototype.painter = function (context) {
         context.save();
@@ -21,7 +22,7 @@ var TankShot = (function (_super) {
         context.arc(this.left + TankShot.radius, this.top + TankShot.radius, TankShot.radius, 0, Math.PI * 2, false);
         context.fillStyle = RobotronSprite.rgbColors();
         context.lineWidth = 2;
-        context.strokeStyle = 'white';
+        context.strokeStyle = this.rgbColors();
         context.fill();
         context.stroke();
         context.beginPath();

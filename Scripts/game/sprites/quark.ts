@@ -1,7 +1,7 @@
 class Quark extends RobotronSprite {
     spawns: number = 0;
     static tanksSpawned = 4;
-    constructor(game: Game, left: number, top: number, private rgbColors: () => string) {
+    constructor(game: Game, left: number, top: number, private rgbColors: RgbFunction) {
         super('quark', game, left, top, "all", Quark.cells);
         this.speed = 150;
         this.width = Quark.cells['all'][0].w * 2;

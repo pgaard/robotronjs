@@ -2,16 +2,18 @@
     velocityX: number;
     velocityY: number;
     dissapearing = false;
+    rgbColors: RgbFunction;
     static bulletSpeed = 500;
     static radius = 10;
 
-    constructor(game: Game, left: number, top: number, shootX: number, shootY: number, rgbColors: () => string) {
+    constructor(game: Game, left: number, top: number, shootX: number, shootY: number, rgbColors: RgbFunction) {
         super('tankshot', game, left, top);
         this.velocityX = shootX * TankShot.bulletSpeed;
         this.velocityY = shootY * TankShot.bulletSpeed;
         this.canKill = true;
         this.enemy = true;
         this.width = this.height = TankShot.radius * 2;
+        this.rgbColors = rgbColors;
     }
 
     painter(context: CanvasRenderingContext2D) {
@@ -20,7 +22,7 @@
         context.arc(this.left + TankShot.radius, this.top + TankShot.radius, TankShot.radius, 0, Math.PI * 2, false);
         context.fillStyle = RobotronSprite.rgbColors();
         context.lineWidth = 2;
-        context.strokeStyle = 'white';
+        context.strokeStyle = this.rgbColors();
         context.fill();
         context.stroke();
 

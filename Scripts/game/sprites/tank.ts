@@ -1,6 +1,6 @@
 ﻿class Tank extends RobotronSprite
 {    
-    constructor(game: Game, left: number, top: number, private rgbColors: () => string) {
+    constructor(game: Game, left: number, top: number, private rgbColors: RgbFunction) {
         super('tank', game, left, top, "all", Tank.cells);
         this.speed = 50;
         this.width = Tank.cells['all'][0].w * 2;

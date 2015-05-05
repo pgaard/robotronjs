@@ -113,11 +113,13 @@
             if (type == Grunt)
                 new Grunt(this, left, t, () => this.waveDuration(), () => this.manLocation());
             else if (type == Brain)
-                new Brain(this, left, t, () => this.manLocation());
+                new Brain(this, left, t, () => this.manLocation(), () => this.rgbColors());
             else if(type == Electrode)
                 new Electrode(this, left, t, () => this.rgbColors());
             else if (type == Quark)
                 new Quark(this, left, t, () => this.rgbColors());
+            else if (type == Tank)
+                new Tank(this, left, t, () => this.rgbColors());
             else
                 new type(this, left, t);
         }

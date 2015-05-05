@@ -14,7 +14,7 @@
 
     static currentTime: number;
     static getMan: () => Sprite;
-    static rgbColors: () => string; 
+    static rgbColors: RgbFunction; 
 
     constructor(name: string, game: Game, left: number, top: number, startDirection?: string, cells?: ISpriteCells) {
         super(name, game, left, top, startDirection, cells);

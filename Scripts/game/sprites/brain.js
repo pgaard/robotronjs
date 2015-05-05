@@ -10,7 +10,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var Brain = (function (_super) {
     __extends(Brain, _super);
-    function Brain(game, left, top, manPosition) {
+    function Brain(game, left, top, manPosition, rgbColors) {
         var _this = this;
         _super.call(this, 'brain', game, left, top, "left", Brain.cells);
         this.speed = 50;
@@ -21,6 +21,7 @@ var Brain = (function (_super) {
         this.mustKill = true;
         this.score = 500;
         this.manPosition = manPosition;
+        this.rgbColors = rgbColors;
         this.setRandomDirection();
         this.queueRandomEvent(3, 1, true, function () { return _this.setRandomDirection(); });
         this.queueRandomEvent(3, 6, true, function () { return _this.fireMissle(); });
@@ -38,7 +39,7 @@ var Brain = (function (_super) {
         this.game.removeSprite(this);
     };
     Brain.prototype.fireMissle = function () {
-        var missle = new CruiseMissile(this.game, this.centerX(), this.centerY(), this.manPosition);
+        var missle = new CruiseMissile(this.game, this.centerX(), this.centerY(), this.manPosition, this.rgbColors);
     };
     Brain.cells = {
         left: [

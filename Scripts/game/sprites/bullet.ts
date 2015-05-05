@@ -6,9 +6,9 @@ class Bullet extends RobotronSprite {
     velocityY: number;
     bulletSpeed: number;
     bulletLength: number;
-    rgbColors: () => string;
+    rgbColors: RgbFunction;
 
-    constructor(game: Game, left: number, top: number, shootX: number, shootY: number, rgbColors: () => string ) {
+    constructor(game: Game, left: number, top: number, shootX: number, shootY: number, rgbColors: RgbFunction ) {
         super('bullet', game, left, top);
         this.rgbColors = rgbColors;
         this.bulletSpeed = 1000;

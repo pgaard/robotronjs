@@ -98,11 +98,13 @@ var Robotron = (function (_super) {
             if (type == Grunt)
                 new Grunt(this, left, t, function () { return _this.waveDuration(); }, function () { return _this.manLocation(); });
             else if (type == Brain)
-                new Brain(this, left, t, function () { return _this.manLocation(); });
+                new Brain(this, left, t, function () { return _this.manLocation(); }, function () { return _this.rgbColors(); });
             else if (type == Electrode)
                 new Electrode(this, left, t, function () { return _this.rgbColors(); });
             else if (type == Quark)
                 new Quark(this, left, t, function () { return _this.rgbColors(); });
+            else if (type == Tank)
+                new Tank(this, left, t, function () { return _this.rgbColors(); });
             else
                 new type(this, left, t);
         }

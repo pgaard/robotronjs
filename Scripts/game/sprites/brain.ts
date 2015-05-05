@@ -5,8 +5,9 @@
 
 class Brain extends RobotronSprite {
     manPosition: ManPositionFunction;
+    rgbColors: RgbFunction;
 
-    constructor(game: Game, left: number, top: number, manPosition: ManPositionFunction) {
+    constructor(game: Game, left: number, top: number, manPosition: ManPositionFunction, rgbColors: RgbFunction) {
         super('brain', game, left, top, "left", Brain.cells );
         this.speed = 50;
         this.width = Brain.cells['left'][0].w * 2;
@@ -16,6 +17,7 @@ class Brain extends RobotronSprite {
         this.mustKill = true;
         this.score = 500;
         this.manPosition = manPosition;
+        this.rgbColors = rgbColors;
         this.setRandomDirection();
         this.queueRandomEvent(3, 1, true, () => this.setRandomDirection());
         this.queueRandomEvent(3, 6, true, () => this.fireMissle());
@@ -36,7 +38,7 @@ class Brain extends RobotronSprite {
     }
 
     fireMissle() {
-        var missle = new CruiseMissile(this.game, this.centerX(), this.centerY(), this.manPosition);
+        var missle = new CruiseMissile(this.game, this.centerX(), this.centerY(), this.manPosition, this.rgbColors);
     }
 
     static cells : ISpriteCells = {

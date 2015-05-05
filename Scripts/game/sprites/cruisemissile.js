@@ -6,9 +6,10 @@ var __extends = this.__extends || function (d, b) {
 };
 var CruiseMissile = (function (_super) {
     __extends(CruiseMissile, _super);
-    function CruiseMissile(game, left, top, manPosition) {
+    function CruiseMissile(game, left, top, manPosition, rgbColors) {
         _super.call(this, 'cruisemissile', game, left, top);
         this.manPosition = manPosition;
+        this.rgbColors = rgbColors;
         this.canKill = true;
         this.enemy = true;
         this.width = 5;
@@ -40,12 +41,19 @@ var CruiseMissile = (function (_super) {
     CruiseMissile.prototype.painter = function (context) {
         context.save();
         context.beginPath();
-        context.strokeStyle = 'white';
+        context.strokeStyle = this.rgbColors();
         context.lineWidth = this.width;
         context.moveTo(this.front.x, this.front.y);
         context.lineTo(this.middle.x, this.middle.y);
         if (this.end)
             context.lineTo(this.end.x, this.end.y);
+        context.stroke();
+        context.beginPath();
+        context.strokeStyle = 'white';
+        context.moveTo(this.front.x, this.front.y);
+        var len = this.game.distance(this.front.x, this.front.y, this.middle.x, this.middle.y);
+        var ratio = this.width / len;
+        context.lineTo(this.front.x + (this.front.x - this.middle.x) * ratio, this.front.y + (this.front.y - this.middle.y) * ratio);
         context.stroke();
         context.restore();
     };

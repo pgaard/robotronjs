@@ -4,9 +4,9 @@
 
 class Electrode extends RobotronSprite {
     hit:boolean;
-    rgbColors:  () => string;
+    rgbColors: RgbFunction;
 
-    constructor(game: Game, left: number, top: number, rgbColors: () => string) {
+    constructor(game: Game, left: number, top: number, rgbColors: RgbFunction) {
         super('electrode', game, left, top);
         this.hit = false;
         this.width = 10 * 2;

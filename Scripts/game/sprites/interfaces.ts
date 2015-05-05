@@ -2,6 +2,10 @@
     (): { left: number; top: number }
 }
 
+interface RgbFunction {
+    (): string;
+}
+
 interface WaveDurationFunction {
     (): number;
 }
