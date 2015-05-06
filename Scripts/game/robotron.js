@@ -10,6 +10,7 @@ var Robotron = (function (_super) {
         var _this = this;
         _super.call(this, "robotron", "canvas");
         this.startingWave = 5;
+        this.extraGuyEvery = 25000;
         this.score = 0;
         this.men = 4;
         this.innerWave = true;
@@ -249,9 +250,14 @@ var Robotron = (function (_super) {
         }
     };
     Robotron.prototype.increaseScore = function (amount) {
-        if (Math.floor((this.score + amount) / 25000) > Math.floor(this.score / 25000))
+        var extra = false;
+        if (Math.floor((this.score + amount) / this.extraGuyEvery) > Math.floor(this.score / this.extraGuyEvery)) {
             this.men++;
+            this.playSound("sound_extraguy");
+            extra = true;
+        }
         this.score += amount;
+        return extra;
     };
     Robotron.prototype.checkForKills = function () {
         var sprites = this.getAllSprites();
@@ -320,9 +326,9 @@ var Robotron = (function (_super) {
                 else if (sprite instanceof Family) {
                     if ((left + width) >= sprite.left && left <= sprite.left + sprite.width && (top + height) >= sprite.top && top <= sprite.top + sprite.height) {
                         // points
-                        this.increaseScore(this.bonus);
                         addSprites.push(new Bonus(this, sprite.left, sprite.top, this.bonus.toString()));
-                        this.playSound("sound_rescue");
+                        if (!this.increaseScore(this.bonus))
+                            this.playSound("sound_rescue");
                         if (this.bonus < 5000)
                             this.bonus += 1000;
                         removeSprites.push(sprite);

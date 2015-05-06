@@ -3,6 +3,7 @@
     wave: number;
     innerWave: boolean;
     startingWave: number = 5;
+    extraGuyEvery: number = 25000;
     currentWave: { [id: string]: number; };
     continueWave: boolean;
     gameOver: boolean;
@@ -292,11 +293,15 @@
         }
     }
 
-    increaseScore(amount: number) {
-
-        if (Math.floor((this.score + amount) / 25000) > Math.floor(this.score / 25000))
+    increaseScore(amount: number) : bool {
+        var extra = false;
+        if (Math.floor((this.score + amount) / this.extraGuyEvery) > Math.floor(this.score / this.extraGuyEvery)) {
             this.men++;
+            this.playSound("sound_extraguy");
+            extra = true;
+        }
         this.score += amount;
+        return extra;
     }
 
     checkForKills() {
@@ -377,9 +382,9 @@
                         (top + height) >= sprite.top && top <= sprite.top + sprite.height)
                     {
                         // points
-                        this.increaseScore(this.bonus);
                         addSprites.push(new Bonus(this, sprite.left, sprite.top, this.bonus.toString()));
-                        this.playSound("sound_rescue");
+                        if(!this.increaseScore(this.bonus))
+                            this.playSound("sound_rescue");
 
                         if (this.bonus < 5000)
                             this.bonus += 1000;

@@ -70,7 +70,7 @@ class Game {
         this.soundOn = true;
         this.soundChannels = [];
         this.audio = new Audio();
-        this.NUM_SOUND_CHANNELS = 10;
+        this.NUM_SOUND_CHANNELS = 4;
         this.HIGH_SCORES_SUFFIX = "highscores"
 
         this.pressedKeys = {};
@@ -367,12 +367,11 @@ class Game {
                     return audio;
             }
         }
-        return undefined; // All channels in use
+        return this.soundChannels[0]; // All channels in use
     }
 
     // Given an identifier, play the associated sound.
     playSound(id: string) {
-        return;
         var channel = this.getAvailableSoundChannel(),
             element = <HTMLAudioElement> document.getElementById(id);
         if (channel && element) {
