@@ -28,7 +28,7 @@ class Enforcer extends RobotronSprite
     shootAtPlayer() {
         var man = RobotronSprite.getMan();
         var distance = this.game.distance(this.left, this.top, man.left, man.top);
-        var bulletSpeed = (distance / this.game.width()) * 600;
+        var bulletSpeed = (distance / this.game.width()) * 1000;
         var theta = Math.atan((this.top - man.top) / (this.left - man.left));
         var reverse = this.left > man.left ? -1 : 1;
         var velocityX = Math.cos(theta) * bulletSpeed * reverse;
