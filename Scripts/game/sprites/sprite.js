@@ -34,4 +34,4 @@ var Sprite = (function () {
     };
     return Sprite;
 })();
-//# sourceMappingURL=sprite.js.map
+//# sourceMappingURL=Sprite.js.map
