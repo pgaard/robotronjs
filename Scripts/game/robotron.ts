@@ -2,7 +2,7 @@
     men: number;
     wave: number;
     innerWave: boolean;
-    startingWave: number = 5;
+    startingWave: number = 1;
     extraGuyEvery: number = 25000;
     currentWave: { [id: string]: number; };
     continueWave: boolean;
@@ -293,7 +293,7 @@
         }
     }
 
-    increaseScore(amount: number) : bool {
+    increaseScore(amount: number) : boolean {
         var extra = false;
         if (Math.floor((this.score + amount) / this.extraGuyEvery) > Math.floor(this.score / this.extraGuyEvery)) {
             this.men++;

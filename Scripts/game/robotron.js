@@ -9,7 +9,7 @@ var Robotron = (function (_super) {
     function Robotron() {
         var _this = this;
         _super.call(this, "robotron", "canvas");
-        this.startingWave = 5;
+        this.startingWave = 1;
         this.extraGuyEvery = 25000;
         this.score = 0;
         this.men = 4;
